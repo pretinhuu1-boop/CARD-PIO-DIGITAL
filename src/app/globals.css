@@ -1,26 +1,371 @@
 @import "tailwindcss";
 
+/* ============================================================
+   CSS Variables - Light Theme
+   ============================================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand palette */
+  --color-primary: #E84363;
+  --color-primary-dark: #C7254E;
+  --color-primary-light: #FF6B6B;
+
+  /* Backgrounds */
+  --background: #FEFDFB;
+  --background-secondary: #FDF9F3;
+  --background-tertiary: #FAF3E6;
+
+  /* Foreground / Text */
+  --foreground: #2D0614;
+  --foreground-secondary: #6E1330;
+  --foreground-muted: #9B7A85;
+
+  /* Surfaces */
+  --surface: #FFFFFF;
+  --surface-hover: #FFF9E8;
+  --surface-active: #FFE0E0;
+
+  /* Borders */
+  --border: #F5E9D3;
+  --border-hover: #EDDCBE;
+  --border-focus: #E84363;
+
+  /* Accents */
+  --accent-gold: #FFC107;
+  --accent-cream: #FFF9E8;
+  --accent-warm: #FF9494;
+
+  /* Semantic */
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #3B82F6;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(45, 6, 20, 0.06);
+  --shadow-md: 0 4px 12px rgba(45, 6, 20, 0.08);
+  --shadow-lg: 0 8px 30px rgba(45, 6, 20, 0.12);
+  --shadow-warm: 0 4px 20px rgba(232, 67, 99, 0.15);
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-shadow: 0 8px 32px rgba(45, 6, 20, 0.08);
+
+  /* Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ============================================================
+   CSS Variables - Dark Theme
+   ============================================================ */
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --color-primary: #FF6B6B;
+    --color-primary-dark: #E84363;
+    --color-primary-light: #FF9494;
+
+    --background: #1A0A10;
+    --background-secondary: #241218;
+    --background-tertiary: #2E1A22;
+
+    --foreground: #FDF9F3;
+    --foreground-secondary: #E0CCA5;
+    --foreground-muted: #9B7A85;
+
+    --surface: #2E1A22;
+    --surface-hover: #3A2430;
+    --surface-active: #4A303E;
+
+    --border: #3A2430;
+    --border-hover: #4A303E;
+    --border-focus: #FF6B6B;
+
+    --accent-gold: #FFD54F;
+    --accent-cream: #3A2430;
+    --accent-warm: #FF9494;
+
+    --glass-bg: rgba(30, 15, 20, 0.72);
+    --glass-border: rgba(60, 30, 40, 0.4);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.4);
+    --shadow-warm: 0 4px 20px rgba(255, 107, 107, 0.2);
   }
+}
+
+/* ============================================================
+   Tailwind Theme Tokens
+   ============================================================ */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
+  --color-background-tertiary: var(--background-tertiary);
+  --color-foreground: var(--foreground);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-primary-light: var(--color-primary-light);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-accent-gold: var(--accent-gold);
+  --color-accent-cream: var(--accent-cream);
+  --color-accent-warm: var(--accent-warm);
+  --color-muted: var(--foreground-muted);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+/* ============================================================
+   Base Styles
+   ============================================================ */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::selection {
+  background: rgba(232, 67, 99, 0.15);
+  color: var(--color-primary-dark);
+}
+
+/* ============================================================
+   Custom Scrollbar
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--foreground-muted);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--foreground-muted) transparent;
+}
+
+/* ============================================================
+   Glassmorphism Classes
+   ============================================================ */
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-sm {
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px) saturate(150%);
+  -webkit-backdrop-filter: blur(8px) saturate(150%);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-lg);
+}
+
+.glass-dark {
+  background: rgba(26, 10, 16, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================================
+   Skeleton Loading Animation
+   ============================================================ */
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--background-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--glass-border),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-text {
+  height: 0.875rem;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-title {
+  height: 1.25rem;
+  width: 60%;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-image {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-circle {
+  border-radius: var(--radius-full);
+}
+
+/* ============================================================
+   Keyframe Animations
+   ============================================================ */
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-10px) rotate(2deg); }
+  66% { transform: translateY(-5px) rotate(-1deg); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ============================================================
+   Utility Classes
+   ============================================================ */
+
+.text-gradient-brand {
+  background: linear-gradient(135deg, var(--color-primary), var(--accent-gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-gradient-brand {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+}
+
+.bg-gradient-warm {
+  background: linear-gradient(135deg, var(--background), var(--background-secondary));
+}
+
+.shadow-brand {
+  box-shadow: var(--shadow-warm);
+}
+
+.ring-brand {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}
+
+/* Hide scrollbar but keep scroll functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Text utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Touch-friendly tap highlight */
+@media (pointer: coarse) {
+  button,
+  a,
+  [role="button"] {
+    -webkit-tap-highlight-color: rgba(232, 67, 99, 0.1);
+  }
 }
