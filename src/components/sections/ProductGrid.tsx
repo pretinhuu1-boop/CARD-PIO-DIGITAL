@@ -12,11 +12,16 @@ import { useCart } from '@/lib/store';
 import { cn, formatCurrency, calculateDiscount } from '@/lib/utils';
 
 const categoryEmojis: Record<string, string> = {
-  bolos: '🎂',
+  'doces-finos': '🍬',
   tortas: '🥧',
-  doces: '🍬',
+  bolos: '🎂',
   brownies: '🍫',
+  sobremesas: '🍮',
+  salgados: '🥐',
+  cafes: '☕',
+  'zero-lactose': '🌿',
   cookies: '🍪',
+  doces: '🍬',
 };
 
 function getCategoryEmoji(slug: string): string {
@@ -80,18 +85,27 @@ export function ProductGrid() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product, index) => {
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-30px' }}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.06 } },
+          }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        >
+          {filteredProducts.map((product) => {
             const cartItem = items.find((item) => item.product.id === product.id);
             const isFavorited = favorites.includes(product.id);
 
             return (
               <motion.div
                 key={product.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+                }}
                 whileHover={{ y: -4 }}
                 className={cn(
                   'rounded-2xl bg-white shadow overflow-hidden',
@@ -219,7 +233,7 @@ export function ProductGrid() {
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       )}
     </section>
   );
