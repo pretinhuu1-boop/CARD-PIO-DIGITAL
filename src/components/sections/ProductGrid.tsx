@@ -113,10 +113,19 @@ export function ProductGrid() {
                 )}
               >
                 {/* Image Area */}
-                <div className="relative h-48 bg-gradient-to-br from-[#FFF8F0] to-[#f5e6d0] flex items-center justify-center">
-                  <span className="text-7xl" role="img" aria-label={product.category}>
-                    {getCategoryEmoji(product.category)}
-                  </span>
+                <div className="relative h-48 bg-gradient-to-br from-[#FFF8F0] to-[#f5e6d0] flex items-center justify-center overflow-hidden">
+                  {product.image ? (
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span className="text-7xl" role="img" aria-label={product.category}>
+                      {getCategoryEmoji(product.category)}
+                    </span>
+                  )}
 
                   {product.badge && (
                     <div className="absolute top-3 left-3">

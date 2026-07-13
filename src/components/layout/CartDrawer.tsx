@@ -71,16 +71,18 @@ function CartItemRow({ item }: { item: CartItem }) {
         'border border-[#8B1A4A]/5 dark:border-white/5',
       )}
     >
-      {/* Product image placeholder */}
+      {/* Product image */}
       <div
         className={cn(
-          'w-16 h-16 rounded-xl flex-shrink-0 flex items-center justify-center',
-          'bg-gradient-to-br from-[#8B1A4A]/10 to-[#D4A853]/10',
-          'dark:from-[#8B1A4A]/20 dark:to-[#D4A853]/20',
-          'text-2xl',
+          'w-16 h-16 rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden',
+          !product.image && 'bg-gradient-to-br from-[#8B1A4A]/10 to-[#D4A853]/10 dark:from-[#8B1A4A]/20 dark:to-[#D4A853]/20',
         )}
       >
-        🧁
+        {product.image ? (
+          <img src={product.image} alt={product.name} className="w-full h-full object-cover rounded-xl" />
+        ) : (
+          <span className="text-2xl">🧁</span>
+        )}
       </div>
 
       {/* Info */}
