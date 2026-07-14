@@ -1,227 +1,130 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import { MapPin, ChevronRight, Star } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
-import { StarRating } from '@/components/ui/StarRating'
-import { cn } from '@/lib/utils'
-
-const floatingShapes = [
-  { size: 16, x: '10%', y: '20%', duration: 18, delay: 0, opacity: 0.15 },
-  { size: 10, x: '80%', y: '15%', duration: 22, delay: 2, opacity: 0.12 },
-  { size: 20, x: '70%', y: '60%', duration: 20, delay: 1, opacity: 0.1 },
-  { size: 8, x: '25%', y: '75%', duration: 16, delay: 3, opacity: 0.18 },
-  { size: 14, x: '55%', y: '35%', duration: 25, delay: 0.5, opacity: 0.12 },
-  { size: 12, x: '90%', y: '80%', duration: 19, delay: 1.5, opacity: 0.14 },
-]
+import { motion } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 
 const containerVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.3,
+      staggerChildren: 0.12,
+      delayChildren: 0.4,
     },
   },
-}
+};
 
-const slideUpVariants = {
-  hidden: {
-    opacity: 0,
-    y: 40,
-  },
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.8,
-      ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
-    },
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const },
   },
-}
+};
 
 export function HeroBanner() {
-  const handleScrollToCardapio = () => {
-    const element = document.getElementById('cardapio')
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-    }
-  }
+  const handleScroll = (target: string) => {
+    const el = document.getElementById(target);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
-    <section
-      className={cn(
-        'relative w-full overflow-hidden',
-        'h-[60vh] md:h-[80vh]',
-      )}
-      style={{
-        background: 'linear-gradient(135deg, #8B1A4A 0%, #a8325e 30%, #d4a085 70%, #FFF8F0 100%)',
-      }}
-    >
-      {/* Floating decorative elements */}
-      {floatingShapes.map((shape, index) => (
+    <section className="relative w-full h-[100svh] min-h-[600px] overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-chocolate-900/80 via-chocolate-900/50 to-chocolate-900/70" />
+
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183507_6a414511-e5ce-45b1-9087-023f83b05c42_min.webp)',
+          filter: 'brightness(0.6) saturate(0.9)',
+        }}
+      />
+
+      <div className="absolute inset-0 bg-gradient-to-b from-chocolate-950/60 via-transparent to-chocolate-950/80" />
+
+      <div className="relative z-10 flex h-full w-full items-center justify-center px-6">
         <motion.div
-          key={index}
-          className="absolute rounded-full"
-          style={{
-            width: shape.size,
-            height: shape.size,
-            left: shape.x,
-            top: shape.y,
-            backgroundColor: index % 2 === 0 ? '#D4A853' : '#FFF8F0',
-            opacity: shape.opacity,
-          }}
-          animate={{
-            y: [0, -30, 10, -20, 0],
-            x: [0, 15, -10, 20, 0],
-            scale: [1, 1.2, 0.9, 1.1, 1],
-          }}
-          transition={{
-            duration: shape.duration,
-            repeat: Infinity,
-            repeatType: 'loop',
-            ease: 'easeInOut',
-            delay: shape.delay,
-          }}
-        />
-      ))}
-
-      {/* Decorative SVG blobs */}
-      <motion.svg
-        className="absolute"
-        style={{ left: '40%', top: '10%', opacity: 0.08 }}
-        width="60"
-        height="60"
-        viewBox="0 0 60 60"
-        animate={{
-          y: [0, -20, 15, -10, 0],
-          rotate: [0, 45, -20, 30, 0],
-        }}
-        transition={{
-          duration: 23,
-          repeat: Infinity,
-          repeatType: 'loop',
-          ease: 'easeInOut',
-        }}
-      >
-        <circle cx="30" cy="30" r="28" fill="#D4A853" />
-      </motion.svg>
-
-      <motion.svg
-        className="absolute"
-        style={{ left: '15%', top: '50%', opacity: 0.06 }}
-        width="40"
-        height="40"
-        viewBox="0 0 40 40"
-        animate={{
-          y: [0, 20, -15, 10, 0],
-          x: [0, -10, 15, -5, 0],
-        }}
-        transition={{
-          duration: 21,
-          repeat: Infinity,
-          repeatType: 'loop',
-          ease: 'easeInOut',
-          delay: 2,
-        }}
-      >
-        <circle cx="20" cy="20" r="18" fill="#FFF8F0" />
-      </motion.svg>
-
-      {/* Content */}
-      <div className="relative z-10 flex h-full w-full items-center justify-center px-4 sm:px-6 lg:px-8">
-        <motion.div
-          className="flex max-w-3xl flex-col items-center text-center"
+          className="flex max-w-2xl flex-col items-center text-center"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* Location pill */}
-          <motion.div
-            variants={slideUpVariants}
-            className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm backdrop-blur-sm md:mb-8 md:text-base"
-            style={{
-              backgroundColor: 'rgba(255, 248, 240, 0.15)',
-              color: '#FFF8F0',
-              border: '1px solid rgba(255, 248, 240, 0.2)',
-            }}
+          <motion.span
+            variants={fadeUp}
+            className="mb-6 text-sm tracking-[0.3em] uppercase text-cream-300/80 font-medium"
           >
-            <MapPin className="h-4 w-4" />
-            <span>Vila Gomes Cardim, Sao Paulo</span>
-          </motion.div>
+            Confeitaria Artesanal
+          </motion.span>
 
-          {/* Headline */}
           <motion.h1
-            variants={slideUpVariants}
-            className="font-serif text-5xl font-bold leading-tight tracking-tight sm:text-6xl md:text-7xl lg:text-8xl"
-            style={{ color: '#FFF8F0' }}
+            variants={fadeUp}
+            className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-cream-50 leading-[0.95] tracking-tight"
           >
-            Doces Dondoca
+            Doces
+            <br />
+            Dondoca
           </motion.h1>
 
-          {/* Tagline */}
-          <motion.p
-            variants={slideUpVariants}
-            className="mt-4 max-w-xl text-lg leading-relaxed sm:text-xl md:mt-6 md:text-2xl"
-            style={{ color: 'rgba(255, 248, 240, 0.9)' }}
-          >
-            A combinacao perfeita entre doces, salgados e bons cafes
-          </motion.p>
-
-          {/* Subtitle */}
-          <motion.p
-            variants={slideUpVariants}
-            className="mt-3 max-w-md text-sm leading-relaxed sm:text-base md:mt-4"
-            style={{ color: 'rgba(255, 248, 240, 0.7)' }}
-          >
-            Feito com ingredientes selecionados e o carinho artesanal que so a Dondoca tem
-          </motion.p>
-
-          {/* Rating badge */}
           <motion.div
-            variants={slideUpVariants}
-            className="mt-6 inline-flex items-center gap-3 rounded-full px-4 py-2 backdrop-blur-sm md:mt-8"
-            style={{
-              backgroundColor: 'rgba(255, 248, 240, 0.12)',
-              border: '1px solid rgba(212, 168, 83, 0.3)',
-            }}
+            variants={fadeUp}
+            className="mt-6 w-12 h-px bg-caramel-400/60"
+          />
+
+          <motion.p
+            variants={fadeUp}
+            className="mt-6 max-w-md text-lg sm:text-xl text-cream-200/90 leading-relaxed font-light"
           >
-            <StarRating rating={4.9} count={5} size="sm" />
-            <span
-              className="text-sm font-medium"
-              style={{ color: '#D4A853' }}
+            A combinação perfeita entre doces artesanais, salgados gourmet e cafés especiais
+          </motion.p>
+
+          <motion.div
+            variants={fadeUp}
+            className="mt-10 flex flex-col sm:flex-row items-center gap-4"
+          >
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => handleScroll('cardapio')}
+              className="px-8 py-4 bg-cream-50 text-chocolate-900 text-[15px] font-medium rounded-full hover:bg-white transition-colors duration-200 shadow-lg shadow-black/10"
             >
-              4.9
-            </span>
-            <span
-              className="text-xs sm:text-sm"
-              style={{ color: 'rgba(255, 248, 240, 0.7)' }}
+              Pedir Agora
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => handleScroll('cardapio')}
+              className="px-8 py-4 text-cream-100/90 text-[15px] font-medium rounded-full border border-cream-200/20 hover:bg-cream-50/10 transition-colors duration-200"
             >
-              2000+ avaliacoes
-            </span>
+              Explorar Cardápio
+            </motion.button>
           </motion.div>
 
-          {/* CTA button */}
-          <motion.div variants={slideUpVariants} className="mt-8 md:mt-10">
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={handleScrollToCardapio}
-            >
-              Explorar Cardapio
-              <ChevronRight className="ml-2 h-5 w-5" />
-            </Button>
-          </motion.div>
+          <motion.p
+            variants={fadeUp}
+            className="mt-8 text-sm text-cream-300/60"
+          >
+            Vila Gomes Cardim, Tatuapé — São Paulo
+          </motion.p>
         </motion.div>
       </div>
 
-      {/* Bottom gradient fade */}
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-24"
-        style={{
-          background: 'linear-gradient(to top, #FFF8F0, transparent)',
-        }}
-      />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+      >
+        <motion.button
+          onClick={() => handleScroll('cardapio')}
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          className="text-cream-200/40 hover:text-cream-200/70 transition-colors"
+          aria-label="Rolar para o cardápio"
+        >
+          <ChevronDown className="w-6 h-6" />
+        </motion.button>
+      </motion.div>
     </section>
-  )
+  );
 }

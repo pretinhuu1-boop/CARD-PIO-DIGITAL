@@ -72,31 +72,21 @@ function CategoryChip({ categories, selected, onChange, className }: CategoryChi
           <motion.button
             key={category.slug}
             layout
-            whileTap={{ scale: 0.95 }}
+            whileTap={{ scale: 0.96 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             onClick={() => handleChipClick(category.slug)}
             className={cn(
-              'flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap',
-              'transition-colors duration-200 shrink-0',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8B1A4A]/50',
+              'flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium whitespace-nowrap',
+              'transition-all duration-200 shrink-0',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-caramel-400/50',
               isSelected
-                ? 'bg-[#8B1A4A] text-white shadow-md shadow-[#8B1A4A]/20 dark:bg-[#A0284C]'
-                : 'bg-white/80 text-gray-700 border border-gray-200 hover:border-[#8B1A4A]/30 hover:bg-[#8B1A4A]/5 dark:bg-white/10 dark:text-gray-300 dark:border-gray-700 dark:hover:border-[#A0284C]/40 dark:hover:bg-[#A0284C]/10',
+                ? 'bg-chocolate-800 text-cream-50 shadow-md shadow-chocolate-800/15 dark:bg-cream-200 dark:text-chocolate-900'
+                : 'bg-cream-100 text-cream-700 border border-cream-300 hover:border-caramel-300 hover:bg-cream-200 dark:bg-chocolate-800/30 dark:text-cream-400 dark:border-chocolate-600 dark:hover:border-caramel-600',
             )}
             type="button"
           >
             <span className="text-base">{category.emoji}</span>
             <span>{category.name}</span>
-            {isSelected && (
-              <motion.span
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: 'auto' }}
-                exit={{ opacity: 0, width: 0 }}
-                className="text-xs text-white/70 ml-0.5 tabular-nums"
-              >
-                {category.productCount}
-              </motion.span>
-            )}
           </motion.button>
         );
       })}

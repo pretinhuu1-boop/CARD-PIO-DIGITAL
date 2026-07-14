@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { motion } from 'framer-motion'
-import { Camera, Heart } from 'lucide-react'
-import { brandStory } from '@/lib/data'
-import { cn } from '@/lib/utils'
+import { motion } from 'framer-motion';
+import { Camera } from 'lucide-react';
+import { brandStory } from '@/lib/data';
+import { cn } from '@/lib/utils';
 
 const containerVariants = {
   hidden: {},
@@ -13,7 +13,7 @@ const containerVariants = {
       delayChildren: 0.2,
     },
   },
-}
+};
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 24 },
@@ -22,7 +22,7 @@ const fadeInUp = {
     y: 0,
     transition: { duration: 0.6, ease: 'easeOut' as const },
   },
-}
+};
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -30,38 +30,12 @@ const fadeIn = {
     opacity: 1,
     transition: { duration: 0.6, ease: 'easeOut' as const },
   },
-}
-
-const decorativeCircles = [
-  { size: 200, top: '5%', left: '-5%', color: '#8B1A4A', opacity: 0.05 },
-  { size: 150, top: '30%', right: '-3%', color: '#D4A853', opacity: 0.07 },
-  { size: 100, bottom: '15%', left: '10%', color: '#8B1A4A', opacity: 0.04 },
-  { size: 120, bottom: '5%', right: '15%', color: '#D4A853', opacity: 0.05 },
-]
+};
 
 export function BrandStory() {
   return (
-    <section className="relative overflow-hidden bg-[#FFF8F0] py-20 md:py-28">
-      {/* Decorative background circles */}
-      {decorativeCircles.map((circle, i) => (
-        <div
-          key={i}
-          className="pointer-events-none absolute rounded-full"
-          style={{
-            width: circle.size,
-            height: circle.size,
-            top: circle.top,
-            left: circle.left,
-            right: circle.right,
-            bottom: circle.bottom,
-            backgroundColor: circle.color,
-            opacity: circle.opacity,
-          }}
-        />
-      ))}
-
+    <section id="sobre" className="relative overflow-hidden bg-cream-50 dark:bg-chocolate-800/30 py-20 md:py-28">
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -69,21 +43,26 @@ export function BrandStory() {
           variants={containerVariants}
           className="mb-16 text-center"
         >
+          <motion.span
+            variants={fadeInUp}
+            className="text-sm tracking-[0.2em] uppercase text-caramel-600 font-medium"
+          >
+            Nossa História
+          </motion.span>
           <motion.h2
             variants={fadeInUp}
-            className="mb-4 font-serif text-3xl font-bold text-[#8B1A4A] md:text-4xl lg:text-5xl"
+            className="mt-3 font-display text-4xl sm:text-5xl text-chocolate-800 dark:text-cream-100"
           >
             {brandStory.title}
           </motion.h2>
           <motion.p
             variants={fadeInUp}
-            className="text-lg italic text-[#D4A853] md:text-xl"
+            className="mt-4 text-lg text-caramel-600 dark:text-caramel-400"
           >
             {brandStory.subtitle}
           </motion.p>
         </motion.div>
 
-        {/* Story paragraphs */}
         <div className="mb-20 space-y-6">
           {brandStory.paragraphs.map((paragraph, index) => (
             <motion.p
@@ -103,14 +82,13 @@ export function BrandStory() {
                   },
                 },
               }}
-              className="mx-auto max-w-2xl text-center text-base leading-relaxed text-gray-700 md:text-lg"
+              className="mx-auto max-w-2xl text-center text-base leading-relaxed text-cream-700 dark:text-cream-400 md:text-lg"
             >
               {paragraph}
             </motion.p>
           ))}
         </div>
 
-        {/* Values cards */}
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -122,18 +100,19 @@ export function BrandStory() {
             <motion.div
               key={index}
               variants={fadeInUp}
-              className="rounded-2xl bg-white p-6 shadow-sm transition-shadow duration-300 hover:shadow-md"
+              className="rounded-2xl bg-[var(--background)] dark:bg-chocolate-800/50 p-6 border border-cream-200 dark:border-chocolate-700 transition-all duration-300 hover:border-caramel-300 dark:hover:border-caramel-700"
             >
               <span className="mb-3 block text-4xl">{value.icon}</span>
-              <h3 className="mb-2 font-semibold text-[#8B1A4A]">
+              <h3 className="mb-2 font-medium text-chocolate-800 dark:text-cream-200">
                 {value.title}
               </h3>
-              <p className="text-sm text-gray-600">{value.description}</p>
+              <p className="text-sm text-cream-600 dark:text-cream-500">
+                {value.description}
+              </p>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Camera CTA */}
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -147,17 +126,17 @@ export function BrandStory() {
             rel="noopener noreferrer"
             className={cn(
               'inline-flex items-center gap-2 rounded-full px-8 py-3',
-              'bg-[#8B1A4A] text-white transition-all duration-300',
-              'hover:bg-[#6d1439] hover:shadow-lg',
-              'text-sm font-medium md:text-base'
+              'bg-chocolate-800 text-cream-50 transition-all duration-200',
+              'hover:bg-chocolate-700',
+              'dark:bg-cream-200 dark:text-chocolate-900 dark:hover:bg-cream-100',
+              'text-sm font-medium',
             )}
           >
-            <Camera className="h-5 w-5" />
+            <Camera className="h-4 w-4" />
             Siga @docesdondocaoficial
-            <Heart className="h-4 w-4 fill-current" />
           </a>
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

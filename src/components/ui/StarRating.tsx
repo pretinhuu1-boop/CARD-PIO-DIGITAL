@@ -40,24 +40,22 @@ function StarRating({ rating, count, size = 'md', className }: StarRatingProps) 
               }}
               className="relative inline-flex"
             >
-              {/* Empty star (background) */}
               <Star
                 className={cn(
                   sizes.star,
-                  'text-gray-200 dark:text-gray-700',
+                  'text-cream-300 dark:text-chocolate-600',
                 )}
                 fill="currentColor"
                 strokeWidth={0}
               />
 
-              {/* Filled star (clipped) */}
               {fillLevel > 0 && (
                 <span
                   className="absolute inset-0 overflow-hidden"
                   style={{ width: `${fillLevel * 100}%` }}
                 >
                   <Star
-                    className={cn(sizes.star, 'text-[#D4A853]')}
+                    className={cn(sizes.star, 'text-caramel-500')}
                     fill="currentColor"
                     strokeWidth={0}
                   />
@@ -72,7 +70,7 @@ function StarRating({ rating, count, size = 'md', className }: StarRatingProps) 
         <span
           className={cn(
             sizes.text,
-            'text-gray-400 dark:text-gray-500 ml-1 tabular-nums',
+            'text-cream-600 dark:text-cream-500 ml-1 tabular-nums',
           )}
         >
           ({count})

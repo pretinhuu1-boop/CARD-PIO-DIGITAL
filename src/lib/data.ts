@@ -6,7 +6,7 @@ export interface Product {
   originalPrice?: number;
   image: string;
   category: string;
-  badge?: 'maisVendido' | 'novo' | 'promo' | 'zeroLactose' | 'vegano';
+  badge?: 'maisVendido' | 'novo' | 'promo' | 'zeroLactose' | 'vegano' | 'chefRecomenda' | 'edicaoLimitada';
   rating: number;
   reviews: number;
   ingredients?: string[];
@@ -591,7 +591,7 @@ export const promos: Promo[] = [
     description: 'Todos os brigadeiros gourmet com 20% OFF',
     discount: 20,
     code: 'BRIGADEIRO20',
-    bgGradient: 'from-[#8B1A4A] to-[#D4A853]',
+    bgGradient: 'from-[#3D2B1F] to-[#5C3D2E]',
   },
   {
     id: 'promo-2',
@@ -599,7 +599,7 @@ export const promos: Promo[] = [
     description: 'Café + fatia de bolo a partir de R$ 19,90',
     discount: 15,
     code: 'CAFETARDE15',
-    bgGradient: 'from-[#D4A853] to-[#8B1A4A]',
+    bgGradient: 'from-[#5C3D2E] to-[#C8956C]',
   },
   {
     id: 'promo-3',
@@ -607,7 +607,7 @@ export const promos: Promo[] = [
     description: 'Em pedidos acima de R$ 89,90 para toda São Paulo',
     discount: 100,
     code: 'FRETEGRATIS',
-    bgGradient: 'from-[#2D1B2E] to-[#8B1A4A]',
+    bgGradient: 'from-[#2A1D15] to-[#3D2B1F]',
   },
   {
     id: 'promo-4',
@@ -615,7 +615,7 @@ export const promos: Promo[] = [
     description: 'Brinde especial em compras acima de R$ 150',
     discount: 0,
     code: 'BRINDE150',
-    bgGradient: 'from-[#8B1A4A] via-[#A0284C] to-[#D4A853]',
+    bgGradient: 'from-[#3D2B1F] via-[#5C3D2E] to-[#C8956C]',
   },
 ];
 
@@ -673,6 +673,105 @@ export const brandStory: BrandStory = {
     { icon: '⭐', title: 'Excelência', description: 'Compromisso inabalável com a qualidade e sua satisfação' },
   ],
 };
+
+export interface Review {
+  id: string;
+  name: string;
+  avatar: string;
+  rating: number;
+  text: string;
+  date: string;
+  product?: string;
+}
+
+export interface FAQ {
+  question: string;
+  answer: string;
+}
+
+export const reviews: Review[] = [
+  {
+    id: 'r-1',
+    name: 'Camila S.',
+    avatar: 'CS',
+    rating: 5,
+    text: 'Os brigadeiros gourmet são simplesmente divinos. A caixa veio lindamente embalada, perfeita para presente. Já é minha confeitaria favorita no Tatuapé!',
+    date: '2 dias atrás',
+    product: 'Brigadeiro Gourmet',
+  },
+  {
+    id: 'r-2',
+    name: 'Rafael M.',
+    avatar: 'RM',
+    rating: 5,
+    text: 'Encomendei o bolo Red Velvet para o aniversário da minha esposa. Todo mundo elogiou! Sabor incrível e decoração impecável.',
+    date: '1 semana atrás',
+    product: 'Bolo Red Velvet',
+  },
+  {
+    id: 'r-3',
+    name: 'Juliana P.',
+    avatar: 'JP',
+    rating: 5,
+    text: 'O cheesecake de frutas vermelhas é o melhor que já comi em São Paulo. Cremoso na medida certa, com frutas frescas de verdade.',
+    date: '2 semanas atrás',
+    product: 'Cheesecake Frutas Vermelhas',
+  },
+  {
+    id: 'r-4',
+    name: 'Marcos T.',
+    avatar: 'MT',
+    rating: 5,
+    text: 'Peço as empadas gourmet toda semana. A massa é incrivelmente crocante e o recheio é super generoso. Viciante!',
+    date: '3 semanas atrás',
+    product: 'Empada Gourmet',
+  },
+  {
+    id: 'r-5',
+    name: 'Ana Luísa R.',
+    avatar: 'AR',
+    rating: 5,
+    text: 'Sou intolerante à lactose e finalmente encontrei uma confeitaria que se preocupa de verdade. Os brownies zero lactose são maravilhosos.',
+    date: '1 mês atrás',
+    product: 'Brownie Zero Lactose',
+  },
+  {
+    id: 'r-6',
+    name: 'Fernando C.',
+    avatar: 'FC',
+    rating: 5,
+    text: 'O cappuccino cremoso com o brownie belga trufado é a combinação perfeita. Atendimento sempre atencioso e carinhoso.',
+    date: '1 mês atrás',
+    product: 'Cappuccino Cremoso',
+  },
+];
+
+export const faqs: FAQ[] = [
+  {
+    question: 'Como faço para realizar um pedido?',
+    answer: 'Basta adicionar os produtos desejados ao carrinho e clicar em "Finalizar Pedido via WhatsApp". Você será redirecionado para o nosso WhatsApp com o resumo do pedido pronto.',
+  },
+  {
+    question: 'Qual o prazo de entrega?',
+    answer: 'Para pedidos no Tatuapé e região, entregamos em até 2 horas. Para outras regiões de São Paulo, o prazo é de até 4 horas. Encomendas de bolos e tortas inteiras precisam de pelo menos 24 horas de antecedência.',
+  },
+  {
+    question: 'Vocês fazem bolos e doces sob encomenda?',
+    answer: 'Sim! Trabalhamos com encomendas personalizadas para aniversários, casamentos, chás de bebê e eventos corporativos. Entre em contato pelo WhatsApp para solicitar um orçamento.',
+  },
+  {
+    question: 'Qual o valor mínimo para entrega?',
+    answer: 'O pedido mínimo para entrega é de R$ 30,00. Frete grátis em pedidos acima de R$ 89,90 para o Tatuapé e região. Para outras regiões, consulte o valor do frete.',
+  },
+  {
+    question: 'Vocês possuem opções sem lactose ou veganas?',
+    answer: 'Sim! Temos uma linha especial zero lactose com brownies, bolos e brigadeiros. Também oferecemos opções veganas sob encomenda. Confira nossa categoria Zero Lactose no cardápio.',
+  },
+  {
+    question: 'Quais são as formas de pagamento?',
+    answer: 'Aceitamos Pix, cartão de crédito e débito (todas as bandeiras), dinheiro e vale-refeição (Alelo, VR, Sodexo). O pagamento é realizado na entrega ou retirada.',
+  },
+];
 
 export const loyaltyTiers: Tier[] = [
   {

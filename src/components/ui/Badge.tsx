@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-type BadgeVariant = 'maisVendido' | 'novo' | 'promo' | 'zeroLactose' | 'vegano';
+type BadgeVariant = 'maisVendido' | 'novo' | 'promo' | 'zeroLactose' | 'vegano' | 'chefRecomenda' | 'edicaoLimitada';
 
 interface BadgeProps {
   variant: BadgeVariant;
@@ -13,28 +13,31 @@ interface BadgeProps {
 const variantConfig: Record<BadgeVariant, { label: string; styles: string }> = {
   maisVendido: {
     label: 'Mais Vendido',
-    styles:
-      'bg-gradient-to-r from-[#D4A853] to-[#E8C36A] text-[#5C3D0A] dark:from-[#B8902E] dark:to-[#D4A853] dark:text-[#FFF8E7]',
+    styles: 'bg-caramel-100 text-caramel-800 border border-caramel-200',
+  },
+  chefRecomenda: {
+    label: 'Chef Recomenda',
+    styles: 'bg-blush-100 text-blush-800 border border-blush-200',
   },
   novo: {
-    label: 'Novo',
-    styles:
-      'bg-gradient-to-r from-emerald-400 to-emerald-500 text-white dark:from-emerald-600 dark:to-emerald-500',
+    label: 'Novidade',
+    styles: 'bg-emerald-50 text-emerald-800 border border-emerald-200',
+  },
+  edicaoLimitada: {
+    label: 'Edição Limitada',
+    styles: 'bg-chocolate-100 text-chocolate-800 border border-chocolate-200',
   },
   promo: {
-    label: 'Promo',
-    styles:
-      'bg-gradient-to-r from-rose-500 to-red-500 text-white dark:from-rose-600 dark:to-red-500',
+    label: 'Promoção',
+    styles: 'bg-amber-50 text-amber-800 border border-amber-200',
   },
   zeroLactose: {
     label: 'Zero Lactose',
-    styles:
-      'bg-gradient-to-r from-sky-400 to-blue-400 text-white dark:from-sky-600 dark:to-blue-500',
+    styles: 'bg-sky-50 text-sky-800 border border-sky-200',
   },
   vegano: {
     label: 'Vegano',
-    styles:
-      'bg-gradient-to-r from-lime-400 to-green-500 text-white dark:from-lime-600 dark:to-green-600',
+    styles: 'bg-lime-50 text-lime-800 border border-lime-200',
   },
 };
 
@@ -43,12 +46,12 @@ function Badge({ variant, className }: BadgeProps) {
 
   return (
     <motion.span
-      initial={{ opacity: 0, scale: 0.85 }}
+      initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       className={cn(
-        'inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase whitespace-nowrap',
-        'shadow-sm select-none',
+        'inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium tracking-wide whitespace-nowrap',
+        'select-none',
         config.styles,
         className,
       )}

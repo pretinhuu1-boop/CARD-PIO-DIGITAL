@@ -9,7 +9,9 @@ import { HeroBanner } from '@/components/sections/HeroBanner';
 import { PromoBanner } from '@/components/sections/PromoBanner';
 import { ProductGrid } from '@/components/sections/ProductGrid';
 import { ComboSection } from '@/components/sections/ComboSection';
+import { ReviewsSection } from '@/components/sections/ReviewsSection';
 import { BrandStory } from '@/components/sections/BrandStory';
+import { FAQSection } from '@/components/sections/FAQSection';
 import { LoyaltyProgram } from '@/components/sections/LoyaltyProgram';
 import { Footer } from '@/components/sections/Footer';
 
@@ -25,7 +27,9 @@ export default function Home() {
         <PromoBanner />
         <ProductGrid />
         <ComboSection />
+        <ReviewsSection />
         <BrandStory />
+        <FAQSection />
         <LoyaltyProgram />
       </main>
 

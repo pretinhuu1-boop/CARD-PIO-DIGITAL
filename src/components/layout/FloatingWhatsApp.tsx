@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 const WHATSAPP_NUMBER = '5511983990000';
-const WHATSAPP_MESSAGE = encodeURIComponent('Ola! Gostaria de fazer um pedido 🍰');
+const WHATSAPP_MESSAGE = encodeURIComponent('Olá! Gostaria de fazer um pedido');
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`;
 
 function WhatsAppIcon({ className }: { className?: string }) {
@@ -26,7 +26,6 @@ function FloatingWhatsApp() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 sm:bottom-8 sm:right-8">
-      {/* Tooltip */}
       <AnimatePresence>
         {hovered && (
           <motion.div
@@ -36,8 +35,8 @@ function FloatingWhatsApp() {
             transition={{ type: 'spring', stiffness: 500, damping: 25 }}
             className={cn(
               'hidden sm:block px-3 py-1.5 rounded-lg',
-              'bg-gray-900 dark:bg-gray-100',
-              'text-sm font-medium text-white dark:text-gray-900',
+              'bg-chocolate-800 dark:bg-cream-100',
+              'text-sm font-medium text-cream-50 dark:text-chocolate-900',
               'shadow-lg whitespace-nowrap',
               'pointer-events-none',
             )}
@@ -47,7 +46,6 @@ function FloatingWhatsApp() {
         )}
       </AnimatePresence>
 
-      {/* Button */}
       <motion.a
         href={WHATSAPP_URL}
         target="_blank"
@@ -78,7 +76,6 @@ function FloatingWhatsApp() {
       >
         <WhatsAppIcon className="w-7 h-7 sm:w-8 sm:h-8" />
 
-        {/* Pulse rings */}
         <motion.span
           className="absolute inset-0 rounded-full bg-[#25D366]/30"
           animate={{
@@ -89,20 +86,6 @@ function FloatingWhatsApp() {
             duration: 2,
             repeat: Infinity,
             ease: 'easeOut',
-          }}
-          aria-hidden="true"
-        />
-        <motion.span
-          className="absolute inset-0 rounded-full bg-[#25D366]/20"
-          animate={{
-            scale: [1, 1.8],
-            opacity: [0.3, 0],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: 'easeOut',
-            delay: 0.5,
           }}
           aria-hidden="true"
         />

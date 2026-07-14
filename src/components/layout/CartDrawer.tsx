@@ -21,6 +21,20 @@ interface CartDrawerProps {
   onClose: () => void;
 }
 
+const WHATSAPP_NUMBER = '5511983990000';
+
+function generateWhatsAppMessage(items: CartItem[], total: number, shipping: number) {
+  let msg = '🧁 *Pedido Doces Dondoca*\n\n';
+  items.forEach((item) => {
+    msg += `• ${item.quantity}x ${item.product.name} — ${formatCurrency(item.product.price * item.quantity)}\n`;
+  });
+  msg += `\n📦 Subtotal: ${formatCurrency(total)}`;
+  msg += `\n🚚 Entrega: ${shipping === 0 ? 'Grátis' : formatCurrency(shipping)}`;
+  msg += `\n💰 *Total: ${formatCurrency(total + shipping)}*`;
+  msg += '\n\nObrigado!';
+  return msg;
+}
+
 const overlayVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
@@ -67,45 +81,36 @@ function CartItemRow({ item }: { item: CartItem }) {
       exit="exit"
       className={cn(
         'flex gap-3 p-3 rounded-2xl',
-        'bg-white/60 dark:bg-white/5',
-        'border border-[#8B1A4A]/5 dark:border-white/5',
+        'bg-cream-100/60 dark:bg-chocolate-800/40',
+        'border border-cream-300/50 dark:border-chocolate-600/50',
       )}
     >
-      {/* Product image */}
       <div
         className={cn(
-          'w-16 h-16 rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden',
-          !product.image && 'bg-gradient-to-br from-[#8B1A4A]/10 to-[#D4A853]/10 dark:from-[#8B1A4A]/20 dark:to-[#D4A853]/20',
+          'w-16 h-16 rounded-xl flex-shrink-0 overflow-hidden',
+          !product.image && 'bg-cream-200 flex items-center justify-center',
         )}
       >
         {product.image ? (
           <img src={product.image} alt={product.name} className="w-full h-full object-cover rounded-xl" />
         ) : (
-          <span className="text-2xl">🧁</span>
+          <span className="text-2xl">🍰</span>
         )}
       </div>
 
-      {/* Info */}
       <div className="flex-1 min-w-0">
-        <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+        <h4 className="text-sm font-medium text-chocolate-800 dark:text-cream-200 truncate">
           {product.name}
         </h4>
-        <p className="text-sm font-bold text-[#8B1A4A] dark:text-[#D4A853] mt-0.5">
+        <p className="text-sm font-semibold text-chocolate-700 dark:text-caramel-400 mt-0.5">
           {formatCurrency(product.price)}
         </p>
 
-        {/* Quantity controls */}
         <div className="flex items-center gap-1.5 mt-2">
           <motion.button
             whileTap={{ scale: 0.85 }}
             onClick={() => updateQuantity(product.id, quantity - 1)}
-            className={cn(
-              'flex items-center justify-center w-7 h-7 rounded-lg',
-              'bg-[#8B1A4A]/10 hover:bg-[#8B1A4A]/20',
-              'dark:bg-[#E8A0B8]/10 dark:hover:bg-[#E8A0B8]/20',
-              'text-[#8B1A4A] dark:text-[#E8A0B8]',
-              'transition-colors duration-150',
-            )}
+            className="flex items-center justify-center w-7 h-7 rounded-lg bg-cream-200 hover:bg-cream-300 dark:bg-chocolate-700 dark:hover:bg-chocolate-600 text-chocolate-700 dark:text-cream-300 transition-colors"
             aria-label="Diminuir quantidade"
           >
             <Minus className="w-3.5 h-3.5" />
@@ -116,7 +121,7 @@ function CartItemRow({ item }: { item: CartItem }) {
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-            className="w-8 text-center text-sm font-bold text-gray-900 dark:text-gray-100 tabular-nums"
+            className="w-8 text-center text-sm font-semibold text-chocolate-800 dark:text-cream-200 tabular-nums"
           >
             {quantity}
           </motion.span>
@@ -124,28 +129,16 @@ function CartItemRow({ item }: { item: CartItem }) {
           <motion.button
             whileTap={{ scale: 0.85 }}
             onClick={() => updateQuantity(product.id, quantity + 1)}
-            className={cn(
-              'flex items-center justify-center w-7 h-7 rounded-lg',
-              'bg-[#8B1A4A]/10 hover:bg-[#8B1A4A]/20',
-              'dark:bg-[#E8A0B8]/10 dark:hover:bg-[#E8A0B8]/20',
-              'text-[#8B1A4A] dark:text-[#E8A0B8]',
-              'transition-colors duration-150',
-            )}
+            className="flex items-center justify-center w-7 h-7 rounded-lg bg-cream-200 hover:bg-cream-300 dark:bg-chocolate-700 dark:hover:bg-chocolate-600 text-chocolate-700 dark:text-cream-300 transition-colors"
             aria-label="Aumentar quantidade"
           >
             <Plus className="w-3.5 h-3.5" />
           </motion.button>
 
-          {/* Remove */}
           <motion.button
             whileTap={{ scale: 0.85 }}
             onClick={() => removeItem(product.id)}
-            className={cn(
-              'ml-auto flex items-center justify-center w-7 h-7 rounded-lg',
-              'hover:bg-red-50 dark:hover:bg-red-900/20',
-              'text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400',
-              'transition-colors duration-150',
-            )}
+            className="ml-auto flex items-center justify-center w-7 h-7 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-cream-500 hover:text-red-500 dark:text-cream-600 dark:hover:text-red-400 transition-colors"
             aria-label={`Remover ${product.name}`}
           >
             <Trash2 className="w-3.5 h-3.5" />
@@ -153,9 +146,8 @@ function CartItemRow({ item }: { item: CartItem }) {
         </div>
       </div>
 
-      {/* Line total */}
       <div className="flex-shrink-0 self-start">
-        <span className="text-sm font-bold text-gray-700 dark:text-gray-300 tabular-nums">
+        <span className="text-sm font-semibold text-chocolate-700 dark:text-cream-300 tabular-nums">
           {formatCurrency(product.price * quantity)}
         </span>
       </div>
@@ -172,35 +164,33 @@ function SuggestionCard({
 
   return (
     <motion.button
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.97 }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       onClick={() => addItem(product)}
       className={cn(
         'flex items-center gap-2.5 p-2.5 rounded-xl w-full text-left',
-        'bg-white/60 dark:bg-white/5',
-        'border border-[#D4A853]/20 dark:border-[#D4A853]/10',
-        'hover:border-[#D4A853]/40 dark:hover:border-[#D4A853]/30',
+        'bg-cream-100/60 dark:bg-chocolate-800/40',
+        'border border-cream-300/50 dark:border-chocolate-600/50',
+        'hover:border-caramel-400/40 dark:hover:border-caramel-500/30',
         'transition-colors duration-200',
       )}
     >
-      <div
-        className={cn(
-          'w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center',
-          'bg-gradient-to-br from-[#D4A853]/20 to-[#8B1A4A]/10',
-          'text-lg',
+      <div className="w-10 h-10 rounded-lg flex-shrink-0 overflow-hidden bg-cream-200">
+        {product.image ? (
+          <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-lg">🍰</div>
         )}
-      >
-        🍰
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs font-semibold text-gray-800 dark:text-gray-200 truncate">
+        <p className="text-xs font-medium text-chocolate-800 dark:text-cream-200 truncate">
           {product.name}
         </p>
-        <p className="text-xs font-bold text-[#8B1A4A] dark:text-[#D4A853]">
+        <p className="text-xs font-semibold text-chocolate-700 dark:text-caramel-400">
           {formatCurrency(product.price)}
         </p>
       </div>
-      <Plus className="w-4 h-4 text-[#8B1A4A] dark:text-[#D4A853] flex-shrink-0" />
+      <Plus className="w-4 h-4 text-caramel-500 flex-shrink-0" />
     </motion.button>
   );
 }
@@ -214,27 +204,20 @@ function EmptyState({ onClose }: { onClose: () => void }) {
       className="flex flex-col items-center justify-center flex-1 px-6 py-12 text-center"
     >
       <motion.div
-        animate={{
-          y: [0, -8, 0],
-          rotate: [0, -5, 5, 0],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-        className="text-6xl mb-6"
+        animate={{ y: [0, -6, 0] }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        className="text-5xl mb-6 opacity-40"
       >
         🧁
       </motion.div>
-      <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2">
-        Seu carrinho esta vazio
+      <h3 className="text-lg font-display text-chocolate-800 dark:text-cream-200 mb-2">
+        Seu carrinho está vazio
       </h3>
-      <p className="text-sm text-gray-500 dark:text-gray-400 mb-8 max-w-[220px]">
-        Explore nosso cardapio e adicione deliciosas opcoes ao seu pedido
+      <p className="text-sm text-cream-600 dark:text-cream-500 mb-8 max-w-[220px]">
+        Explore nosso cardápio e adicione delícias ao seu pedido
       </p>
       <Button variant="primary" onClick={onClose}>
-        Ver Cardapio
+        Ver Cardápio
         <ChevronRight className="w-4 h-4" />
       </Button>
     </motion.div>
@@ -242,27 +225,21 @@ function EmptyState({ onClose }: { onClose: () => void }) {
 }
 
 function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-  const { items, total, count, clearCart } = useCart();
+  const { items, total, count } = useCart();
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  // Lock body scroll when drawer is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
+    return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
-  // Close on Escape
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
+      if (e.key === 'Escape' && isOpen) onClose();
     }
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -271,17 +248,21 @@ function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const shipping = total >= freeShippingThreshold ? 0 : 9.90;
   const orderTotal = total + shipping;
 
-  // Suggestions: products not already in cart
   const cartProductIds = new Set(items.map((i) => i.product.id));
   const suggestions = products
     .filter((p) => !cartProductIds.has(p.id) && p.available)
     .slice(0, 3);
 
+  const handleWhatsAppOrder = () => {
+    const message = generateWhatsAppMessage(items, total, shipping);
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Overlay */}
           <motion.div
             variants={overlayVariants}
             initial="hidden"
@@ -293,7 +274,6 @@ function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             aria-hidden="true"
           />
 
-          {/* Drawer */}
           <motion.div
             ref={drawerRef}
             variants={drawerVariants}
@@ -303,25 +283,19 @@ function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             className={cn(
               'fixed top-0 right-0 bottom-0 z-[70]',
               'w-full max-w-md',
-              'bg-[#FFF8F0]/95 dark:bg-[#1A0A10]/95',
+              'bg-[var(--background)]/95 dark:bg-chocolate-900/95',
               'backdrop-blur-xl',
-              'shadow-2xl shadow-black/20',
+              'shadow-2xl shadow-black/15',
               'flex flex-col',
             )}
             role="dialog"
             aria-modal="true"
             aria-label="Carrinho de compras"
           >
-            {/* Header */}
-            <div
-              className={cn(
-                'flex items-center justify-between px-5 py-4',
-                'border-b border-[#8B1A4A]/10 dark:border-white/5',
-              )}
-            >
+            <div className="flex items-center justify-between px-5 py-4 border-b border-cream-300/50 dark:border-chocolate-700">
               <div className="flex items-center gap-2.5">
-                <ShoppingBag className="w-5 h-5 text-[#8B1A4A] dark:text-[#E8A0B8]" />
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                <ShoppingBag className="w-5 h-5 text-chocolate-700 dark:text-cream-300" />
+                <h2 className="text-lg font-display text-chocolate-800 dark:text-cream-100">
                   Seu Pedido
                 </h2>
                 {count > 0 && (
@@ -329,12 +303,7 @@ function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     key={count}
                     initial={{ scale: 0.5 }}
                     animate={{ scale: 1 }}
-                    className={cn(
-                      'flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full',
-                      'bg-[#8B1A4A]/10 dark:bg-[#E8A0B8]/10',
-                      'text-xs font-bold text-[#8B1A4A] dark:text-[#E8A0B8]',
-                      'tabular-nums',
-                    )}
+                    className="flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-caramel-100 dark:bg-caramel-800/30 text-xs font-semibold text-caramel-700 dark:text-caramel-400 tabular-nums"
                   >
                     {count}
                   </motion.span>
@@ -345,13 +314,7 @@ function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={onClose}
-                className={cn(
-                  'flex items-center justify-center w-9 h-9 rounded-full',
-                  'bg-gray-100 hover:bg-gray-200',
-                  'dark:bg-white/5 dark:hover:bg-white/10',
-                  'text-gray-500 dark:text-gray-400',
-                  'transition-colors duration-150',
-                )}
+                className="flex items-center justify-center w-9 h-9 rounded-full bg-cream-200 hover:bg-cream-300 dark:bg-chocolate-700 dark:hover:bg-chocolate-600 text-cream-600 dark:text-cream-400 transition-colors"
                 aria-label="Fechar carrinho"
               >
                 <X className="w-5 h-5" />
@@ -362,14 +325,13 @@ function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               <EmptyState onClose={onClose} />
             ) : (
               <>
-                {/* Progress bars */}
-                <div className="px-5 py-4 space-y-3 border-b border-[#8B1A4A]/5 dark:border-white/5">
+                <div className="px-5 py-4 space-y-3 border-b border-cream-300/30 dark:border-chocolate-700/50">
                   <ProgressBar
                     current={total}
                     target={freeShippingThreshold}
-                    label="Frete Gratis"
+                    label="Frete Grátis"
                     icon="🚚"
-                    completedText="Frete gratis desbloqueado!"
+                    completedText="Frete grátis desbloqueado!"
                   />
                   <ProgressBar
                     current={total}
@@ -380,7 +342,6 @@ function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   />
                 </div>
 
-                {/* Scrollable items */}
                 <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-3 space-y-2.5">
                   <AnimatePresence initial={false}>
                     {items.map((item) => (
@@ -388,72 +349,59 @@ function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     ))}
                   </AnimatePresence>
 
-                  {/* Suggestions */}
                   {suggestions.length > 0 && (
-                    <div className="mt-6 pt-4 border-t border-[#8B1A4A]/5 dark:border-white/5">
-                      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+                    <div className="mt-6 pt-4 border-t border-cream-300/30 dark:border-chocolate-700/50">
+                      <p className="text-xs font-medium text-cream-600 dark:text-cream-500 uppercase tracking-wider mb-3">
                         Que tal adicionar?
                       </p>
                       <div className="space-y-2">
                         {suggestions.map((product) => (
-                          <SuggestionCard
-                            key={product.id}
-                            product={product}
-                          />
+                          <SuggestionCard key={product.id} product={product} />
                         ))}
                       </div>
                     </div>
                   )}
                 </div>
 
-                {/* Order summary + CTA */}
-                <div
-                  className={cn(
-                    'px-5 py-4 space-y-3',
-                    'border-t border-[#8B1A4A]/10 dark:border-white/5',
-                    'bg-white/40 dark:bg-black/20',
-                  )}
-                >
-                  {/* Summary lines */}
+                <div className="px-5 py-4 space-y-3 border-t border-cream-300/50 dark:border-chocolate-700 bg-cream-50/50 dark:bg-chocolate-900/50">
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500 dark:text-gray-400">
-                        Subtotal
-                      </span>
-                      <span className="font-semibold text-gray-800 dark:text-gray-200 tabular-nums">
+                      <span className="text-cream-600 dark:text-cream-500">Subtotal</span>
+                      <span className="font-medium text-chocolate-800 dark:text-cream-200 tabular-nums">
                         {formatCurrency(total)}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500 dark:text-gray-400">
-                        Entrega
-                      </span>
-                      <span
-                        className={cn(
-                          'font-semibold tabular-nums',
-                          shipping === 0
-                            ? 'text-emerald-600 dark:text-emerald-400'
-                            : 'text-gray-800 dark:text-gray-200',
-                        )}
-                      >
-                        {shipping === 0 ? 'Gratis' : formatCurrency(shipping)}
+                      <span className="text-cream-600 dark:text-cream-500">Entrega</span>
+                      <span className={cn(
+                        'font-medium tabular-nums',
+                        shipping === 0
+                          ? 'text-emerald-600 dark:text-emerald-400'
+                          : 'text-chocolate-800 dark:text-cream-200',
+                      )}>
+                        {shipping === 0 ? 'Grátis' : formatCurrency(shipping)}
                       </span>
                     </div>
-                    <div className="h-px bg-[#8B1A4A]/10 dark:bg-white/5" />
+                    <div className="h-px bg-cream-300/50 dark:bg-chocolate-700" />
                     <div className="flex justify-between">
-                      <span className="text-base font-bold text-gray-900 dark:text-gray-100">
+                      <span className="text-base font-semibold text-chocolate-800 dark:text-cream-100">
                         Total
                       </span>
-                      <span className="text-base font-bold text-[#8B1A4A] dark:text-[#D4A853] tabular-nums">
+                      <span className="text-base font-bold text-chocolate-800 dark:text-cream-100 tabular-nums">
                         {formatCurrency(orderTotal)}
                       </span>
                     </div>
                   </div>
 
-                  <Button variant="primary" fullWidth size="lg">
-                    Finalizar Pedido
-                    <ChevronRight className="w-5 h-5" />
-                  </Button>
+                  <motion.button
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    onClick={handleWhatsAppOrder}
+                    className="w-full py-4 rounded-xl font-medium text-[15px] bg-[#25D366] text-white hover:bg-[#20BD5A] shadow-md shadow-[#25D366]/20 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <WhatsAppIcon className="w-5 h-5" />
+                    Finalizar Pedido via WhatsApp
+                  </motion.button>
 
                   <Button variant="ghost" fullWidth size="sm" onClick={onClose}>
                     Continuar Comprando
@@ -465,6 +413,14 @@ function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         </>
       )}
     </AnimatePresence>
+  );
+}
+
+function WhatsAppIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+    </svg>
   );
 }
 

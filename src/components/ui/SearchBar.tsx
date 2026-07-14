@@ -59,23 +59,22 @@ function SearchBar({
 
   return (
     <motion.div
-      animate={{ scale: isFocused ? 1.02 : 1 }}
+      animate={{ scale: isFocused ? 1.01 : 1 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
       className={cn(
         'relative flex items-center rounded-2xl transition-all duration-300',
-        'bg-white/70 backdrop-blur-xl border border-white/40',
-        'shadow-lg shadow-black/5',
-        'dark:bg-white/10 dark:border-white/15 dark:shadow-black/20',
-        isFocused && 'border-[#8B1A4A]/30 shadow-[#8B1A4A]/10 dark:border-[#A0284C]/40',
+        'bg-cream-100 border border-cream-300',
+        'dark:bg-chocolate-800/50 dark:border-chocolate-600',
+        isFocused && 'border-caramel-400 ring-2 ring-caramel-400/10 dark:border-caramel-500',
         className,
       )}
     >
       <Search
         className={cn(
-          'absolute left-4 h-5 w-5 transition-colors duration-200 pointer-events-none',
+          'absolute left-4 h-4.5 w-4.5 transition-colors duration-200 pointer-events-none',
           isFocused
-            ? 'text-[#8B1A4A] dark:text-[#E8A0B8]'
-            : 'text-gray-400 dark:text-gray-500',
+            ? 'text-caramel-600 dark:text-caramel-400'
+            : 'text-cream-600 dark:text-cream-600',
         )}
       />
 
@@ -88,9 +87,9 @@ function SearchBar({
         onBlur={() => setIsFocused(false)}
         placeholder={placeholder}
         className={cn(
-          'w-full bg-transparent py-3.5 pl-12 pr-10 text-sm font-medium',
-          'text-gray-800 placeholder:text-gray-400',
-          'dark:text-gray-100 dark:placeholder:text-gray-500',
+          'w-full bg-transparent py-3.5 pl-12 pr-10 text-sm',
+          'text-chocolate-800 placeholder:text-cream-600',
+          'dark:text-cream-200 dark:placeholder:text-cream-600',
           'outline-none',
         )}
       />
@@ -104,9 +103,9 @@ function SearchBar({
             transition={{ duration: 0.15 }}
             onClick={handleClear}
             className={cn(
-              'absolute right-3 p-1 rounded-full',
-              'text-gray-400 hover:text-gray-600 hover:bg-gray-100',
-              'dark:text-gray-500 dark:hover:text-gray-300 dark:hover:bg-white/10',
+              'absolute right-3 p-1.5 rounded-full',
+              'text-cream-600 hover:text-chocolate-700 hover:bg-cream-200',
+              'dark:text-cream-500 dark:hover:text-cream-200 dark:hover:bg-chocolate-700',
               'transition-colors duration-150',
             )}
             type="button"

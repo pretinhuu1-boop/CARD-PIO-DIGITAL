@@ -19,19 +19,19 @@ interface ButtonProps {
 
 const variantStyles: Record<string, string> = {
   primary:
-    'bg-[#8B1A4A] text-white shadow-lg shadow-[#8B1A4A]/20 hover:bg-[#A0284C] dark:bg-[#A0284C] dark:hover:bg-[#8B1A4A]',
+    'bg-chocolate-800 text-cream-50 shadow-md shadow-chocolate-800/10 hover:bg-chocolate-700 dark:bg-cream-300 dark:text-chocolate-900 dark:hover:bg-cream-200',
   secondary:
-    'bg-[#FFF8F0] text-[#8B1A4A] border border-[#8B1A4A]/20 hover:bg-[#8B1A4A]/5 dark:bg-[#2A1520] dark:text-[#E8A0B8] dark:border-[#A0284C]/30 dark:hover:bg-[#A0284C]/10',
+    'bg-cream-200 text-chocolate-800 border border-cream-400 hover:bg-cream-300 dark:bg-chocolate-800/50 dark:text-cream-200 dark:border-chocolate-600 dark:hover:bg-chocolate-700/50',
   ghost:
-    'text-[#8B1A4A] hover:bg-[#8B1A4A]/5 dark:text-[#E8A0B8] dark:hover:bg-[#A0284C]/10',
+    'text-chocolate-700 hover:bg-cream-200 dark:text-cream-300 dark:hover:bg-chocolate-800/50',
   outline:
-    'border-2 border-[#8B1A4A] text-[#8B1A4A] hover:bg-[#8B1A4A] hover:text-white dark:border-[#A0284C] dark:text-[#E8A0B8] dark:hover:bg-[#A0284C] dark:hover:text-white',
+    'border-2 border-chocolate-800 text-chocolate-800 hover:bg-chocolate-800 hover:text-cream-50 dark:border-cream-400 dark:text-cream-300 dark:hover:bg-cream-300 dark:hover:text-chocolate-900',
 };
 
 const sizeStyles: Record<string, string> = {
-  sm: 'px-3 py-1.5 text-sm rounded-lg gap-1.5',
-  md: 'px-5 py-2.5 text-base rounded-xl gap-2',
-  lg: 'px-7 py-3.5 text-lg rounded-xl gap-2.5',
+  sm: 'px-4 py-2 text-sm rounded-xl gap-1.5',
+  md: 'px-6 py-3 text-[15px] rounded-xl gap-2',
+  lg: 'px-8 py-4 text-base rounded-2xl gap-2.5',
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -46,7 +46,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       type = 'button',
       onClick,
-      ...props
     },
     ref,
   ) => {
@@ -55,13 +54,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <motion.button
         ref={ref}
-        whileHover={isDisabled ? undefined : { scale: 1.03 }}
-        whileTap={isDisabled ? undefined : { scale: 0.97 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+        whileHover={isDisabled ? undefined : { scale: 1.02 }}
+        whileTap={isDisabled ? undefined : { scale: 0.98 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
         disabled={isDisabled}
         className={cn(
-          'inline-flex items-center justify-center font-semibold transition-colors duration-200 select-none',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8B1A4A]/50 focus-visible:ring-offset-2',
+          'inline-flex items-center justify-center font-medium transition-all duration-200 select-none',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-caramel-400/50 focus-visible:ring-offset-2',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           variantStyles[variant],
           sizeStyles[size],
