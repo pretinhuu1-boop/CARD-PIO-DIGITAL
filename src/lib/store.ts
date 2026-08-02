@@ -20,38 +20,16 @@ export interface CartItem {
   notes: string;
 }
 
-export interface CustomerData {
-  name: string;
-  phone: string;
-  /** 'entrega' exige endereço; 'retirada' não. */
-  fulfillment: 'entrega' | 'retirada';
-  address: string;
-  payment: string;
-  /** Troco para quanto, quando o pagamento é em dinheiro. */
-  changeFor: string;
-}
-
 interface CartState {
   items: CartItem[];
-  customer: CustomerData;
   searchQuery: string;
   selectedCategory: string;
 }
 
 const STORAGE_KEY = 'cardapio:cart:v1';
 
-const emptyCustomer: CustomerData = {
-  name: '',
-  phone: '',
-  fulfillment: 'entrega',
-  address: '',
-  payment: '',
-  changeFor: '',
-};
-
 const initialState: CartState = {
   items: [],
-  customer: emptyCustomer,
   searchQuery: '',
   selectedCategory: 'todos',
 };
@@ -98,7 +76,6 @@ function persist() {
         quantity: i.quantity,
         notes: i.notes,
       })),
-      customer: state.customer,
     };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   } catch {
@@ -122,9 +99,10 @@ function hydrate() {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
 
+    // Payloads antigos podiam trazer um bloco `customer`. Ele é ignorado:
+    // o cardápio não coleta mais dados do cliente.
     const parsed = JSON.parse(raw) as {
       items?: { productId: string; quantity: number; notes: string }[];
-      customer?: Partial<CustomerData>;
     };
 
     const items: CartItem[] = [];
@@ -136,11 +114,7 @@ function hydrate() {
       items.push({ lineId: makeLineId(product.id, notes), product, quantity, notes });
     }
 
-    state = {
-      ...state,
-      items,
-      customer: { ...emptyCustomer, ...(parsed.customer ?? {}) },
-    };
+    state = { ...state, items };
     emitChange();
   } catch {
     // Payload corrompido: ignora e começa com carrinho vazio.
@@ -197,12 +171,6 @@ function clearCart() {
   emitChange();
 }
 
-function setCustomer(patch: Partial<CustomerData>) {
-  state = { ...state, customer: { ...state.customer, ...patch } };
-  persist();
-  emitChange();
-}
-
 function setSearchQuery(searchQuery: string) {
   state = { ...state, searchQuery };
   emitChange();
@@ -238,7 +206,6 @@ export function useCart() {
 
   return {
     items: snap.items,
-    customer: snap.customer,
     searchQuery: snap.searchQuery,
     selectedCategory: snap.selectedCategory,
     total,
@@ -248,7 +215,6 @@ export function useCart() {
     removeItem,
     updateQuantity,
     clearCart,
-    setCustomer,
     setSearchQuery,
     setSelectedCategory,
   };

@@ -102,9 +102,19 @@ export const categories: Category[] = [
 /* -------------------------------------------------------------------------- */
 /* PRODUTOS                                                                    */
 /* -------------------------------------------------------------------------- */
-/* Os 5 itens da vitrine "Os Queridinhos" do iFood — seleção do próprio        */
-/* lojista, não heurística nossa. `id` = externalCode do iFood (chave estável: */
-/* o uuid muda conforme a categoria em que o item aparece).                    */
+/* 10 itens. Os 5 primeiros são a vitrine "Os Queridinhos" do iFood — seleção  */
+/* do próprio lojista, não heurística nossa, e por isso levam selo. Os 5       */
+/* seguintes são o restante do cardápio, sem selo.                             */
+/*                                                                             */
+/* `id` = externalCode do iFood (chave estável: o uuid muda conforme a         */
+/* categoria em que o item aparece).                                           */
+/*                                                                             */
+/* PREÇOS: todos do iFood, coletados em 2026-08-02. Não foi possível cruzar    */
+/* com o site oficial — o cardápio da unidade                                  */
+/* (caracolchocolates.com.br/cardapio-tatuape) redireciona para uma publicação */
+/* Adobe InDesign que retorna "Document Not Found", e a loja online vende      */
+/* outro catálogo (barras SIGNO 60g, não as 23g da cafeteria). Preço de iFood  */
+/* costuma ser mais alto que o de balcão — confirmar com a lojista.            */
 
 export const products: Product[] = [
   {
@@ -161,6 +171,60 @@ export const products: Product[] = [
     image: '/produtos/mini-fondue-favorito-cacau.webp',
     category: 'doces',
     badge: { label: 'Os Queridinhos', tone: 'accent' },
+    available: true,
+  },
+
+  /* Demais itens do cardápio, fora da vitrine "Os Queridinhos" — por isso
+     sem selo. Mesma fonte, mesma data de coleta. */
+  {
+    id: '11',
+    name: 'Waffle com Chocolate e Morangos',
+    description:
+      'Massa artesanal leve e crocante. Acompanha a famosa ganache de chocolate ao leite Caracol, morangos frescos e chantilly. Os complementos vão separados para a massa chegar perfeita até você!',
+    price: 53.9,
+    image: '/produtos/waffle-chocolate-morangos.webp',
+    category: 'doces',
+    available: true,
+  },
+  {
+    id: '14',
+    name: 'Trio de Brownies Recheados',
+    description:
+      'Nossa receita exclusiva! Três brownies super macios recheados com Nutella, ganache branca e doce de leite. Acompanha porção de ganache de chocolate Caracol.',
+    price: 53.9,
+    image: '/produtos/trio-brownies-recheados.webp',
+    category: 'doces',
+    servings: '3 unidades',
+    available: true,
+  },
+  {
+    id: '253',
+    name: 'Croissant de Presunto e Queijo',
+    description:
+      'A legítima massa folhada francesa da Ofner, incrivelmente leve e amanteigada, com recheio tradicional de presunto e queijo.',
+    price: 26.9,
+    image: '/produtos/croissant-presunto-queijo.webp',
+    category: 'salgados',
+    available: true,
+  },
+  {
+    id: '10037',
+    name: 'Croiffle Presunto e Queijo',
+    description:
+      'Inovação e sabor! A massa folhada Ofner prensada na chapa de waffle até ficar dourada, com recheio de requeijão, presunto e queijo derretido.',
+    price: 33.9,
+    image: '/produtos/croiffle-presunto-queijo.webp',
+    category: 'salgados',
+    available: true,
+  },
+  {
+    id: '10011',
+    name: 'Chai Latte',
+    description:
+      'Uma experiência aromática. Bebida à base de chá preto, leite, cardamomo, cravo, canela, gengibre e mel. Um equilíbrio perfeito e intenso que aquece a alma.',
+    price: 21.9,
+    image: '/produtos/chai-latte.webp',
+    category: 'bebidas',
     available: true,
   },
 ];

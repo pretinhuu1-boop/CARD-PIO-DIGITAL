@@ -62,8 +62,6 @@ export interface StoreConfig {
    */
   heroImage: string | null;
 
-  /** Valor do frete padrão em R$. Use 0 para frete sempre grátis. */
-  shippingFee: number;
   /**
    * Valor mínimo do subtotal para frete grátis.
    * `null` desativa a barra de progresso de frete grátis.
@@ -79,9 +77,6 @@ export interface StoreConfig {
    * Use 0 para não exigir mínimo.
    */
   minimumOrder: number;
-
-  /** Formas de pagamento oferecidas na etapa de checkout. */
-  paymentMethods: string[];
 }
 
 /**
@@ -89,9 +84,9 @@ export interface StoreConfig {
  * Coletado em 2026-08-02 de Google Maps, Instagram (@caracol.tatuape),
  * Linktree e iFood. Ver `scraped-stores/caracol-chocolates-tatuape/`.
  *
- * NÃO VERIFICADO (confirmar com o lojista antes de publicar):
- *   - shippingFee / freeShippingThreshold — nenhuma fonte informa o frete
- *   - paymentMethods — nenhuma fonte lista as formas aceitas na loja
+ * Frete e formas de pagamento NÃO entram aqui: nenhuma fonte pública informa
+ * a política real da loja, e o cardápio não coleta dados do cliente. Os dois
+ * assuntos se resolvem na conversa do WhatsApp, com quem sabe a resposta.
  */
 export const store: StoreConfig = {
   name: 'Caracol Chocolates Tatuapé',
@@ -122,12 +117,9 @@ export const store: StoreConfig = {
 
   heroImage: '/produtos/croissant-chocolate-morangos.webp',
 
-  shippingFee: 0,
   freeShippingThreshold: null,
   freeGiftThreshold: null,
   minimumOrder: 35, // confirmado no iFood
-
-  paymentMethods: ['Pix', 'Cartão de crédito', 'Cartão de débito', 'Dinheiro'],
 };
 
 /** Texto da mensagem do botão flutuante de WhatsApp (contato, fora do pedido). */
