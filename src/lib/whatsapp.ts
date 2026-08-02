@@ -46,7 +46,10 @@ export function buildOrderMessage(order: OrderSummary): string {
       isPickup
         ? 'Retirada no local'
         : shipping === 0
-          ? 'Grátis'
+          // `shippingFee: 0` significa "não informado" com a mesma frequência
+          // com que significa "grátis". Afirmar gratuidade em nome do lojista
+          // sem fonte é criar política de entrega que ele nunca declarou.
+          ? 'a combinar'
           : formatCurrency(shipping)
     }`,
   );

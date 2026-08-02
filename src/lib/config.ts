@@ -84,27 +84,46 @@ export interface StoreConfig {
   paymentMethods: string[];
 }
 
+/**
+ * Loja: Restaurante Istambul Tatuapé (halal)
+ * Coletado em 2026-08-02. Procedência em
+ * `scraped-stores/istambul-tatuape/istambul-tatuape.md`.
+ *
+ * NÃO VERIFICADO (confirmar antes de publicar):
+ *   - frete e pedido mínimo: o cardápio online não expõe sem escolher endereço
+ *   - formas de pagamento: nenhuma fonte lista
+ */
 export const store: StoreConfig = {
-  name: 'Nome da Loja', // «PREENCHER»
-  tagline: 'Categoria do negócio', // «PREENCHER»
+  name: 'Restaurante Istambul',
+  tagline: 'Culinária árabe e turca · halal',
   description:
-    'Descrição curta da loja em uma ou duas linhas, usada no hero e no SEO.', // «PREENCHER»
+    'Shawarma, esfihas e pratos na brasa no Tatuapé. Salão para refeição no local e pedidos por WhatsApp.',
 
-  whatsapp: '', // «PREENCHER» — ex.: '5511999998888'
-  phoneDisplay: '(00) 00000-0000', // «PREENCHER»
+  whatsapp: '5511959343335', // (11) 95934-3335 — Maps e cardápio online
+  phoneDisplay: '(11) 95934-3335',
 
-  address: 'Rua, número — Bairro, Cidade', // «PREENCHER»
-  city: 'Cidade - UF', // «PREENCHER»
+  // O CEP que o Google registra (15390-000) é do interior e não bate com o
+  // Tatuapé; foi omitido de propósito em vez de repetido.
+  address: 'R. Itapura, 1342 — Vila Gomes Cardim, São Paulo - SP',
+  city: 'Tatuapé, São Paulo',
 
   hours: [
-    { day: 'Seg a Sex', time: '09h - 18h' },
-    { day: 'Sábado', time: '09h - 14h' },
-    { day: 'Domingo', time: null },
+    { day: 'Segunda', time: null },
+    { day: 'Terça a Domingo', time: '11h - 23h' },
   ],
 
-  social: [], // «PREENCHER» — ex.: [{ label: '@minhaloja', url: 'https://instagram.com/minhaloja' }]
+  social: [
+    {
+      label: '@restauranteistambul2',
+      url: 'https://www.instagram.com/restauranteistambul2/',
+    },
+    {
+      label: 'Cardápio completo e pedido online',
+      url: 'https://restauranteistambulhalal-tatuape.pedido.app.br/cardapio/',
+    },
+  ],
 
-  heroImage: null,
+  heroImage: '/loja/salao.webp',
 
   shippingFee: 0,
   freeShippingThreshold: null,
@@ -115,4 +134,5 @@ export const store: StoreConfig = {
 };
 
 /** Texto da mensagem do botão flutuante de WhatsApp (contato, fora do pedido). */
-export const contactMessage = 'Olá! Gostaria de mais informações.';
+export const contactMessage =
+  'Olá! Vi o cardápio do Restaurante Istambul e gostaria de fazer um pedido.';
