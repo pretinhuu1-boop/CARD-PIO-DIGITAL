@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Inter, Anton } from 'next/font/google';
 import { store } from '@/lib/config';
 import './globals.css';
 
@@ -20,8 +21,18 @@ import './globals.css';
  * globals.css; nada mais precisa mudar.
  */
 
+/**
+ * TIPOGRAFIA — TBT.
+ *
+ * O logo da casa é lettering condensado, pesado e em caixa alta ("TBT" com
+ * estrela). Anton é a fonte de display que mais se aproxima disso. Inter no
+ * corpo para o cardápio ficar legível sobre fundo escuro.
+ */
+const sans = Inter({ subsets: ['latin'], variable: '--font-app-sans', display: 'swap' });
+const display = Anton({ subsets: ['latin'], weight: '400', variable: '--font-app-display', display: 'swap' });
+
 export const metadata: Metadata = {
-  title: `${store.name} | Cardápio digital`,
+  title: `${store.name} — ${store.tagline}`,
   description: store.description,
   openGraph: {
     title: store.name,
@@ -40,17 +51,17 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#121212' },
-  ],
+  themeColor: '#0a0c0a',
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className="h-full antialiased">
+    <html
+      lang="pt-BR"
+      className={`${sans.variable} ${display.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col bg-surface text-ink">
         {children}
       </body>

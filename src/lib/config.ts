@@ -84,27 +84,39 @@ export interface StoreConfig {
   paymentMethods: string[];
 }
 
+/**
+ * Loja: TBT Lounge Tatuapé
+ * Coletado em 2026-08-02. Procedência em
+ * `scraped-stores/tbt-lounge-tatuape/tbt-lounge-tatuape.md`.
+ *
+ * NÃO VERIFICADO (confirmar antes de publicar):
+ *   - horário: nenhuma fonte publica a grade completa
+ *   - frete, pedido mínimo e formas de pagamento
+ */
 export const store: StoreConfig = {
-  name: 'Nome da Loja', // «PREENCHER»
-  tagline: 'Categoria do negócio', // «PREENCHER»
+  name: 'TBT Lounge',
+  tagline: 'Bar e lounge · Tatuapé',
   description:
-    'Descrição curta da loja em uma ou duas linhas, usada no hero e no SEO.', // «PREENCHER»
+    'O famoso baile do TBT. Drinks, garrafas, narguilé e camarote na Rua Itapura.',
 
-  whatsapp: '', // «PREENCHER» — ex.: '5511999998888'
-  phoneDisplay: '(00) 00000-0000', // «PREENCHER»
+  // O Linktree da casa publica `wa.me/11951240157`, SEM o código do país —
+  // assim o WhatsApp interpreta como número dos EUA. O correto, a partir do
+  // telefone (11) 95124-0157, é 55 + 11 + 951240157.
+  whatsapp: '5511951240157',
+  phoneDisplay: '(11) 95124-0157',
 
-  address: 'Rua, número — Bairro, Cidade', // «PREENCHER»
-  city: 'Cidade - UF', // «PREENCHER»
+  address: 'R. Itapura, 1267 — Vila Gomes Cardim, São Paulo - SP',
+  city: 'Tatuapé, São Paulo',
 
-  hours: [
-    { day: 'Seg a Sex', time: '09h - 18h' },
-    { day: 'Sábado', time: '09h - 14h' },
-    { day: 'Domingo', time: null },
+  // Grade completa não publicada em fonte nenhuma.
+  hours: [{ day: 'Consulte no WhatsApp', time: null }],
+
+  social: [
+    { label: '@tbtloungetatuape', url: 'https://www.instagram.com/tbtloungetatuape' },
+    { label: 'Cardápio completo', url: 'https://tbt-lounge.cluvi.com.br/tbt-lounge/menu-digital' },
   ],
 
-  social: [], // «PREENCHER» — ex.: [{ label: '@minhaloja', url: 'https://instagram.com/minhaloja' }]
-
-  heroImage: null,
+  heroImage: '/loja/camarote.webp',
 
   shippingFee: 0,
   freeShippingThreshold: null,
@@ -115,4 +127,5 @@ export const store: StoreConfig = {
 };
 
 /** Texto da mensagem do botão flutuante de WhatsApp (contato, fora do pedido). */
-export const contactMessage = 'Olá! Gostaria de mais informações.';
+export const contactMessage =
+  'Olá! Vi o cardápio do TBT Lounge e queria falar sobre mesa/camarote.';

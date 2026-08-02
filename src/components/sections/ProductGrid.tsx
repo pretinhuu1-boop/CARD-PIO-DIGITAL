@@ -80,6 +80,12 @@ export function ProductGrid() {
             return (
               <motion.article
                 key={product.id}
+                /* Catálogo legível no DOM: serve à suíte de testes e ao
+                   snapshot estático, que sem isto nasce inerte em silêncio. */
+                data-product-id={product.id}
+                data-product-name={product.name}
+                data-product-price={product.price}
+                data-product-category={product.category}
                 variants={{
                   hidden: { opacity: 0, y: 16 },
                   visible: {
