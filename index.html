@@ -48,6 +48,14 @@
     :root{--bg:#fbfbfc;--bg2:#fff;--line:#e3e6ea;--ink:#14171c;--ink2:#4a525e;--ink3:#7d8794;
           --brand:#1d7a52;--on-brand:#fff}
   }
+  .vers{display:flex;gap:.5rem;margin-top:.9rem;flex-wrap:wrap}
+  .vers a{
+    display:inline-flex;align-items:center;min-height:44px;padding:0 1.05rem;
+    border-radius:99px;text-decoration:none;font-size:.87rem;font-weight:500;
+    background:var(--brand);color:var(--on-brand)
+  }
+  .vers a.alt{background:transparent;border:1px solid var(--line);color:var(--ink2)}
+  .vers a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -71,33 +79,53 @@
   </div>
 
   <div class="grid">
-    <a class="card" href="caracol/">
+    <div class="card">
       <span class="tipo">Cardápio com pedido</span>
       <h2>Caracol Chocolates</h2>
       <p>Cafeteria e chocolateria. Identidade medida no CSS do site oficial.</p>
-      <p class="meta">10 produtos · filtro, busca e carrinho</p>
-    </a>
+      <p class="meta">10 produtos · dourado #F1CA3E a 9,66:1</p>
+      <p class="vers"><a href="caracol/v2/">Ver v2</a> <a class="alt" href="caracol/v1/">v1</a></p>
+    </div>
 
-    <a class="card" href="kokedami/">
+    <div class="card">
       <span class="tipo">Expositor sem preço</span>
       <h2>Kokedami</h2>
       <p>Ateliê de kokedama. Não publica preço em fonte nenhuma — a foto é o produto.</p>
       <p class="meta">6 peças · cada uma abre conversa</p>
-    </a>
+      <p class="vers"><a href="kokedami/v2/">Ver v2</a> <a class="alt" href="kokedami/v1/">v1</a></p>
+    </div>
 
-    <a class="card" href="istambul/">
+    <div class="card">
+      <span class="tipo">Serviços, sem carrinho</span>
+      <h2>Alooks Hair Studio</h2>
+      <p>Salão de beleza. Preço existe, carrinho não: corte de cabelo se agenda.</p>
+      <p class="meta">378 serviços em 7 categorias · loja nova, sem v1</p>
+      <p class="vers"><a href="alooks/v2/">Ver v2</a></p>
+    </div>
+
+    <div class="card">
       <span class="tipo">Cardápio com pedido</span>
       <h2>Restaurante Istambul</h2>
       <p>Árabe e turco, halal. Catálogo do cardápio online do próprio restaurante.</p>
-      <p class="meta">146 itens · 11 seções · preços "a partir de" sinalizados</p>
-    </a>
+      <p class="meta">146 itens · 11 seções · 92 preços são piso, não valor final</p>
+      <p class="vers"><a href="istambul/v2/">Ver v2</a> <a class="alt" href="istambul/v1/">v1</a></p>
+    </div>
 
-    <a class="card" href="tbt-lounge/">
+    <div class="card">
       <span class="tipo">Cardápio com pedido</span>
       <h2>TBT Lounge</h2>
       <p>Bar e lounge. Logo monocromático — a cor veio da iluminação do salão.</p>
-      <p class="meta">10 itens · escuro nos dois temas</p>
-    </a>
+      <p class="meta">10 itens · escuro nos dois temas, porque é casa noturna</p>
+      <p class="vers"><a href="tbt-lounge/v2/">Ver v2</a> <a class="alt" href="tbt-lounge/v1/">v1</a></p>
+    </div>
+
+    <div class="card">
+      <span class="tipo">Referência</span>
+      <h2>Template em branco</h2>
+      <p>O ponto de partida, antes de qualquer loja. Estrutura e comportamento sem identidade de ninguém.</p>
+      <p class="meta">Serve para ver o que é template e o que é a loja</p>
+      <p class="vers"><a href="template-padrao/v2/">Ver v2</a> <a class="alt" href="template-padrao/v1/">v1</a></p>
+    </div>
   </div>
 
   <footer>
@@ -105,6 +133,13 @@
       Cada loja tem sua própria pasta e URL, e cada arquivo é autossuficiente:
       CSS, fontes e imagens em base64. Abre por duplo clique, sem servidor e
       sem rede.
+    </p>
+    <p>
+      <strong>v1</strong> nasceu de uma branch por loja e o template divergiu
+      entre elas — duas chegaram a apagar campos do schema para dizer "não
+      tenho esse dado". <strong>v2</strong> parte de uma base só: o formato da
+      página sai do dado que a fonte sustenta, e o catálogo deixou de filtrar
+      para navegar por âncora.
     </p>
     <p>
       Processo e limites declarados por loja em
