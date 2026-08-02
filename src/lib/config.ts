@@ -25,6 +25,7 @@ export const store: StoreConfig = {
     'Descrição curta da loja em uma ou duas linhas, usada no hero e no SEO.', // «PREENCHER»
 
   whatsapp: '', // «PREENCHER» — ex.: '5511999998888'
+  bookingUrl: null, // «PREENCHER» — agenda online, quando não há WhatsApp
   phoneDisplay: '(00) 00000-0000', // «PREENCHER»
 
   address: 'Rua, número — Bairro, Cidade', // «PREENCHER»

@@ -126,9 +126,9 @@ export function HeroBanner() {
               {ctaLabel}
             </button>
           ) : (
-            store.whatsapp && (
+            (store.whatsapp || store.bookingUrl) && (
               <a
-                href={buildWhatsAppUrl(contactMessage)}
+                href={store.whatsapp ? buildWhatsAppUrl(contactMessage) : store.bookingUrl!}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
@@ -136,7 +136,7 @@ export function HeroBanner() {
                   'bg-brand text-on-brand transition-colors duration-200 hover:bg-brand-hover',
                 )}
               >
-                Falar no WhatsApp
+                {store.whatsapp ? 'Falar no WhatsApp' : 'Agendar horário'}
               </a>
             )
           )}
