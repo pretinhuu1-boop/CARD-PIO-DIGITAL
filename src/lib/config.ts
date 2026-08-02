@@ -35,6 +35,13 @@ export const store: StoreConfig = {
   */
   whatsapp: '',
   phoneDisplay: '(11) 2892-9005', // fixo da ficha do Google, confirmado
+  /*
+    A agenda online do Trinks é a saída enquanto o WhatsApp não é confirmado:
+    página REIVINDICADA pelo lojista e a mesma fonte de onde vieram os 378
+    serviços. O botão de cada serviço leva para lá, e o rótulo diz "Agendar"
+    em vez de "Perguntar" — o destino é uma agenda, não uma conversa.
+  */
+  bookingUrl: 'https://www.trinks.com/alooks',
 
   address: 'R. Itapeti, 518 — Tatuapé, São Paulo - SP, 03324-002',
   city: 'Tatuapé, São Paulo',

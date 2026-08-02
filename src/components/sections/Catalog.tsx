@@ -13,8 +13,7 @@ import { ProductBottomSheet } from '@/components/ui/ProductBottomSheet';
 import { products, categories, type Product, type Category } from '@/lib/data';
 import { hasCheckout, hasPerItemContact, isSellable } from '@/lib/format';
 import { useCart } from '@/lib/store';
-import { store } from '@/lib/config';
-import { buildItemEnquiryMessage, buildWhatsAppUrl } from '@/lib/whatsapp';
+import { itemContactHref, itemContactLabel } from '@/lib/whatsapp';
 import { cn, calculateDiscount, normalize } from '@/lib/utils';
 
 /**
@@ -315,6 +314,7 @@ function ProductCard({
   onAdd: (p: Product, q?: number) => void;
 }) {
   const sellable = isSellable(product);
+  const contatoHref = itemContactHref(product.name);
 
   return (
     <motion.article
@@ -403,10 +403,10 @@ function ProductCard({
           </motion.button>
         )}
 
-        {/* Expositor: sem carrinho, cada peça abre a conversa já dizendo qual. */}
-        {hasPerItemContact && store.whatsapp && (
+        {/* Expositor: sem carrinho, cada item abre o contato já dizendo qual. */}
+        {hasPerItemContact && contatoHref && (
           <a
-            href={buildWhatsAppUrl(buildItemEnquiryMessage(product.name))}
+            href={contatoHref}
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
@@ -414,10 +414,10 @@ function ProductCard({
               'flex h-11 min-w-11 items-center justify-center gap-1.5 rounded-full px-3 sm:px-4',
               'bg-brand text-sm font-medium text-on-brand shadow-md',
             )}
-            aria-label={`Perguntar sobre ${product.name} no WhatsApp`}
+            aria-label={`${itemContactLabel()} — ${product.name}`}
           >
             <MessageCircle className="h-4 w-4" aria-hidden="true" />
-            <span className="hidden sm:inline">Perguntar</span>
+            <span className="hidden sm:inline">{itemContactLabel()}</span>
           </a>
         )}
       </div>
