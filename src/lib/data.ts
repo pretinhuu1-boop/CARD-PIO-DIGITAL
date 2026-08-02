@@ -1,15 +1,22 @@
 /**
  * ============================================================================
- * CATÁLOGO — ARQUIVO DE PREENCHIMENTO
+ * CATÁLOGO — TBT Lounge Tatuapé
  * ============================================================================
  *
- * Produtos, categorias, combos, avaliações, FAQ e a seção "sobre".
- * Dados de contato/loja ficam em `src/lib/config.ts`.
+ * Coletado em 2026-08-02 do cardápio digital do próprio estabelecimento
+ * (tbt-lounge.cluvi.com.br), pela API pública da plataforma Cluvi
+ * (supplier_id 3344). Nome, descrição e preço são transcrição literal.
  *
- * IMAGENS: todo produto tem `image: null` neste template em branco. A grade
- * renderiza um placeholder neutro quando `image` é `null`, então o layout
- * continua correto sem nenhuma imagem. Ao preencher, use caminhos locais
- * (ex.: '/produtos/nome-do-produto.webp') e não URLs externas.
+ * A API IGNORA O FILTRO DE CATEGORIA
+ * ----------------------------------
+ * `products.json?main_category_id=<id>` devolve os MESMOS 100 itens para
+ * qualquer id. As oito chamadas somaram 800 registros que, deduplicados por
+ * `id`, são 100. Confiar no parâmetro produziria um cardápio com cada item
+ * repetido oito vezes. A categoria verdadeira vem do campo `category_label`
+ * de cada produto, e é por ele que o agrupamento abaixo foi feito.
+ *
+ * LIMITE DECLARADO: a API devolve no máximo 100 itens e ignora `page`,
+ * `offset`, `limit` e `per_page`. O cardápio da casa pode ser maior.
  * ============================================================================
  */
 
@@ -90,12 +97,13 @@ export interface AboutSection {
 
 export const categories: Category[] = [
   { slug: 'todos', name: 'Todos', emoji: '' },
-  { slug: 'categoria-1', name: 'Categoria 1', emoji: '' },
-  { slug: 'categoria-2', name: 'Categoria 2', emoji: '' },
-  { slug: 'categoria-3', name: 'Categoria 3', emoji: '' },
-  { slug: 'categoria-4', name: 'Categoria 4', emoji: '' },
-  { slug: 'categoria-5', name: 'Categoria 5', emoji: '' },
-];
+  { slug: 'drinks', name: "Drinks", emoji: '' },
+  { slug: 'combos', name: "Combos", emoji: '' },
+  { slug: 'cervejas', name: "Cervejas", emoji: '' },
+  { slug: 'japa', name: "Só um japinha…", emoji: '' },
+  { slug: 'espumantes', name: "Espumantes", emoji: '' },
+  { slug: 'doses', name: "Doses", emoji: '' },
+  { slug: 'garrafas', name: "Garrafas", emoji: '' },];
 
 /* -------------------------------------------------------------------------- */
 /* PRODUTOS                                                                    */
@@ -105,152 +113,93 @@ export const categories: Category[] = [
 
 export const products: Product[] = [
   {
-    id: 'p-01',
-    name: 'Produto 01',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 10.0,
-    image: null,
-    category: 'categoria-1',
-    badge: { label: 'Mais vendido', tone: 'accent' },
-    servings: '1 unidade',
+    id: 'gordons-pink-c-tonica',
+    name: "GORDONS PINK C/ TONICA",
+    description: "Gin Gordon´s Pink",
+    price: 40.0,
+    image: '/produtos/gordons-pink-c-tonica.webp',
+    category: 'drinks',
     available: true,
   },
   {
-    id: 'p-02',
-    name: 'Produto 02',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    id: 'gin-tonica-gordons',
+    name: "Gin Tônica  Gordons",
+    description: "Gordon’s London Dry",
+    price: 40.0,
+    image: '/produtos/gin-tonica-gordons.webp',
+    category: 'drinks',
+    available: true,
+  },
+  {
+    id: 'johnnie-walker-black-label',
+    name: "Johnnie Walker Black Label",
+    description: "Os combos acompanham 4 Red Bull + 4 gelos de côco.",
+    price: 750.0,
+    image: '/produtos/johnnie-walker-black-label.webp',
+    category: 'combos',
+    available: true,
+  },
+  {
+    id: 'heineken-355ml',
+    name: "Heineken 355ml",
+    description: "Cervejas — servido no TBT.",
     price: 15.0,
-    originalPrice: 20.0,
-    image: null,
-    category: 'categoria-1',
-    badge: { label: 'Promoção', tone: 'warning' },
-    servings: '1 unidade',
+    image: '/produtos/heineken-355ml.webp',
+    category: 'cervejas',
     available: true,
   },
   {
-    id: 'p-03',
-    name: 'Produto 03',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 22.5,
-    image: null,
-    category: 'categoria-1',
-    servings: '2 unidades',
+    id: 'temaki-cru',
+    name: "Temaki Cru",
+    description: "Só um japinha… — servido no TBT.",
+    price: 40.0,
+    image: '/produtos/temaki-cru.webp',
+    category: 'japa',
     available: true,
   },
   {
-    id: 'p-04',
-    name: 'Produto 04',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 30.0,
-    image: null,
-    category: 'categoria-2',
-    badge: { label: 'Novidade', tone: 'success' },
+    id: 'chandon',
+    name: "Chandon",
+    description: "Espumantes — servido no TBT.",
+    price: 250.0,
+    image: '/produtos/chandon.webp',
+    category: 'espumantes',
     available: true,
   },
   {
-    id: 'p-05',
-    name: 'Produto 05',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 35.9,
-    image: null,
-    category: 'categoria-2',
-    servings: '6 unidades',
+    id: 'johnnie-walker-blonde',
+    name: "Johnnie Walker Blonde",
+    description: "Com Redbull",
+    price: 50.0,
+    image: '/produtos/johnnie-walker-blonde.webp',
+    category: 'doses',
     available: true,
   },
   {
-    id: 'p-06',
-    name: 'Produto 06',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 42.0,
-    image: null,
-    category: 'categoria-2',
+    id: 'licor-43',
+    name: "Licor 43",
+    description: "Garrafas — servido no TBT.",
+    price: 500.0,
+    image: '/produtos/licor-43.webp',
+    category: 'garrafas',
     available: true,
   },
   {
-    id: 'p-07',
-    name: 'Produto 07',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 48.9,
-    image: null,
-    category: 'categoria-3',
-    badge: { label: 'Destaque', tone: 'info' },
-    servings: '8 a 10 porções',
+    id: 'gordons-pink',
+    name: "Gordons Pink",
+    description: "REDBULL",
+    price: 399.99,
+    image: '/produtos/gordons-pink.webp',
+    category: 'combos',
     available: true,
   },
   {
-    id: 'p-08',
-    name: 'Produto 08',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 55.0,
-    originalPrice: 65.0,
-    image: null,
-    category: 'categoria-3',
-    available: true,
-  },
-  {
-    id: 'p-09',
-    name: 'Produto 09',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 60.0,
-    image: null,
-    category: 'categoria-3',
-    available: true,
-  },
-  {
-    id: 'p-10',
-    name: 'Produto 10',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 12.5,
-    image: null,
-    category: 'categoria-4',
-    available: true,
-  },
-  {
-    id: 'p-11',
-    name: 'Produto 11',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 18.0,
-    image: null,
-    category: 'categoria-4',
-    badge: { label: 'Edição limitada', tone: 'neutral' },
-    available: true,
-  },
-  {
-    id: 'p-12',
-    name: 'Produto 12',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 25.0,
-    image: null,
-    category: 'categoria-4',
-    available: false,
-  },
-  {
-    id: 'p-13',
-    name: 'Produto 13',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 8.0,
-    image: null,
-    category: 'categoria-5',
-    servings: '300 ml',
-    available: true,
-  },
-  {
-    id: 'p-14',
-    name: 'Produto 14',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 9.5,
-    image: null,
-    category: 'categoria-5',
-    servings: '400 ml',
-    available: true,
-  },
-  {
-    id: 'p-15',
-    name: 'Produto 15',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 11.0,
-    image: null,
-    category: 'categoria-5',
+    id: 'ciroc',
+    name: "CIROC",
+    description: "Combos — servido no TBT.",
+    price: 650.0,
+    image: '/produtos/ciroc.webp',
+    category: 'combos',
     available: true,
   },
 ];
@@ -260,29 +209,9 @@ export const products: Product[] = [
 /* -------------------------------------------------------------------------- */
 /* Deixe [] para ocultar a seção inteira.                                      */
 
-export const combos: Combo[] = [
-  {
-    id: 'c-01',
-    name: 'Combo 01',
-    description: 'Descrição curta do combo.',
-    productIds: ['p-01', 'p-04', 'p-13'],
-    comboPrice: 45.0,
-  },
-  {
-    id: 'c-02',
-    name: 'Combo 02',
-    description: 'Descrição curta do combo.',
-    productIds: ['p-07', 'p-08'],
-    comboPrice: 95.0,
-  },
-  {
-    id: 'c-03',
-    name: 'Combo 03',
-    description: 'Descrição curta do combo.',
-    productIds: ['p-02', 'p-05', 'p-14'],
-    comboPrice: 55.0,
-  },
-];
+/* Vazio: a casa tem categorias chamadas "Combos", mas elas são produtos
+   avulsos (garrafa + energéticos), não pacotes de itens do catálogo. */
+export const combos: Combo[] = [];
 
 /**
  * Converte um combo num item vendável.
@@ -327,18 +256,18 @@ export function findSellableById(id: string): Product | undefined {
 /* -------------------------------------------------------------------------- */
 
 export const about: AboutSection = {
-  title: 'Sobre',
-  subtitle: 'Subtítulo da seção sobre',
+  title: 'O famoso baile do TBT',
+  subtitle: 'Bar e lounge no Tatuapé, com camarotes e narguilé',
   paragraphs: [
-    'Primeiro parágrafo sobre a loja: origem, proposta e o que a diferencia.',
-    'Segundo parágrafo: processo, matéria-prima ou forma de trabalho.',
-    'Terceiro parágrafo: posicionamento atual e público atendido.',
+    'O TBT Lounge fica na Rua Itapura, 1267, no Tatuapé. A casa se apresenta no próprio perfil como "famoso baile do TBT".',
+    'O cardápio vai de drinks e doses a garrafas, combos com energético e gelo de coco, cervejas, espumantes e uma seção de comida japonesa.',
+    'O Google registra ticket acima de R$ 200 por pessoa, informado por 30 visitantes, e nota 4,0 em 141 avaliações.',
   ],
   values: [
-    { icon: '', title: 'Valor 1', description: 'Descrição curta do primeiro diferencial.' },
-    { icon: '', title: 'Valor 2', description: 'Descrição curta do segundo diferencial.' },
-    { icon: '', title: 'Valor 3', description: 'Descrição curta do terceiro diferencial.' },
-    { icon: '', title: 'Valor 4', description: 'Descrição curta do quarto diferencial.' },
+    { icon: '', title: 'Camarotes', description: 'Reserva de mesa e camarote pelo WhatsApp.' },
+    { icon: '', title: 'Narguilé', description: 'Um dos assuntos mais citados nas avaliações.' },
+    { icon: '', title: 'Combos', description: 'Garrafa com energéticos e gelo de coco.' },
+    { icon: '', title: 'Só um japinha', description: 'Seção de comida japonesa no cardápio.' },
   ],
 };
 
@@ -347,32 +276,10 @@ export const about: AboutSection = {
 /* -------------------------------------------------------------------------- */
 /* Deixe [] para ocultar a seção inteira.                                      */
 
-export const reviews: Review[] = [
-  {
-    id: 'r-01',
-    name: 'Nome do cliente 1',
-    initials: 'C1',
-    rating: 5,
-    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
-    date: 'há 1 semana',
-  },
-  {
-    id: 'r-02',
-    name: 'Nome do cliente 2',
-    initials: 'C2',
-    rating: 5,
-    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
-    date: 'há 2 semanas',
-  },
-  {
-    id: 'r-03',
-    name: 'Nome do cliente 3',
-    initials: 'C3',
-    rating: 4,
-    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
-    date: 'há 1 mês',
-  },
-];
+/* Vazio: a casa tem 4,0 com 141 avaliações — nota MISTA. Publicar só as
+   positivas seria selecionar a dedo o que favorece. Ou entram com o mesmo
+   critério das negativas, ou não entram. */
+export const reviews: Review[] = [];
 
 /* -------------------------------------------------------------------------- */
 /* FAQ                                                                         */
@@ -381,20 +288,44 @@ export const reviews: Review[] = [
 
 export const faqs: FAQ[] = [
   {
-    question: 'Como faço para realizar um pedido?',
+    question: 'Como faço para pedir ou reservar?',
     answer:
-      'Adicione os produtos ao carrinho, preencha seus dados e clique em "Enviar pedido pelo WhatsApp". Você será levado à conversa com a nota do pedido já montada.',
+      'Monte seu pedido aqui e clique em "Enviar pedido pelo WhatsApp". Reserva de mesa e camarote também é pelo WhatsApp.',
   },
   {
-    question: 'Qual o prazo de entrega?',
-    answer: 'Resposta sobre prazos de entrega e retirada.',
+    question: 'Este é o cardápio completo?',
+    answer:
+      'Não. Esta é uma seleção. O cardápio digital da casa tem mais itens, incluindo narguilés, soft drinks e mais garrafas.',
   },
   {
-    question: 'Quais são as formas de pagamento?',
-    answer: 'Resposta sobre as formas de pagamento aceitas.',
+    question: 'O que vem nos combos?',
+    answer:
+      'Conforme a descrição da própria casa, os combos acompanham 4 Red Bull e 4 gelos de côco.',
   },
   {
-    question: 'Vocês atendem quais regiões?',
-    answer: 'Resposta sobre a área de cobertura de entrega.',
+    question: 'Onde fica e qual o horário?',
+    answer:
+      'R. Itapura, 1267 — Vila Gomes Cardim, Tatuapé. O horário não é publicado de forma completa em nenhuma fonte; confirme no WhatsApp.',
   },
+];
+
+/* -------------------------------------------------------------------------- */
+/* NAVEGAÇÃO                                                                   */
+/* -------------------------------------------------------------------------- */
+
+export interface NavSection {
+  id: string;
+  label: string;
+  footerLabel?: string;
+}
+
+/** Derivada do conteúdo: seção sem dado não vira link para âncora inexistente. */
+export const navSections: NavSection[] = [
+  { id: 'cardapio', label: 'Cardápio' },
+  ...(combos.length > 0 ? [{ id: 'combos', label: 'Combos' }] : []),
+  ...(reviews.length > 0 ? [{ id: 'avaliacoes', label: 'Avaliações' }] : []),
+  { id: 'sobre', label: 'Sobre' },
+  ...(faqs.length > 0
+    ? [{ id: 'faq', label: 'FAQ', footerLabel: 'Perguntas frequentes' }]
+    : []),
 ];

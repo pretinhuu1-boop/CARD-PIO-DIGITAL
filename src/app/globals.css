@@ -30,28 +30,41 @@
 
 :root {
   /* --- Superfícies ------------------------------------------------------ */
-  --surface: #ffffff;        /* fundo de cards, header, modais              */
-  --surface-2: #f7f7f7;      /* fundo alternado de seção                    */
-  --surface-3: #efefef;      /* preenchimento de campos, placeholders       */
+  /*
+    ESTE TEMPLATE FICA ESCURO NOS DOIS ESQUEMAS, de propósito.
+    O TBT é uma casa noturna: as fotos do lugar têm fundo quase preto
+    (#030303 a #050705 medidos) com neon por cima. Uma versão clara não
+    seria "acessibilidade", seria descrever outro lugar.
+  */
+  --surface: #0a0c0a;        /* fundo de cards, header, modais              */
+  --surface-2: #12160f;      /* fundo alternado de seção                    */
+  --surface-3: #1b2019;      /* preenchimento de campos, placeholders       */
 
   /* --- Texto ------------------------------------------------------------ */
-  --ink: #171717;            /* títulos e texto principal                   */
-  --ink-2: #525252;          /* texto de apoio                              */
-  --ink-3: #8a8a8a;          /* legendas, texto desabilitado                */
+  --ink: #f2f4f1;            /* títulos e texto principal      17.75:1      */
+  --ink-2: #aeb6ac;          /* texto de apoio                  9.43:1      */
+  --ink-3: #7c857b;          /* legendas                        5.14:1      */
 
   /* --- Traços ----------------------------------------------------------- */
-  --line: #e5e5e5;           /* bordas padrão                               */
-  --line-strong: #d4d4d4;    /* bordas em destaque / hover                  */
+  --line: #1f2a1e;
+  --line-strong: #2f3d2d;
 
   /* --- Marca (CTA principal) ------------------------------------------- */
-  --brand: #171717;          /* «PREENCHER» cor principal da loja           */
-  --brand-hover: #333333;    /* «PREENCHER» estado hover do CTA             */
-  --brand-soft: #f0f0f0;     /* «PREENCHER» fundo suave da marca            */
-  --on-brand: #ffffff;       /* texto sobre a cor da marca                  */
+  /*
+    Verde neon amostrado da iluminação do camarote. O logo da casa é
+    monocromático (preto sobre transparente), então a cor da marca não vem
+    dele — vem da luz do lugar.
+    `on-brand` é ESCURO: verde neon com texto branco dá 2,37:1 e reprova.
+  */
+  --brand: #00c080;          /* verde neon TBT                  8.27:1      */
+  --brand-hover: #12d18c;
+  --brand-soft: #0e2a1f;
+  --on-brand: #07120c;       /* texto sobre a marca             8.04:1      */
 
   /* --- Destaque secundário --------------------------------------------- */
-  --accent: #525252;         /* «PREENCHER» selos, ênfases, eyebrow         */
-  --accent-soft: #f0f0f0;    /* «PREENCHER» fundo de selo                   */
+  /* Âmbar das garrafas retroiluminadas do bar. */
+  --accent: #d9a05b;         /* eyebrow, ênfases                8.53:1      */
+  --accent-soft: #2a1f12;
 
   /* --- Estados ---------------------------------------------------------- */
   --success: #1f7a4d;
@@ -69,8 +82,8 @@
   --on-overlay: #ffffff;
 
   /* --- Vidro (header fixo) ---------------------------------------------- */
-  --glass-bg: rgba(255, 255, 255, 0.82);
-  --glass-line: rgba(0, 0, 0, 0.07);
+  --glass-bg: rgba(10, 12, 10, 0.86);
+  --glass-line: rgba(255, 255, 255, 0.08);
 
   /* --- Canal do WhatsApp ------------------------------------------------ */
   /* Cor institucional do canal, não da loja. Manter para reconhecimento. */
@@ -91,24 +104,25 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --surface: #121212;
-    --surface-2: #1a1a1a;
-    --surface-3: #242424;
+    /* Mesmos valores do bloco acima: a casa é escura em qualquer preferência. */
+    --surface: #0a0c0a;
+    --surface-2: #12160f;
+    --surface-3: #1b2019;
 
-    --ink: #f5f5f5;
-    --ink-2: #b4b4b4;
-    --ink-3: #8a8a8a;
+    --ink: #f2f4f1;
+    --ink-2: #aeb6ac;
+    --ink-3: #7c857b;
 
-    --line: #2a2a2a;
-    --line-strong: #3a3a3a;
+    --line: #1f2a1e;
+    --line-strong: #2f3d2d;
 
-    --brand: #f5f5f5;
-    --brand-hover: #e0e0e0;
-    --brand-soft: #242424;
-    --on-brand: #121212;
+    --brand: #00c080;
+    --brand-hover: #12d18c;
+    --brand-soft: #0e2a1f;
+    --on-brand: #07120c;
 
-    --accent: #b4b4b4;
-    --accent-soft: #242424;
+    --accent: #d9a05b;
+    --accent-soft: #2a1f12;
 
     --success: #5cc08d;
     --success-soft: #16281f;

@@ -46,7 +46,9 @@ export function buildOrderMessage(order: OrderSummary): string {
       isPickup
         ? 'Retirada no local'
         : shipping === 0
-          ? 'Grátis'
+          // 0 significa "não informado" com a mesma frequência com que
+          // significa "grátis". Sem fonte, não se afirma gratuidade.
+          ? 'a combinar'
           : formatCurrency(shipping)
     }`,
   );

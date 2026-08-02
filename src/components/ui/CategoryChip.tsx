@@ -43,8 +43,12 @@ function CategoryChip({ categories, selected, onChange, className }: CategoryChi
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     const el = scrollRef.current;
     if (!el || !pointerDown.current) return;
+    // Faixa que cabe na tela não tem o que arrastar.
+    if (el.scrollWidth <= el.clientWidth) return;
     const dx = e.clientX - dragStartX.current;
-    if (Math.abs(dx) > 4) didDrag.current = true;
+    // 10px, não 4: a mão move 4 a 8px entre apertar e soltar, e com 4
+    // TODO clique de mouse virava "arrasto" e o filtro não trocava nunca.
+    if (Math.abs(dx) > 10) didDrag.current = true;
     if (didDrag.current) el.scrollLeft = scrollStartX.current - dx;
   }, []);
 
@@ -86,6 +90,7 @@ function CategoryChip({ categories, selected, onChange, className }: CategoryChi
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             onClick={() => handleChipClick(category.slug)}
             aria-pressed={isSelected}
+            data-category-slug={category.slug}
             className={cn(
               'focus-ring flex shrink-0 items-center gap-2 whitespace-nowrap',
               'min-h-[44px] rounded-full px-4 text-sm font-medium',
