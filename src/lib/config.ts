@@ -1,14 +1,10 @@
 /**
  * ============================================================================
- * CONFIGURAÇÃO DA LOJA — ARQUIVO DE PREENCHIMENTO
+ * CONFIGURAÇÃO — Caracol Chocolates Cafeteria Tatuapé
  * ============================================================================
  *
- * Este é o ÚNICO arquivo que precisa ser editado para trocar a loja do
- * template. Nenhum componente contém texto, telefone ou endereço fixo.
- *
- * Para as cores e fontes, edite `src/app/globals.css` (bloco IDENTIDADE VISUAL).
- *
- * Campos marcados com «PREENCHER» são placeholders neutros.
+ * Coletado em 2026-08-02. Procedência e lacunas declaradas em
+ * `scraped-stores/caracol-chocolates-tatuape/`.
  * ============================================================================
  */
 
@@ -16,40 +12,53 @@ import type { StoreConfig } from './types';
 
 export type { StoreConfig, StoreHours, StoreSocial } from './types';
 
-
 export const store: StoreConfig = {
-  name: 'Nome da Loja', // «PREENCHER»
-  orderMode: 'cart', // «PREENCHER» — 'cart' vende, 'enquiry' agenda/orça
-  tagline: 'Categoria do negócio', // «PREENCHER»
+  name: 'Caracol Chocolates Tatuapé',
+  orderMode: 'cart', // cafeteria: o cliente monta o pedido e envia
+  tagline: 'Cafeteria e chocolateria',
   description:
-    'Descrição curta da loja em uma ou duas linhas, usada no hero e no SEO.', // «PREENCHER»
+    'Cafeteria, eventos e o melhor do chocolate de Gramado, no coração do Tatuapé.',
 
-  whatsapp: '', // «PREENCHER» — ex.: '5511999998888'
-  phoneDisplay: '(00) 00000-0000', // «PREENCHER»
+  // O fixo do Maps é (11) 2365-3520, número DIFERENTE. Este é o WhatsApp que a
+  // própria loja publica no Linktree, e é o canal de pedido.
+  whatsapp: '5511997365921', // linktr.ee/caracol.chocolates.tatuape
+  phoneDisplay: '(11) 99736-5921',
 
-  address: 'Rua, número — Bairro, Cidade', // «PREENCHER»
-  city: 'Cidade - UF', // «PREENCHER»
+  address: 'R. Itapeti, 601 — Tatuapé, São Paulo - SP, 03324-002',
+  city: 'São Paulo - SP',
 
+  // Instagram (@caracol.tatuape): "Ter a sáb 9h-18h/dom 10h-19h"
   hours: [
-    { day: 'Seg a Sex', time: '09h - 18h' },
-    { day: 'Sábado', time: '09h - 14h' },
-    { day: 'Domingo', time: null },
+    { day: 'Segunda', time: null },
+    { day: 'Terça a Sábado', time: '09h - 18h' },
+    { day: 'Domingo', time: '10h - 19h' },
   ],
 
-  social: [], // «PREENCHER» — ex.: [{ label: '@minhaloja', url: 'https://instagram.com/minhaloja' }]
+  social: [
+    { label: '@caracol.tatuape', url: 'https://www.instagram.com/caracol.tatuape' },
+    {
+      label: 'Pedir no iFood',
+      url: 'https://www.ifood.com.br/delivery/sao-paulo-sp/caracol-chocolates-tatuape-vila-gomes-cardim/d527f516-05cc-4d6d-888e-c0806ab9edfc',
+    },
+  ],
 
-  heroImage: null,
+  // Sem foto de fachada em fonte alguma. O hero usa foto própria da loja
+  // (Croissant de Chocolate com Morangos), vinda do iFood.
+  heroImage: '/loja/hero.webp',
   aboutImage: null,
 
-  shippingFee: null, // «PREENCHER» — null = "a combinar", 0 = grátis de fato
+  // NÃO ENCONTRADO em fonte alguma. `null` faz a página escrever "a combinar"
+  // em vez de prometer entrega grátis que a loja nunca declarou.
+  shippingFee: null,
   freeShippingThreshold: null,
   freeGiftThreshold: null,
-  minimumOrder: 0,
+  minimumOrder: 35, // confirmado no iFood
 
-  // «PREENCHER» com o que a loja de fato aceita. Vazio esconde o campo — é
-  // melhor não perguntar do que oferecer uma forma que a loja não aceita.
+  // NÃO ENCONTRADO. Lista vazia esconde o campo no checkout — a lista genérica
+  // do template seria chute nosso publicado em nome da loja.
   paymentMethods: [],
 };
 
 /** Texto da mensagem do botão flutuante de WhatsApp (contato, fora do pedido). */
-export const contactMessage = 'Olá! Gostaria de mais informações.';
+export const contactMessage =
+  'Olá! Gostaria de mais informações sobre a Caracol Chocolates Tatuapé.';

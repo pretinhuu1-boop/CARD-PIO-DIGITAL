@@ -1,202 +1,319 @@
 /**
  * ============================================================================
- * EXPOSITOR — Kokedami, Arte com Plantas
+ * CATÁLOGO — Caracol Chocolates Cafeteria Tatuapé
  * ============================================================================
  *
- * Coletado em 2026-08-02 de Google Maps (ficha, fotos do proprietário e
- * avaliações) e Instagram @koke.da.mi.
+ * Coletado em 2026-08-02.
+ * Fonte dos produtos: iFood (categoria "Os Queridinhos" — vitrine curada pela
+ * própria loja). Nome, descrição e preço são transcrição literal da fonte.
+ * Fonte das avaliações: iFood. Fonte de horário/endereço: Google Maps + Instagram.
  *
- * POR QUE ISTO NÃO É UM CATÁLOGO
- * ------------------------------
- * A loja não publica preço nem nome de produto em lugar nenhum: não tem site,
- * não está em iFood/99Food/Keeta/Rappi (são delivery de comida) e o Instagram
- * não expõe legenda sem login. Kokedama é peça artesanal — planta, porte e
- * suporte mudam o valor, e a venda acontece na conversa.
- *
- * Inventar preço aqui seria publicar número que a lojista nunca disse. Então a
- * página é um EXPOSITOR: a foto é o produto, a legenda descreve o que está na
- * foto, e cada peça leva para o WhatsApp.
- *
- * LIMITE DECLARADO: os títulos das peças descrevem a fotografia (a planta que
- * aparece nela). NÃO são o nome comercial que a loja usa — a loja não publica
- * nomenclatura. Trocar por nomes reais é a primeira coisa a fazer com acesso
- * à lojista.
+ * DADO DESCARTADO NA CURADORIA
+ * ----------------------------
+ * O iFood devolve `unitOriginalPrice: 78.90` em 26 dos 30 produtos — inclusive
+ * em água mineral de R$ 12,90. É valor-lixo do cadastro, não preço "de".
+ * Publicar isso como desconto seria propaganda falsa em nome do lojista, então
+ * NENHUM produto abaixo usa `originalPrice`.
  * ============================================================================
  */
 
-export interface Piece {
-  id: string;
-  /** Título descritivo do que aparece na foto. Ver limite declarado acima. */
-  title: string;
-  /** Uma linha sobre a peça. Só cita o que é visível na fotografia. */
-  caption: string;
-  image: string;
-  /** Proporção usada na grade — quebra o ritmo e evita cara de catálogo. */
-  span?: 'tall' | 'wide';
-}
-
-export interface Quote {
-  id: string;
-  /** Primeiro nome + inicial. A avaliação é pública; o nome completo não vai. */
-  name: string;
-  text: string;
-  date: string;
-}
-
-export interface AboutSection {
-  title: string;
-  subtitle: string;
-  paragraphs: string[];
-  values: { icon: string; title: string; description: string }[];
-}
-
-/* -------------------------------------------------------------------------- */
-/* PEÇAS EM EXPOSIÇÃO                                                          */
-/* -------------------------------------------------------------------------- */
-/* Fotografias do próprio estabelecimento, publicadas por ele no Google Maps.  */
-
-export const pieces: Piece[] = [
-  {
-    id: 'orquidea',
-    title: 'Orquídea',
-    caption: 'Haste amarela sobre esfera de musgo, apoiada sem vaso.',
-    image: '/pecas/orquidea.webp',
-    span: 'tall',
-  },
-  {
-    id: 'aglaonema',
-    title: 'Aglaonema',
-    caption: 'Folhagem rosada. O tamanho cabe nas duas mãos.',
-    image: '/pecas/aglaonema.webp',
-  },
-  {
-    id: 'singonio-suporte',
-    title: 'Singônio com suporte',
-    caption: 'Esfera suspensa dentro de um cubo de metal preto.',
-    image: '/pecas/singonio-suporte.webp',
-    span: 'tall',
-  },
-  {
-    id: 'podocarpo-suporte',
-    title: 'Podocarpo com suporte',
-    caption: 'Porte vertical em base aramada, junto à janela.',
-    image: '/pecas/podocarpo-suporte.webp',
-  },
-  {
-    id: 'anturio-verde',
-    title: 'Antúrio',
-    caption: 'Folhas largas sobre disco de madeira.',
-    image: '/pecas/anturio-verde.webp',
-  },
-  {
-    id: 'anturios-vitrine',
-    title: 'Antúrios na vitrine',
-    caption: 'Floração vermelha na bancada que dá para a rua.',
-    image: '/pecas/anturios-vitrine.webp',
-    span: 'wide',
-  },
-];
-
-/* -------------------------------------------------------------------------- */
-/* VOZES                                                                       */
-/* -------------------------------------------------------------------------- */
 /*
-  Avaliações reais do Google (5,0 · 77 avaliações), transcritas literalmente.
+ * As FORMAS destes dados vivem em `src/lib/types.ts` e são reexportadas aqui
+ * por conveniência de import. Ao montar uma loja você mexe SÓ no conteúdo
+ * abaixo — campo novo entra no contrato, não numa cópia local.
+ */
+export type {
+  BadgeTone,
+  Badge,
+  Product,
+  Category,
+  Combo,
+  Review,
+  FAQ,
+  AboutSection,
+  NavSection,
+} from './types';
 
-  CUIDADO QUE CUSTOU UMA CONFERÊNCIA: o Maps concatena a RESPOSTA DA LOJA no
-  mesmo bloco de texto da avaliação. Duas destas vinham com a fala da própria
-  dona grudada no fim — publicar assim seria atribuir ao cliente algo que ele
-  não escreveu. O texto abaixo já vem separado.
-*/
+import type {
+  Product,
+  Category,
+  Combo,
+  Review,
+  FAQ,
+  AboutSection,
+} from './types';
 
-export const quotes: Quote[] = [
+
+/* -------------------------------------------------------------------------- */
+/* CATEGORIAS                                                                  */
+/* -------------------------------------------------------------------------- */
+/* A categoria 'todos' é obrigatória e sempre a primeira.                      */
+
+export const categories: Category[] = [
+  { slug: 'doces', name: 'Doces', emoji: '' },
+  { slug: 'salgados', name: 'Salgados', emoji: '' },
+  { slug: 'bebidas', name: 'Bebidas', emoji: '' },
+];
+
+/* -------------------------------------------------------------------------- */
+/* PRODUTOS                                                                    */
+/* -------------------------------------------------------------------------- */
+/* 10 itens. Os 5 primeiros são a vitrine "Os Queridinhos" do iFood — seleção  */
+/* do próprio lojista, não heurística nossa, e por isso levam selo. Os 5       */
+/* seguintes são o restante do cardápio, sem selo.                             */
+/*                                                                             */
+/* `id` = externalCode do iFood (chave estável: o uuid muda conforme a         */
+/* categoria em que o item aparece).                                           */
+/*                                                                             */
+/* PREÇOS: todos do iFood, coletados em 2026-08-02. Não foi possível cruzar    */
+/* com o site oficial — o cardápio da unidade                                  */
+/* (caracolchocolates.com.br/cardapio-tatuape) redireciona para uma publicação */
+/* Adobe InDesign que retorna "Document Not Found", e a loja online vende      */
+/* outro catálogo (barras SIGNO 60g, não as 23g da cafeteria). Preço de iFood  */
+/* costuma ser mais alto que o de balcão — confirmar com a lojista.            */
+
+export const products: Product[] = [
   {
-    id: 'q-lucas',
-    name: 'Lucas H.',
-    text: 'A Micheli demonstra ter muito conhecimento dessa arte de cultivo de plantas e me senti seguro em comprar e cuidar, apesar da minha pouca experiência com plantas em geral.',
-    date: 'há 1 mês',
+    id: '10019',
+    name: 'Bolo de Cenoura',
+    description:
+      'Nossa receita caseira de bolo fofinho, feito na loja. Coberto com a autêntica ganache de chocolate ao leite Caracol. Um abraço em forma de doce!',
+    price: 37.9,
+    image: '/produtos/bolo-de-cenoura.webp',
+    category: 'doces',
+    badge: { label: 'Os Queridinhos', tone: 'accent' },
+    available: true,
   },
   {
-    id: 'q-sandra',
-    name: 'Sandra M.',
-    text: 'A loja é perfeita, uma kokedama mais linda que a outra. Gostei tanto que resolvi participar da oficina e adorei.',
-    date: 'há 2 meses',
+    id: '751',
+    name: 'Chocolate Quente Cremoso',
+    description:
+      'O verdadeiro sabor do inverno gaúcho. Bebida densa e aveludada, feita com o puro chocolate Caracol. Enviado em copo térmico.',
+    price: 33.9,
+    image: '/produtos/chocolate-quente-cremoso.webp',
+    category: 'bebidas',
+    badge: { label: 'Os Queridinhos', tone: 'accent' },
+    servings: '180 ml',
+    available: true,
   },
   {
-    id: 'q-larissa',
-    name: 'Larissa C.',
-    text: 'Passei e vi a loja, e achei maravilhosa por fora. Mas por dentro, a experiência foi ainda mais incrível.',
-    date: 'há 5 meses',
+    id: '10082',
+    name: 'Coxinha de Frango com Requeijão',
+    description:
+      'A queridinha da casa! Massa de batata fininha e super recheada com frango desfiado bem temperado e requeijão cremoso. Frita no ponto para chegar dourada até você.',
+    price: 17.9,
+    image: '/produtos/coxinha-frango-requeijao.webp',
+    category: 'salgados',
+    badge: { label: 'Os Queridinhos', tone: 'accent' },
+    available: true,
   },
   {
-    id: 'q-gabor',
-    name: 'Gabor G.',
-    text: 'Lindíssimo trabalho. Comprei para a minha esposa e, quando viu, tirou foto para mandar para toda a família.',
-    date: 'há 6 meses',
+    id: '3',
+    name: 'Croissant de Chocolate com Morangos',
+    description:
+      'A união perfeita: a clássica massa folhada Ofner recheada com nossa inconfundível ganache de chocolate ao leite de Gramado e morangos frescos fatiados. Finalizado com raspas de chocolate.',
+    price: 52.9,
+    image: '/produtos/croissant-chocolate-morangos.webp',
+    category: 'doces',
+    badge: { label: 'Os Queridinhos', tone: 'accent' },
+    available: true,
   },
   {
-    id: 'q-vic',
-    name: 'Vic T.',
-    text: 'Experiência maravilhosa e ambiente acolhedor para todos.',
-    date: 'há 5 meses',
+    id: '1',
+    name: 'Mini Fondue - Favorito Cacau',
+    description:
+      'A experiência da Serra Gaúcha na sua casa! Puro chocolate Caracol derretido, com mini brownies artesanais, marshmallows e morangos frescos (enviados separados para manter o frescor).',
+    price: 67.9,
+    image: '/produtos/mini-fondue-favorito-cacau.webp',
+    category: 'doces',
+    badge: { label: 'Os Queridinhos', tone: 'accent' },
+    available: true,
+  },
+
+  /* Demais itens do cardápio, fora da vitrine "Os Queridinhos" — por isso
+     sem selo. Mesma fonte, mesma data de coleta. */
+  {
+    id: '11',
+    name: 'Waffle com Chocolate e Morangos',
+    description:
+      'Massa artesanal leve e crocante. Acompanha a famosa ganache de chocolate ao leite Caracol, morangos frescos e chantilly. Os complementos vão separados para a massa chegar perfeita até você!',
+    price: 53.9,
+    image: '/produtos/waffle-chocolate-morangos.webp',
+    category: 'doces',
+    available: true,
   },
   {
-    id: 'q-vanessa',
-    name: 'Vanessa R.',
-    text: 'Ganhei de uma pessoa muito especial na minha vida. Depois disso me apaixonei e comprei outros.',
-    date: 'há 4 meses',
+    id: '14',
+    name: 'Trio de Brownies Recheados',
+    description:
+      'Nossa receita exclusiva! Três brownies super macios recheados com Nutella, ganache branca e doce de leite. Acompanha porção de ganache de chocolate Caracol.',
+    price: 53.9,
+    image: '/produtos/trio-brownies-recheados.webp',
+    category: 'doces',
+    servings: '3 unidades',
+    available: true,
+  },
+  {
+    id: '253',
+    name: 'Croissant de Presunto e Queijo',
+    description:
+      'A legítima massa folhada francesa da Ofner, incrivelmente leve e amanteigada, com recheio tradicional de presunto e queijo.',
+    price: 26.9,
+    image: '/produtos/croissant-presunto-queijo.webp',
+    category: 'salgados',
+    available: true,
+  },
+  {
+    id: '10037',
+    name: 'Croiffle Presunto e Queijo',
+    description:
+      'Inovação e sabor! A massa folhada Ofner prensada na chapa de waffle até ficar dourada, com recheio de requeijão, presunto e queijo derretido.',
+    price: 33.9,
+    image: '/produtos/croiffle-presunto-queijo.webp',
+    category: 'salgados',
+    available: true,
+  },
+  {
+    id: '10011',
+    name: 'Chai Latte',
+    description:
+      'Uma experiência aromática. Bebida à base de chá preto, leite, cardamomo, cravo, canela, gengibre e mel. Um equilíbrio perfeito e intenso que aquece a alma.',
+    price: 21.9,
+    image: '/produtos/chai-latte.webp',
+    category: 'bebidas',
+    available: true,
   },
 ];
+
+/* -------------------------------------------------------------------------- */
+/* COMBOS                                                                      */
+/* -------------------------------------------------------------------------- */
+/* Vazio por decisão: a seção inteira fica oculta.                             */
+/* A loja tem 3 combos reais no iFood ("Conforto de Gramado" R$ 50,99,         */
+/* "Duo Croissant Royal" R$ 104,99 e "Clássico" R$ 39,99) — registrados em     */
+/* scraped-stores/caracol-chocolates-tatuape/ caso voltem a ser publicados.    */
+
+export const combos: Combo[] = [];
+
+/**
+ * Converte um combo num item vendável.
+ *
+ * O combo entra no pedido como UMA linha, pelo preço do combo — se entrasse
+ * como produtos avulsos, o carrinho cobraria a soma dos preços cheios e
+ * contradiria o desconto anunciado no card.
+ */
+export function comboAsProduct(combo: Combo): Product {
+  const names = combo.productIds
+    .map((id) => products.find((p) => p.id === id)?.name)
+    .filter(Boolean)
+    .join(' + ');
+
+  return {
+    id: `combo-${combo.id}`,
+    name: combo.name,
+    description: names,
+    price: combo.comboPrice,
+    image: null,
+    category: 'combos',
+    available: combo.productIds.every(
+      (id) => products.find((p) => p.id === id)?.available,
+    ),
+  };
+}
+
+/**
+ * Resolve qualquer id vendável — produto avulso ou combo.
+ * Usado ao restaurar o carrinho do localStorage.
+ */
+export function findSellableById(id: string): Product | undefined {
+  const product = products.find((p) => p.id === id);
+  if (product) return product;
+
+  const combo = combos.find((c) => `combo-${c.id}` === id);
+  return combo ? comboAsProduct(combo) : undefined;
+}
 
 /* -------------------------------------------------------------------------- */
 /* SOBRE                                                                       */
 /* -------------------------------------------------------------------------- */
 
 export const about: AboutSection = {
-  title: 'Uma esfera de musgo, uma planta, nenhum vaso',
-  subtitle: 'Kokedama é a técnica japonesa que sustenta a raiz em terra e musgo',
+  title: 'O chocolate de Gramado no Tatuapé',
+  subtitle: 'Fábrica própria na Serra Gaúcha desde 1982',
   paragraphs: [
-    'A Kokedami fica na Rua Itapeti, no Tatuapé, e é atendida pela Michele. Cada peça é montada à mão: a planta, a esfera e o suporte são escolhidos juntos.',
-    'Além da loja, a casa recebe oficinas — várias das avaliações são de quem entrou para comprar e voltou para aprender a fazer.',
-    'Não há tabela de preço publicada porque não há duas peças iguais. O valor sai na conversa, junto com a escolha da planta.',
+    'A Caracol nasceu em 1982, em Canela, batizada com o nome da Cascata do Caracol. Em 2001 levou a fábrica para Gramado e se tornou pioneira na produção de chocolate na Serra Gaúcha.',
+    'A unidade do Tatuapé traz esse chocolate para a zona leste de São Paulo em formato de cafeteria: doces, salgados e bebidas feitos na loja, além de espaço para eventos.',
+    'É também uma casa pensada para família — o espaço kids é gratuito, com mini cozinha, mesa de desenho, videogame e jogos de tabuleiro.',
   ],
   values: [
     {
       icon: '',
-      title: '5,0 no Google',
-      description: '77 avaliações da unidade Tatuapé.',
+      title: 'Chocolate de Gramado',
+      description: 'Fábrica própria na Serra Gaúcha há mais de 40 anos.',
     },
     {
       icon: '',
-      title: 'Feito à mão',
-      description: 'Cada esfera é montada peça a peça na loja.',
+      title: 'Espaço kids gratuito',
+      description: 'Mini cozinha, mesa de desenho, videogame e jogos.',
     },
     {
       icon: '',
-      title: 'Oficinas',
-      description: 'Aulas para montar a própria kokedama.',
+      title: 'Massa folhada Ofner',
+      description: 'Croissants e croiffles feitos com a legítima massa francesa.',
     },
     {
       icon: '',
-      title: 'Entrega expressa',
-      description: 'Retirada na loja ou entrega combinada no WhatsApp.',
+      title: '4,7 no Google',
+      description: 'Avaliação da unidade Tatuapé entre os clientes.',
     },
   ],
 };
 
 /* -------------------------------------------------------------------------- */
+/* AVALIAÇÕES                                                                  */
+/* -------------------------------------------------------------------------- */
+/* Avaliação real e literal do iFood. As outras 4 avaliações recentes da loja  */
+/* são nota 5 sem texto escrito — sem conteúdo para exibir, ficaram de fora.   */
+
+export const reviews: Review[] = [
+  {
+    id: 'r-ifood-4788',
+    name: 'Victor',
+    initials: 'V',
+    rating: 4,
+    text: 'O Chocolate Quente Cremoso é realmente muito bom — sabor rico e textura agradável. O único ponto a melhorar é a quantidade servida, que ficou abaixo do esperado. No geral, um ótimo produto com potencial para 5 estrelas.',
+    date: '07/06/2026',
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/* FAQ                                                                         */
+/* -------------------------------------------------------------------------- */
+
+export const faqs: FAQ[] = [
+  {
+    question: 'Como faço para realizar um pedido?',
+    answer:
+      'Adicione os produtos ao carrinho, preencha seus dados e clique em "Enviar pedido pelo WhatsApp". Você será levado à conversa com a nota do pedido já montada.',
+  },
+  {
+    question: 'Qual é o pedido mínimo?',
+    answer: 'O pedido mínimo é de R$ 35,00.',
+  },
+  {
+    question: 'Onde vocês ficam e qual o horário?',
+    answer:
+      'R. Itapeti, 601 — Tatuapé, São Paulo/SP. Terça a sábado das 9h às 18h e domingo das 10h às 19h. Segunda-feira não abrimos.',
+  },
+  {
+    question: 'A loja tem espaço para crianças?',
+    answer:
+      'Sim, e o acesso é gratuito: mini cozinha, mesa de desenho, videogame e jogos de tabuleiro. A casa também recebe eventos.',
+  },
+];
+
+/* -------------------------------------------------------------------------- */
 /* NAVEGAÇÃO                                                                   */
 /* -------------------------------------------------------------------------- */
 
-export interface NavSection {
-  id: string;
-  label: string;
-  footerLabel?: string;
-}
 
-/** Derivada do conteúdo: seção sem dado não vira link para âncora inexistente. */
-export const navSections: NavSection[] = [
-  ...(pieces.length > 0 ? [{ id: 'expositor', label: 'Expositor' }] : []),
-  { id: 'sobre', label: 'Sobre' },
-  ...(quotes.length > 0 ? [{ id: 'vozes', label: 'Vozes' }] : []),
-];

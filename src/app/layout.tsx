@@ -1,38 +1,30 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Jost } from 'next/font/google';
+import { Nunito_Sans, Playfair_Display } from 'next/font/google';
 import { store } from '@/lib/config';
 import './globals.css';
 
 /**
- * TIPOGRAFIA — ponto de preenchimento.
+ * TIPOGRAFIA — Caracol Chocolates.
  *
- * O template usa a fonte do sistema por padrão (neutro). Para aplicar a fonte
- * da loja, importe de `next/font/google` e injete as variáveis no <html>:
- *
- *   import { Inter, Playfair_Display } from 'next/font/google';
- *
- *   const sans = Inter({ subsets: ['latin'], variable: '--font-app-sans', display: 'swap' });
- *   const display = Playfair_Display({ subsets: ['latin'], variable: '--font-app-display', display: 'swap' });
- *
- * e troque a className do <html> por:
- *   `${sans.variable} ${display.variable} h-full antialiased`
- *
- * As variáveis --font-app-sans / --font-app-display já são consumidas em
- * globals.css; nada mais precisa mudar.
+ * Playfair Display é a fonte de título do site oficial (medida no CSS de
+ * caracolchocolates.com.br). O corpo usa Brandon Grotesque/Avenir, que não
+ * estão no Google Fonts — Nunito Sans é o substituto mais próximo em
+ * largura e altura de x.
  */
+const sans = Nunito_Sans({
+  subsets: ['latin'],
+  variable: '--font-app-sans',
+  display: 'swap',
+});
 
-/**
- * TIPOGRAFIA — Kokedami.
- *
- * Jost é geométrica e de caixa alta larga, que é como o letreiro e o logo da
- * loja se apresentam nas fotos da fachada. Inter no corpo mantém o texto
- * neutro para a foto carregar a estética.
- */
-const sans = Inter({ subsets: ['latin'], variable: '--font-app-sans', display: 'swap' });
-const display = Jost({ subsets: ['latin'], variable: '--font-app-display', display: 'swap' });
+const display = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-app-display',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
-  title: `${store.name} — ${store.tagline}`,
+  title: `${store.name} | Cardápio digital`,
   description: store.description,
   openGraph: {
     title: store.name,
@@ -52,8 +44,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#fdfcfa' },
-    { media: '(prefers-color-scheme: dark)', color: '#12160f' },
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#16120f' },
   ],
 };
 

@@ -30,33 +30,32 @@
 
 :root {
   /* --- Superfícies ------------------------------------------------------ */
-  /* Papel quente, quase branco. A cor forte fica nas fotos, não no fundo.  */
-  --surface: #fdfcfa;        /* fundo de cards, header, modais              */
-  --surface-2: #f5f2ec;      /* fundo alternado de seção                    */
-  --surface-3: #ebe6dc;      /* preenchimento de campos, placeholders       */
+  /* Creme quente, amostrado do site da marca — não branco puro.            */
+  --surface: #ffffff;        /* fundo de cards, header, modais              */
+  --surface-2: #faf7f2;      /* fundo alternado de seção                    */
+  --surface-3: #f1eae1;      /* preenchimento de campos, placeholders       */
 
   /* --- Texto ------------------------------------------------------------ */
-  --ink: #1c2a1e;            /* títulos e texto principal      15.01:1      */
-  --ink-2: #4a5a4c;          /* texto de apoio                  7.35:1      */
-  --ink-3: #8a938a;          /* legendas                                    */
+  --ink: #272521;            /* títulos e texto principal      15.30:1      */
+  --ink-2: #5a5149;          /* texto de apoio                  7.76:1      */
+  --ink-3: #8b8177;          /* legendas, texto desabilitado    3.82:1      */
 
   /* --- Traços ----------------------------------------------------------- */
-  --line: #e4e0d6;           /* bordas padrão                               */
-  --line-strong: #cfc9bb;    /* bordas em destaque / hover                  */
+  --line: #e8e0d6;           /* bordas padrão                               */
+  --line-strong: #d6cbbd;    /* bordas em destaque / hover                  */
 
   /* --- Marca (CTA principal) ------------------------------------------- */
-  /* Verde amostrado da fachada da loja. As duas fotos divergem por causa   */
-  /* da luz (#205020 na sombra, #509060 no sol) — este é o meio, escolhido  */
-  /* pelo contraste, que é o critério que não depende de iluminação.        */
-  --brand: #2e6b3b;          /* verde Kokedami                  6.40:1      */
-  --brand-hover: #245430;
-  --brand-soft: #e8f0e6;
-  --on-brand: #ffffff;
+  /* Dourado: é a cor dos botões reais do site ("COMPRAR AGORA").           */
+  /* on-brand é ESCURO — dourado sobre branco dá 1.58:1 e reprova.          */
+  --brand: #f1ca3e;          /* dourado Caracol                             */
+  --brand-hover: #d9b02a;    /* dourado ~15% mais escuro                    */
+  --brand-soft: #fdf6e0;     /* fundo suave da marca                        */
+  --on-brand: #272521;       /* texto sobre a marca             9.66:1      */
 
   /* --- Destaque secundário --------------------------------------------- */
-  /* Terracota da parede interna, onde fica o logo em verde.                */
-  --accent: #b04a1e;         /* ênfases, eyebrow                5.46:1      */
-  --accent-soft: #f8ece5;
+  /* Chocolate: cor dominante da superfície do site (peso 20.370).          */
+  --accent: #54272a;         /* selos, ênfases, eyebrow        12.35:1      */
+  --accent-soft: #f6eeed;    /* fundo de selo                               */
 
   /* --- Estados ---------------------------------------------------------- */
   --success: #1f7a4d;
@@ -96,26 +95,27 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Escuro com tinta de folha, não cinza neutro. */
-    --surface: #12160f;
-    --surface-2: #1a1f16;
-    --surface-3: #252b20;
+    /* Escuro com tinta de cacau, não cinza neutro. */
+    --surface: #16120f;
+    --surface-2: #1e1815;
+    --surface-3: #2a221e;
 
-    --ink: #f2f1e8;
-    --ink-2: #b7bcae;
-    --ink-3: #868c7e;
+    --ink: #f7f2ec;
+    --ink-2: #c0b4a8;
+    --ink-3: #928578;
 
-    --line: #2a3123;
-    --line-strong: #3b4433;
+    --line: #2e2621;
+    --line-strong: #40352e;
 
-    /* O verde da fachada some no escuro: sobe para a folha nova. */
-    --brand: #6aab74;
-    --brand-hover: #82bd8a;
-    --brand-soft: #1e2a1d;
-    --on-brand: #10160f;
+    /* O dourado se mantém no escuro — é a cor de ação da marca. */
+    --brand: #f1ca3e;
+    --brand-hover: #f7d95f;
+    --brand-soft: #2e2617;
+    --on-brand: #16120f;
 
-    --accent: #e08c5e;
-    --accent-soft: #2b1d15;
+    /* Chocolate escuro some no escuro: vira rosewood claro da mesma família. */
+    --accent: #e3a9a0;
+    --accent-soft: #2c1e1d;
 
     --success: #5cc08d;
     --success-soft: #16281f;
