@@ -179,6 +179,29 @@ detalhada e plausível — de **outro restaurante**, a três ruas dali. O buscad
 mistura. Preço só vale se veio de uma página que você abriu e confirmou ser
 da loja pela âncora (endereço ou telefone).
 
+### A API pode ignorar o filtro que você mandou
+
+O caso mais perigoso já encontrado, porque **nada no retorno denuncia**. Num
+lounge, `products.json?main_category_id=<id>` devolvia os **mesmos 100 itens**
+para qualquer id. As oito chamadas somaram 800 registros que, deduplicados por
+`id`, eram 100. Confiar no parâmetro publicaria cada item repetido oito vezes.
+
+**Sempre dedupe por `id` e confira se o filtro foi respeitado:**
+
+```python
+ids = {cat: {p['id'] for p in bloco['productos']} for cat, bloco in resposta.items()}
+assert len(set().union(*ids.values())) > max(len(v) for v in ids.values()) * 1.2, \
+    "o endpoint parece ignorar o filtro de categoria"
+```
+
+A categoria verdadeira costuma estar num campo do próprio produto
+(`category_label`), não no parâmetro que você mandou.
+
+**Cheque também o teto de página.** Ali a API devolvia exatamente 100 e
+ignorava `page`, `offset`, `limit` e `per_page`. Se todas as categorias
+devolvem o mesmo número redondo, é teto — declare que o catálogo pode ser
+maior em vez de afirmar que aquilo é tudo.
+
 ### A plataforma reaproveita foto entre produtos
 
 Três shawarmas de frango dividiam a mesma imagem; dois falafels também. Ao
