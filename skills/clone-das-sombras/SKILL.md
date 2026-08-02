@@ -156,6 +156,45 @@ Pares obrigatórios ≥ 4.5:1 — `ink`/`surface`, `ink-2`/`surface`, `on-brand`
 - **Instagram sem login** não entrega legenda nem preço; os `alt` são descrições geradas pela Meta
 - **Google Maps concatena a resposta da loja no texto da avaliação** — separe antes de publicar, ou você atribui ao cliente a fala da dona
 
+### Procure o dado estruturado no atributo antes de raspar texto
+
+Antes de partir o HTML em pedaços, procure o JSON que a plataforma já deixou
+pronto. No Expresso Delivery (`*.pedido.app.br`) cada card carrega
+`data-dadositem='{"coditem":"316","nomeitem":"ALHO","precoitem":"2.00",…}'`,
+além de marcação schema.org. As páginas de categoria são renderizadas no
+servidor — nem browser é preciso.
+
+A diferença não é de conforto: o preço lido do atributo é o número do
+cadastro, e o preço lido de tela é o número **formatado**, com "à partir de",
+símbolo e vírgula grudados. Um parser por texto voltou 0 item nessa mesma
+página antes de eu olhar os atributos.
+
+```bash
+curl -s "<url-da-categoria>" | grep -o "data-dadositem='[^']*'" | head -3
+```
+
+### Acompanhamento cadastrado por seção vira produto repetido
+
+Restaurante costuma cadastrar o mesmo adicional em cada seção onde ele é
+oferecido, cada ocorrência com id próprio. Num caso medido, "ALHO" aparecia em
+cinco categorias e "molho de pimenta" em três: **152 registros para 146
+produtos reais**. Por categoria isso está certo; numa página única com filtro
+"Todos", vira repetição visível.
+
+Unifique por **nome + preço** — não por id — e guarde as outras categorias
+como anotação em vez de jogar fora:
+
+```python
+vistos = {}
+for p in registros:
+    k = (p['nomeitem'].strip().lower(), p['precoitem'])
+    if k in vistos: vistos[k]['tambem'].append(p['categoria'])
+    else: vistos[k] = {**p, 'catPrincipal': p['categoria'], 'tambem': []}
+```
+
+Se o preço divergir entre duplicatas, **não unifique** — são produtos
+diferentes com nome igual, e a diferença é informação.
+
 ### Regras de plausibilidade (marcar, não descartar em silêncio)
 
 - `original_price` igual em >50% dos itens → **valor-lixo de cadastro**
@@ -171,6 +210,15 @@ Uma mesma fonte pode misturar as duas formas. Num restaurante testado, os
 Lanches vinham como *"à partir de R$ 25,00"* (variações de tamanho) e as
 Esfihas com preço fechado. Publicar o piso como preço final **subestima a
 conta do cliente**. Rotule só o que a fonte rotula, item a item.
+
+No catálogo completo desse mesmo restaurante a proporção ficou em **98 de 152
+(64%)**. Não é exceção de uma seção — é a forma dominante da casa. Amostrar
+duas categorias e concluir "quase tudo tem preço fechado" teria errado feio.
+
+E o inverso da regra do valor-lixo também vale: ali o preço mais repetido era
+R$ 25, em **13%** dos itens. Bem longe dos >50% que denunciam cadastro
+preguiçoso, e bem longe do iFood onde `78.90` cobria 26 de 30 produtos.
+Meça a repetição antes de suspeitar — e antes de confiar.
 
 ### Preço de concorrente entra pela busca, não pela fonte
 
@@ -207,6 +255,13 @@ maior em vez de afirmar que aquilo é tudo.
 Três shawarmas de frango dividiam a mesma imagem; dois falafels também. Ao
 escolher os itens a publicar, use **foto distinta** como critério, senão a
 grade parece quebrada.
+
+**Mas o critério inverte quando o catálogo é completo.** Publicando as onze
+seções do mesmo restaurante, 146 produtos dividiam 103 fotos — os cinco
+tamanhos de "misto assado" compartilham uma. Aí recortar por foto única
+esconderia produto que existe, e esconder é pior que repetir. Foto distinta é
+critério de **seleção**; quando não há seleção, deixa de valer. Diga na
+procedência quantas fotos distintas há.
 
 Caso real: iFood devolveu `originalPrice: 78.90` em 26 de 30 produtos, inclusive água mineral de R$ 12,90. JSON válido, tipo certo, build limpo. Renderizado como desconto, vira propaganda falsa.
 
@@ -265,6 +320,36 @@ computer({ action: 'left_click_drag', start_coordinate: [x, y], coordinate: [x+6
 
 Faixa que cabe inteira na tela não tem o que arrastar: só suprima clique se `scrollWidth > clientWidth`.
 
+### O teste também erra — e erra parecendo bug do produto
+
+Dois falsos alarmes numa sessão, os dois convincentes:
+
+**React ignora `new Event('input')` cru.** Setar `input.value` direto não
+dispara o handler do React: o valor volta atrás no próximo render e a busca
+parece não filtrar nada. Uma busca por "baklava" devolveu os 146 produtos e
+por um momento pareceu busca quebrada. Use o setter nativo:
+
+```js
+const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+set.call(input, 'baklava');
+input.dispatchEvent(new Event('input', { bubbles: true }));
+```
+
+**Seletor global pega o controle do item errado.** Procurar o botão por texto
+entre *todos* os visíveis (`find(b => /adicionar/i.test(b.textContent))`) acha
+o primeiro card da página, não o do produto aberto. Abri "Esfiha Carne" e o
+carrinho recebeu "ALHO" — parecia bug grave de vinculação. Ancore no elemento:
+`card.querySelector('[aria-label^="Adicionar"]')`, ou no id do painel
+(`#sh-add`).
+
+Antes de reportar defeito de interação, **releia o próprio seletor**. E
+confirme o alvo: se a sheet abriu com o produto certo (`#sh-img`.alt), o
+problema está no clique de confirmação, não na abertura.
+
+**Nem todo `<img>` sem `src` é imagem quebrada.** O `<img>` do painel de
+detalhe nasce vazio e só é preenchido ao abrir um produto. Filtre por
+`naturalWidth === 0 && getAttribute('src')` antes de contar quebradas.
+
 ---
 
 ## 8. Snapshot HTML autocontido
@@ -288,6 +373,46 @@ Arquivo único que abre por duplo clique, sem servidor e sem rede: CSS, fontes e
   build anterior e não percebe.
 
 **Valide executando, não contando.** Extraia o `<script>` e rode `node --check`; sirva o arquivo e renderize. Grep dizendo "1 script, 0 referências externas" já acompanhou arquivo quebrado.
+
+### Catálogo grande: separe a resolução do arquivo da resolução do site
+
+Base64 infla todo binário em **~37%** (3 bytes viram 4 chars). Num catálogo de
+146 produtos, as fotos a 700px somavam 6,8 MB no disco e produziriam **~9 MB**
+dentro do HTML.
+
+A saída não é comprimir mais — é lembrar que são dois consumidores diferentes.
+O site servido usa `next/image`, que escolhe o tamanho pelo `srcset` e **nunca
+passa pelo gerador**. Só o arquivo solto embute. Então gere um espelho menor
+usado apenas no snapshot, e não toque em `public/`:
+
+```
+public/produtos/*.webp        700px  — o site, qualidade cheia
+.snapshot-img/produtos/*.webp 520px  — só o arquivo único
+```
+
+520px cobriu com folga: o card mede 347px no desktop e 171px no celular (3x).
+Resultado 5,4 MB em vez de 9 MB, sem perda visível e sem rebaixar o site.
+O resolvedor cai no original quando a foto não está no espelho, para foto nova
+não sumir em silêncio.
+
+**Meça antes de escolher a resolução** — a curva não é linear:
+
+| largura | disco | HTML final |
+|--:|--:|--:|
+| 440px q80 | 2,8 MB | 3,8 MB |
+| 520px q82 | 3,7 MB | 5,0 MB |
+| 700px q86 | 6,5 MB | 8,9 MB |
+
+### Retoque manual de publicação vira flag do gerador
+
+O `<meta robots="noindex, nofollow">` era aplicado à mão depois de publicar.
+Ao regerar o snapshot, o arquivo nasceu sem ele e foi pro ar competindo em
+busca com a loja real — porque **etapa manual não tem como falhar em voz
+alta**. Virou `SNAPSHOT_NOINDEX=1`.
+
+Vale como regra: se você editou o artefato depois de gerá-lo, ou aquilo entra
+no gerador, ou a próxima regeração desfaz. Teste que entrou comparando o
+arquivo gerado com o publicado byte a byte.
 
 ---
 
@@ -315,11 +440,26 @@ Arquivo único que abre por duplo clique, sem servidor e sem rede: CSS, fontes e
 | Hero sem texto no dev | grafo de módulos velho após deletar/trocar arquivos | reiniciar o dev server e recarregar |
 | "Grátis" que ninguém prometeu | `shippingFee: 0` tratado como gratuidade | ler a mensagem gerada, não o config |
 | Preço menor que o real | "a partir de" publicado como preço fixo | conferir o rótulo na fonte, item a item |
+| Snapshot de MB demais | base64 embutindo a resolução do site | espelho reduzido só para o arquivo solto |
+| Demo republicada indexável | `noindex` era retoque manual pós-publicação | diff do gerado contra o publicado |
+| Busca "não filtra" no teste | React ignora `new Event('input')` cru | usar o setter nativo de `value` |
+| Item errado no carrinho | seletor global pegou o botão do 1º card | ancorar o seletor no card ou no id do painel |
+| Produto some do catálogo | dedup por id em vez de nome + preço | contar registros da fonte × itens publicados |
 
 > **A correção de template mora na `main`, não na branch da loja.** Ao rodar a
 > terceira loja, o bug do filtro de 4px reapareceu inteiro — a correção vivia
 > só na branch da primeira. Ao consertar algo do template, decida na hora se
 > aquilo volta para a base; senão a próxima loja herda o defeito.
+>
+> **E a dívida cresce em silêncio.** Medido depois de quatro lojas, a `main`
+> ainda não tinha `data-product-id` no ProductGrid, `data-category-slug` no
+> CategoryChip, o "a combinar" do frete, a nav derivada do conteúdo, nem o
+> `scripts/`. Portar só o gerador não resolve — sem os `data-*` ele sai em
+> silêncio e o arquivo nasce estático. **Portar é tudo ou nada.**
+>
+> Cuidado ao voltar de uma branch de publicação: `git checkout <branch> -- .`
+> apaga as edições não commitadas que você acabou de fazer. Commite a correção
+> de template **antes** de trocar de branch para publicar.
 
 ---
 
@@ -338,7 +478,19 @@ Arquivo único que abre por duplo clique, sem servidor e sem rede: CSS, fontes e
 
 ## Referências no repositório
 
-- `docs/APRENDIZADOS-PARA-SKILL.md` — o processo completo das duas primeiras lojas
-- `docs/ESPECIFICACAO-TEMPLATE.md` — contrato de dados do template
+Repositório `CARD-PIO-DIGITAL`. Onde a branch importa, ela está dita — a `main`
+ainda não recebeu o port das correções.
+
+- `docs/ESPECIFICACAO-TEMPLATE.md` — contrato de dados do template (`main`)
+- `docs/BRIEFING-PESQUISA-LOJA.md` e `docs/PROCESSO-CLONAGEM-LOJA.md` —
+  antecessores deste documento. **Superados**: o que valia foi absorvido aqui,
+  medido; o que não foi absorvido não sobreviveu ao contato com loja real.
+  Leia por curiosidade histórica, não como procedimento.
 - `scraped-stores/<slug>/` — procedência por loja, com lacunas declaradas
-- `scripts/snapshot-html.mjs` — gerador do arquivo único
+- `scripts/snapshot-html.mjs` — gerador do arquivo único. **Só nas branches de
+  loja**, não na `main`.
+- branch `chore/template-padrao` — template em branco já com as correções;
+  serve de referência para o port e gera o `template-padrao.html`.
+
+`docs/APRENDIZADOS-PARA-SKILL.md` foi absorvido por este arquivo e removido.
+Se um documento citar esse caminho, o documento é que está velho.

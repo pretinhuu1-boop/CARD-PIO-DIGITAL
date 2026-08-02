@@ -15,9 +15,21 @@ cp skills/clone-das-sombras/SKILL.md ~/.claude/skills/clone-das-sombras/
 
 ## clone-das-sombras
 
-Do link de uma loja ao site publicado. Escrita a partir de cinco lojas reais
-do Tatuapé — três publicadas, duas que pararam na coleta por falta de fonte.
-Cada regra ali custou um erro medido.
+Do link de uma loja ao site publicado. Escrita a partir de seis lojas reais do
+Tatuapé — **quatro publicadas** (Caracol, Kokedami, Istambul, TBT Lounge), uma
+cancelada e uma que parou na coleta por falta de fonte. Cada regra ali custou
+um erro medido.
 
-Material de origem: `docs/APRENDIZADOS-PARA-SKILL.md` e os registros de
-procedência em `scraped-stores/`.
+Material de origem: os registros de procedência em `scraped-stores/`.
+`docs/APRENDIZADOS-PARA-SKILL.md`, citado aqui antes, foi absorvido pela skill
+e removido do repositório — não procure por ele.
+
+### Como manter em dia
+
+A executável em `~/.claude/skills/` é a que evolui durante o trabalho; esta
+cópia só existe se alguém trouxer. Já divergiram em 152 linhas uma vez.
+Antes de fechar uma sessão que mexeu na skill:
+
+```bash
+diff ~/.claude/skills/clone-das-sombras/SKILL.md skills/clone-das-sombras/SKILL.md
+```
