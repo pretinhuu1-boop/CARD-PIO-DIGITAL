@@ -94,9 +94,9 @@ export interface AboutSection {
 
 export const categories: Category[] = [
   { slug: 'todos', name: 'Todos', emoji: '' },
-  { slug: 'doces', name: 'Doces', emoji: '🍫' },
-  { slug: 'salgados', name: 'Salgados', emoji: '🥪' },
-  { slug: 'bebidas', name: 'Bebidas', emoji: '🧋' },
+  { slug: 'doces', name: 'Doces', emoji: '' },
+  { slug: 'salgados', name: 'Salgados', emoji: '' },
+  { slug: 'bebidas', name: 'Bebidas', emoji: '' },
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -168,19 +168,12 @@ export const products: Product[] = [
 /* -------------------------------------------------------------------------- */
 /* COMBOS                                                                      */
 /* -------------------------------------------------------------------------- */
-/* Combo real do iFood. Os outros dois combos da loja ("Duo Croissant Royal" e */
-/* "Clássico") referenciam itens fora destes 5 e por isso ficaram de fora.     */
+/* Vazio por decisão: a seção inteira fica oculta.                             */
+/* A loja tem 3 combos reais no iFood ("Conforto de Gramado" R$ 50,99,         */
+/* "Duo Croissant Royal" R$ 104,99 e "Clássico" R$ 39,99) — registrados em     */
+/* scraped-stores/caracol-chocolates-tatuape/ caso voltem a ser publicados.    */
 
-export const combos: Combo[] = [
-  {
-    id: 'conforto-de-gramado',
-    name: 'Conforto de Gramado',
-    description:
-      'O abraço que a sua tarde precisa. Nossa famosa Coxinha artesanal acompanhada do verdadeiro Chocolate Quente Cremoso Caracol.',
-    productIds: ['10082', '751'],
-    comboPrice: 50.99,
-  },
-];
+export const combos: Combo[] = [];
 
 /**
  * Converte um combo num item vendável.
@@ -234,22 +227,22 @@ export const about: AboutSection = {
   ],
   values: [
     {
-      icon: '🍫',
+      icon: '',
       title: 'Chocolate de Gramado',
       description: 'Fábrica própria na Serra Gaúcha há mais de 40 anos.',
     },
     {
-      icon: '🐻',
+      icon: '',
       title: 'Espaço kids gratuito',
       description: 'Mini cozinha, mesa de desenho, videogame e jogos.',
     },
     {
-      icon: '🥐',
+      icon: '',
       title: 'Massa folhada Ofner',
       description: 'Croissants e croiffles feitos com a legítima massa francesa.',
     },
     {
-      icon: '⭐',
+      icon: '',
       title: '4,7 no Google',
       description: 'Avaliação da unidade Tatuapé entre os clientes.',
     },
