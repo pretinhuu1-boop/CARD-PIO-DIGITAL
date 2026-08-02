@@ -32,7 +32,7 @@ export function HeroBanner() {
   const hasImage = Boolean(store.heroImage);
 
   const scrollToMenu = () => {
-    document.getElementById('cardapio')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('expositor')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -97,12 +97,13 @@ export function HeroBanner() {
             className={cn(
               'focus-ring min-h-[52px] rounded-full px-8 text-[15px] font-medium',
               'transition-colors duration-200',
-              hasImage
-                ? 'bg-on-overlay text-ink hover:opacity-90'
-                : 'bg-brand text-on-brand hover:bg-brand-hover',
+              // `bg-on-overlay text-ink` é par instável: on-overlay é branco
+              // fixo e ink inverte no modo escuro — dava 1,05:1, invisível.
+              // brand/on-brand tem contraste garantido nos dois temas.
+              'bg-brand text-on-brand hover:bg-brand-hover',
             )}
           >
-            Ver cardápio
+            Ver o expositor
           </button>
         </motion.div>
 
@@ -130,7 +131,7 @@ export function HeroBanner() {
           'items-center justify-center rounded-full transition-opacity hover:opacity-100',
           hasImage ? 'text-on-overlay/60' : 'text-ink-3',
         )}
-        aria-label="Rolar para o cardápio"
+        aria-label="Rolar para o expositor"
       >
         <ChevronDown className="h-6 w-6" />
       </motion.button>

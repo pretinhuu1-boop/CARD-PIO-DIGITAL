@@ -1,38 +1,31 @@
-'use client';
-
-import { useState } from 'react';
 import { Header } from '@/components/layout/Header';
-import { CartDrawer } from '@/components/layout/CartDrawer';
 import { FloatingWhatsApp } from '@/components/layout/FloatingWhatsApp';
-import { FloatingCTA } from '@/components/layout/FloatingCTA';
 import { HeroBanner } from '@/components/sections/HeroBanner';
-import { ProductGrid } from '@/components/sections/ProductGrid';
-import { ComboSection } from '@/components/sections/ComboSection';
-import { ReviewsSection } from '@/components/sections/ReviewsSection';
+import { Showcase } from '@/components/sections/Showcase';
+import { Voices } from '@/components/sections/Voices';
 import { AboutSection } from '@/components/sections/AboutSection';
-import { FAQSection } from '@/components/sections/FAQSection';
 import { Footer } from '@/components/sections/Footer';
 
+/**
+ * Composição do expositor.
+ *
+ * Sem carrinho, sem drawer e sem barra de pedido: esta loja não tem preço
+ * publicado nem checkout. Toda ação — peça, cabeçalho, rodapé, botão
+ * flutuante — vai para a mesma conversa de WhatsApp.
+ */
 export default function Home() {
-  const [cartOpen, setCartOpen] = useState(false);
-
   return (
     <>
-      <Header onOpenCart={() => setCartOpen(true)} />
+      <Header />
 
       <main className="flex-1 pt-16">
         <HeroBanner />
-        <ProductGrid />
-        <ComboSection />
-        <ReviewsSection />
+        <Showcase />
+        <Voices />
         <AboutSection />
-        <FAQSection />
       </main>
 
       <Footer />
-
-      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
-      <FloatingCTA onOpenCart={() => setCartOpen(true)} />
       <FloatingWhatsApp />
     </>
   );
