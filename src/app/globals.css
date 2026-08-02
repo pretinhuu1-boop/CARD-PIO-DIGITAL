@@ -30,33 +30,28 @@
 
 :root {
   /* --- Superfícies ------------------------------------------------------ */
-  /* Papel quente, quase branco. A cor forte fica nas fotos, não no fundo.  */
-  --surface: #fdfcfa;        /* fundo de cards, header, modais              */
-  --surface-2: #f5f2ec;      /* fundo alternado de seção                    */
-  --surface-3: #ebe6dc;      /* preenchimento de campos, placeholders       */
+  --surface: #ffffff;        /* fundo de cards, header, modais              */
+  --surface-2: #f7f7f7;      /* fundo alternado de seção                    */
+  --surface-3: #efefef;      /* preenchimento de campos, placeholders       */
 
   /* --- Texto ------------------------------------------------------------ */
-  --ink: #1c2a1e;            /* títulos e texto principal      15.01:1      */
-  --ink-2: #4a5a4c;          /* texto de apoio                  7.35:1      */
-  --ink-3: #8a938a;          /* legendas                                    */
+  --ink: #171717;            /* títulos e texto principal                   */
+  --ink-2: #525252;          /* texto de apoio                              */
+  --ink-3: #8a8a8a;          /* legendas, texto desabilitado                */
 
   /* --- Traços ----------------------------------------------------------- */
-  --line: #e4e0d6;           /* bordas padrão                               */
-  --line-strong: #cfc9bb;    /* bordas em destaque / hover                  */
+  --line: #e5e5e5;           /* bordas padrão                               */
+  --line-strong: #d4d4d4;    /* bordas em destaque / hover                  */
 
   /* --- Marca (CTA principal) ------------------------------------------- */
-  /* Verde amostrado da fachada da loja. As duas fotos divergem por causa   */
-  /* da luz (#205020 na sombra, #509060 no sol) — este é o meio, escolhido  */
-  /* pelo contraste, que é o critério que não depende de iluminação.        */
-  --brand: #2e6b3b;          /* verde Kokedami                  6.40:1      */
-  --brand-hover: #245430;
-  --brand-soft: #e8f0e6;
-  --on-brand: #ffffff;
+  --brand: #171717;          /* «PREENCHER» cor principal da loja           */
+  --brand-hover: #333333;    /* «PREENCHER» estado hover do CTA             */
+  --brand-soft: #f0f0f0;     /* «PREENCHER» fundo suave da marca            */
+  --on-brand: #ffffff;       /* texto sobre a cor da marca                  */
 
   /* --- Destaque secundário --------------------------------------------- */
-  /* Terracota da parede interna, onde fica o logo em verde.                */
-  --accent: #b04a1e;         /* ênfases, eyebrow                5.46:1      */
-  --accent-soft: #f8ece5;
+  --accent: #525252;         /* «PREENCHER» selos, ênfases, eyebrow         */
+  --accent-soft: #f0f0f0;    /* «PREENCHER» fundo de selo                   */
 
   /* --- Estados ---------------------------------------------------------- */
   --success: #1f7a4d;
@@ -96,26 +91,24 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Escuro com tinta de folha, não cinza neutro. */
-    --surface: #12160f;
-    --surface-2: #1a1f16;
-    --surface-3: #252b20;
+    --surface: #121212;
+    --surface-2: #1a1a1a;
+    --surface-3: #242424;
 
-    --ink: #f2f1e8;
-    --ink-2: #b7bcae;
-    --ink-3: #868c7e;
+    --ink: #f5f5f5;
+    --ink-2: #b4b4b4;
+    --ink-3: #8a8a8a;
 
-    --line: #2a3123;
-    --line-strong: #3b4433;
+    --line: #2a2a2a;
+    --line-strong: #3a3a3a;
 
-    /* O verde da fachada some no escuro: sobe para a folha nova. */
-    --brand: #6aab74;
-    --brand-hover: #82bd8a;
-    --brand-soft: #1e2a1d;
-    --on-brand: #10160f;
+    --brand: #f5f5f5;
+    --brand-hover: #e0e0e0;
+    --brand-soft: #242424;
+    --on-brand: #121212;
 
-    --accent: #e08c5e;
-    --accent-soft: #2b1d15;
+    --accent: #b4b4b4;
+    --accent-soft: #242424;
 
     --success: #5cc08d;
     --success-soft: #16281f;
