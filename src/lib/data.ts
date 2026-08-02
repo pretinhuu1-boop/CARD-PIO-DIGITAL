@@ -1,60 +1,52 @@
 /**
  * ============================================================================
- * CATÁLOGO — Restaurante Istambul Tatuapé (halal)
+ * CATÁLOGO — ARQUIVO DE PREENCHIMENTO
  * ============================================================================
  *
- * Cardápio COMPLETO, coletado em 2026-08-02 de
- * restauranteistambulhalal-tatuape.pedido.app.br — as onze seções do site do
- * próprio restaurante. Nome, descrição e preço são transcrição literal,
- * inclusive a grafia da casa.
+ * Produtos, categorias, combos, avaliações, FAQ e a seção "sobre".
+ * Dados de contato/loja ficam em `src/lib/config.ts`.
  *
- * COMO FOI EXTRAÍDO
- * -----------------
- * Cada card traz um bloco `data-dadositem` com JSON (coditem, nomeitem,
- * precoitem) e marcação schema.org. É daí que vêm os dados, não de raspagem
- * de texto — e por isso o preço é o número do cadastro, não um valor lido de
- * tela.
- *
- * 152 REGISTROS VIRARAM 146 PRODUTOS
- * ----------------------------------
- * A casa cadastra acompanhamentos separadamente em cada seção: "ALHO" aparece
- * em cinco categorias e "molho de pimenta" em três, cada ocorrência com
- * `coditem` próprio. Numa página única com filtro "Todos" isso viraria
- * repetição visível, então foram unificados por nome + preço, mantendo a
- * primeira categoria. As demais estão anotadas em comentário no item.
- *
- * PREÇO: 98 dos 152 registros (64%) vêm como "à partir de" — é PISO, há
- * variação de tamanho. Só esses dizem isso na descrição.
- *
- * IMAGENS: 103 fotos distintas para 146 produtos. A plataforma reaproveita a
- * mesma imagem entre variações (os cinco tamanhos de "misto assado" dividem
- * uma foto). Mantido como está: é o acervo real da casa.
+ * IMAGENS: todo produto tem `image: null` neste template em branco. A grade
+ * renderiza um placeholder neutro quando `image` é `null`, então o layout
+ * continua correto sem nenhuma imagem. Ao preencher, use caminhos locais
+ * (ex.: '/produtos/nome-do-produto.webp') e não URLs externas.
  * ============================================================================
  */
 
+/** Tom visual de um selo. Mapeado para as cores semânticas em globals.css. */
 export type BadgeTone = 'neutral' | 'accent' | 'success' | 'warning' | 'info';
 
 export interface Badge {
+  /** Texto exibido no selo. Ex.: 'Mais vendido' */
   label: string;
   tone: BadgeTone;
 }
 
 export interface Product {
+  /** Identificador único e estável. Usado no carrinho e no pedido. */
   id: string;
   name: string;
   description: string;
+  /** Preço de venda em R$. */
   price: number;
+  /** Preço "de" riscado. Omita quando não houver desconto. */
   originalPrice?: number;
+  /** Caminho da imagem em /public, ou `null` para usar o placeholder. */
   image: string | null;
+  /** Deve corresponder a um `slug` de `categories`. */
   category: string;
   badge?: Badge;
+  /** Rendimento/porção. Ex.: '12 unidades'. Omita se não se aplica. */
   servings?: string;
+  /** Produtos indisponíveis aparecem esmaecidos e não podem ser adicionados. */
   available: boolean;
 }
 
 export interface Category {
+  /** Usado no filtro. Deve bater com `Product.category`. */
   slug: string;
   name: string;
+  /** Emoji ou string vazia para não exibir ícone. */
   emoji: string;
 }
 
@@ -62,14 +54,18 @@ export interface Combo {
   id: string;
   name: string;
   description: string;
+  /** IDs de `products`. Ao adicionar o combo, todos entram no carrinho. */
   productIds: string[];
+  /** Preço promocional do conjunto. */
   comboPrice: number;
 }
 
 export interface Review {
   id: string;
   name: string;
+  /** Iniciais exibidas no avatar. */
   initials: string;
+  /** 1 a 5. */
   rating: number;
   text: string;
   date: string;
@@ -90,1344 +86,171 @@ export interface AboutSection {
 /* -------------------------------------------------------------------------- */
 /* CATEGORIAS                                                                  */
 /* -------------------------------------------------------------------------- */
+/* A categoria 'todos' é obrigatória e sempre a primeira.                      */
 
 export const categories: Category[] = [
   { slug: 'todos', name: 'Todos', emoji: '' },
-  { slug: 'lanches', name: "Lanches", emoji: '' },
-  { slug: 'aperitivos', name: "Aperitivos", emoji: '' },
-  { slug: 'esfihas', name: "Esfihas", emoji: '' },
-  { slug: 'pide-turco', name: "Pide Turco", emoji: '' },
-  { slug: 'burgers', name: "Burgers", emoji: '' },
-  { slug: 'churrasco-na-brasa', name: "Churrasco na Brasa", emoji: '' },
-  { slug: 'frango-assado-na-brasa', name: "Frango Assado na Brasa", emoji: '' },
-  { slug: 'frango-frito', name: "Frango Frito", emoji: '' },
-  { slug: 'prato-feito-na-brasa', name: "Prato Feito na Brasa", emoji: '' },
-  { slug: 'bebidas', name: "Bebidas", emoji: '' },
-  { slug: 'doces-e-sobremesas', name: "Doces e Sobremesas", emoji: '' },
+  { slug: 'categoria-1', name: 'Categoria 1', emoji: '' },
+  { slug: 'categoria-2', name: 'Categoria 2', emoji: '' },
+  { slug: 'categoria-3', name: 'Categoria 3', emoji: '' },
+  { slug: 'categoria-4', name: 'Categoria 4', emoji: '' },
+  { slug: 'categoria-5', name: 'Categoria 5', emoji: '' },
 ];
 
 /* -------------------------------------------------------------------------- */
 /* PRODUTOS                                                                    */
 /* -------------------------------------------------------------------------- */
-/* `id` = ordem estável dentro da categoria de origem. O cardápio completo tem */
-/* 11 categorias; estas duas foram publicadas por terem preço e foto próprios. */
-
+/* 15 itens de exemplo distribuídos nas 5 categorias, sem imagem.              */
+/* Substitua nome, descrição, preço e categoria pelos dados reais da loja.     */
 
 export const products: Product[] = [
   {
-    id: 'alho',
-    name: "ALHO",
-    description: "Pasta de alho Valor a partir de — há variações de tamanho.",
-    price: 2.0,
-    image: '/produtos/alho.webp',
-    category: 'lanches',
-    available: true,
-    // Também listado pela casa em: Frango Assado na Brasa, Churrasco na Brasa, Burgers, Frango Frito.
-  },
-  {
-    id: 'molho-de-tahini',
-    name: "molho de tahini",
-    description: "Molho de Tahine Valor a partir de — há variações de tamanho.",
-    price: 2.0,
-    image: '/produtos/molho-de-tahini.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'molho-de-pimenta',
-    name: "molho de pimenta",
-    description: "Molho de Pimenta Valor a partir de — há variações de tamanho.",
-    price: 3.0,
-    image: '/produtos/molho-de-pimenta.webp',
-    category: 'lanches',
-    available: true,
-    // Também listado pela casa em: Frango Assado na Brasa, Frango Frito.
-  },
-  {
-    id: 'shawarma-de-carne-estilo-arabe',
-    name: "Shawarma de Carne (Estilo Àrabe)",
-    description: "Tomate, Cebola, Picles, Carne, Tahine, Salsinha Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/shawarma-de-carne-estilo-arabe.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-misto',
-    name: "Shawarma Misto",
-    description: "Tomate, Frango, Cebola, Picles, Carne, Batata Frita, Pasta de alho, Salsinha Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/shawarma-misto.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'falafel-vegetariano-estilo-arabe',
-    name: "Falafel (Vegetariano) estilo arabe",
-    description: "Tomate, Picles, Pão Sírio, Massa de Grão de Bico Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/falafel-vegetariano-estilo-arabe.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'falafel-estilo-bresileiro',
-    name: "falafel estilo bresileiro",
-    description: "Tomate, Picles, Molho de Tahine, Massa de Grão de Bico Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/falafel-estilo-bresileiro.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-de-frango-estilo-bresileiro',
-    name: "Shawarma de Frango (Estilo bresileiro)",
-    description: "Tomate, Frango, Cebola, Picles, Batata Frita, Pasta de alho, Salsinha Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/shawarma-de-frango-estilo-bresileiro.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-de-frango-estilo-arabe',
-    name: "Shawarma de Frango (Estilo Àrabe)",
-    description: "Frango, Picles, Batata Frita, Pasta de alho Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/shawarma-de-frango-estilo-arabe.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-de-carne-estilo-brasileiro',
-    name: "Shawarma de carne (Estilo Brasileiro)",
-    description: "Tomate, Cebola, Picles, Carne, Batata Frita, Pão Sírio, Salsinha Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/shawarma-de-carne-estilo-brasileiro.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'sujke-com-pimenta',
-    name: "Sujke com pimenta",
-    description: "Alface, Batata Peclis, Carne moída apimentada, Pão Sírio, Pasta de alho, Tomate Valor a partir de — há variações de tamanho.",
-    price: 27.0,
-    image: '/produtos/sujke-com-pimenta.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'tawook',
-    name: "Tawook",
-    description: "Picles, Batata Frita, Pasta de alho, Pão Sírio, Peito de frango em cubos, Assada na chapa Valor a partir de — há variações de tamanho.",
-    price: 27.0,
-    image: '/produtos/tawook.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'carne-assada-lanchearabe',
-    name: "Carne Assada lanchearabe",
-    description: "Carne assadana brasa, Cebola, Picles, Tahine, Tomate Valor a partir de — há variações de tamanho.",
-    price: 27.0,
-    image: '/produtos/carne-assada-lanchearabe.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-de-carne-brasileiro-pao-folha',
-    name: "Shawarma de carne ( Brasileiro) pao folha",
-    description: "Molho Especial, Tomate, Cebola, Picles, Carne, Batata Frita, Salsinha, Pão Folhada Valor a partir de — há variações de tamanho.",
-    price: 28.0,
-    image: '/produtos/shawarma-de-carne-brasileiro-pao-folha.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-de-carne-arabe-pao-folha',
-    name: "Shawarma de carne ( Àrabe) pao folha",
-    description: "Tomate, Salsicha, Cebola, Picles, Carne, Tahine, Pão Folhada Valor a partir de — há variações de tamanho.",
-    price: 28.0,
-    image: '/produtos/shawarma-de-carne-arabe-pao-folha.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-misto-pao-folha',
-    name: "Shawarma Misto pao folha",
-    description: "Frango, Picles, Carne, Batata Frita, Pasta de alho, Pão Folhada Valor a partir de — há variações de tamanho.",
-    price: 28.0,
-    image: '/produtos/shawarma-misto-pao-folha.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-de-frango-bresileiro-pao-folha',
-    name: "Shawarma de Frango( bresileiro pao folha)",
-    description: "Frango, Cebola, Picles, Batata Frita, Pasta de alho, Salsinha, Pão Folhada Valor a partir de — há variações de tamanho.",
-    price: 28.0,
-    image: '/produtos/shawarma-de-frango-bresileiro-pao-folha.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-de-frango-arabe-pao-folha',
-    name: "Shawarma de Frango ( Àrabe) pao folha",
-    description: "Frango, Picles, Batata Frita, Pasta de alho, Pão Folhada Valor a partir de — há variações de tamanho.",
-    price: 28.0,
-    image: '/produtos/shawarma-de-frango-arabe-pao-folha.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'arays-de-carne-arabe',
-    name: "Arays de Carne Àrabe",
-    description: "Pão Sírio, Carne moída Valor a partir de — há variações de tamanho.",
-    price: 30.0,
-    image: '/produtos/arays-de-carne-arabe.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'arays-de-carne-queijo',
-    name: "Arays de Carne Queijo",
-    description: "Mussarela, Pão Sírio, Carne moída Valor a partir de — há variações de tamanho.",
-    price: 35.0,
-    image: '/produtos/arays-de-carne-queijo.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-de-frango-arabe-prato',
-    name: "Shawarma de Frango (Àrabe) prato",
-    description: "Frango, Picles, Batata Frita, Pasta de alho, Shawarma no Prato Valor a partir de — há variações de tamanho.",
-    price: 40.0,
-    image: '/produtos/shawarma-de-frango-arabe-prato.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-de-frango-bresileiro-prato',
-    name: "Shawarma de Frango bresileiro (prato)",
-    description: "Frango, Picles, Batata Frita, Pasta de alho, Shawarma no Prato Valor a partir de — há variações de tamanho.",
-    price: 40.0,
-    image: '/produtos/shawarma-de-frango-bresileiro-prato.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-de-carne-arabe-prato',
-    name: "Shawarma de Carne Àrabe prato",
-    description: "Tomate, Cebola, Picles, Carne, Tahine, Shawarma no Prato Valor a partir de — há variações de tamanho.",
-    price: 40.0,
-    image: '/produtos/shawarma-de-carne-arabe-prato.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-decarne-brasileiroprato',
-    name: "Shawarma deCarne Brasileiroprato",
-    description: "Tomate, Cebola, Picles, Carne, Batata Frita, Shawarma no Prato Valor a partir de — há variações de tamanho.",
-    price: 40.0,
-    image: '/produtos/shawarma-decarne-brasileiroprato.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-misto-prato',
-    name: "Shawarma Misto prato",
-    description: "Frango, Carne, Batata Frita, Pasta de alho Valor a partir de — há variações de tamanho.",
-    price: 40.0,
-    image: '/produtos/shawarma-misto-prato.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-prato-de-carne-para-uma-pessoa',
-    name: "SHAWARMA PRATO DE CARNE PARA UMA PESSOA",
-    description: "Batata Frita, Carne, Cebola, Pasta de alho, Picles, Tomate Valor a partir de — há variações de tamanho.",
-    price: 50.0,
-    image: '/produtos/shawarma-prato-de-carne-para-uma-pessoa.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'sharama-de-frango-em-prato',
-    name: "sharama de frango em prato",
-    description: "Alface, Batata Frita, Molho Especial, Pão Sírio, Shawarma no Prato, Tomate Valor a partir de — há variações de tamanho.",
-    price: 70.0,
-    image: '/produtos/sharama-de-frango-em-prato.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-misto-no-prato',
-    name: "shawarma misto no prato",
-    description: "Alface, Batata Frita, Molho Especial, Pão Sírio, Shawarma no Prato, Tomate Valor a partir de — há variações de tamanho.",
-    price: 70.0,
-    image: '/produtos/shawarma-misto-no-prato.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: 'shawarma-de-carne-no-prato',
-    name: "shawarma de carne no prato",
-    description: "Alface, Batata Frita, Molho de Tahine, Pão Sírio, Shawarma no Prato, Tomate Valor a partir de — há variações de tamanho.",
-    price: 70.0,
-    image: '/produtos/shawarma-de-carne-no-prato.webp',
-    category: 'lanches',
-    available: true,
-  },
-  {
-    id: '250-gr-kibe-cru',
-    name: "250 gr Kibe Crú",
-    description: "Kibe Valor a partir de — há variações de tamanho.",
-    price: 50.0,
-    image: '/produtos/250-gr-kibe-cru.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: '500-gr-kibe-cru',
-    name: "500 gr Kibe Crú",
-    description: "Kibe Valor a partir de — há variações de tamanho.",
-    price: 90.0,
-    image: '/produtos/500-gr-kibe-cru.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'batata-frita-g',
-    name: "Batata Frita G",
-    description: "Batata frita Valor a partir de — há variações de tamanho.",
-    price: 30.0,
-    image: '/produtos/batata-frita-g.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'batata-frita-m',
-    name: "Batata Frita M",
-    description: "Batata frita Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/batata-frita-m.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'homus-250-gr',
-    name: "Homus 250 Gr",
-    description: "Pasta de grão de bico Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/homus-250-gr.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'labneh-250-gr',
-    name: "Labneh 250 Gr",
-    description: "Coalhada Seca Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/labneh-250-gr.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'pao-sirio',
-    name: "Pão Sirio",
-    description: "Pão Sirio Valor a partir de — há variações de tamanho.",
-    price: 20.0,
-    image: '/produtos/pao-sirio.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: '250-gr-crema-de-alho',
-    name: "250 Gr crema de alho",
-    description: "pasta de alho Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/250-gr-crema-de-alho.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'charuto-10-unidades',
-    name: "CHARUTO 10 UNIDADES",
-    description: "ARROZ TEMPERO Valor a partir de — há variações de tamanho.",
-    price: 35.0,
-    image: '/produtos/charuto-10-unidades.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'extra-cheddar',
-    name: "Extra cheddar",
-    description: "Cheddar Valor a partir de — há variações de tamanho.",
-    price: 5.0,
-    image: '/produtos/extra-cheddar.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'falafel-prato-6-unidades',
-    name: "Falafel prato 6 unidades",
-    description: "Falafel Valor a partir de — há variações de tamanho.",
-    price: 30.0,
-    image: '/produtos/falafel-prato-6-unidades.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'falafel-unidade',
-    name: "falafel unidade",
-    description: "Pão Sirio, Pasta de grão de bico Valor a partir de — há variações de tamanho.",
-    price: 6.0,
-    image: '/produtos/falafel-unidade.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'fatuche-grande',
-    name: "FATUCHE GRANDE",
-    description: "Tomate, Azeite, Alface, Pão torrado Valor a partir de — há variações de tamanho.",
-    price: 35.0,
-    image: '/produtos/fatuche-grande.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'fatuche-medio',
-    name: "FATUCHE MEDIO",
-    description: "Tomate, Azeite, Pepino, Alface, Pão torrado Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/fatuche-medio.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'homus-com-shawarma-de-carne',
-    name: "Homus com Shawarma de carne",
-    description: "Homus, Pickles, Shawarma de carne, Tomate Valor a partir de — há variações de tamanho.",
-    price: 65.0,
-    image: '/produtos/homus-com-shawarma-de-carne.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'humos-para-mesa',
-    name: "HUMOS PARA MESA",
-    description: "Pasta de grão de bico, Pão Sirio Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/humos-para-mesa.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'kibe-de-carne',
-    name: "Kibe de Carne",
-    description: "1 unidade Valor a partir de — há variações de tamanho.",
-    price: 13.0,
-    image: '/produtos/kibe-de-carne.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'pao-folha-massa-fina',
-    name: "pao folha massa fina",
-    description: "6 unidade Valor a partir de — há variações de tamanho.",
-    price: 30.0,
-    image: '/produtos/pao-folha-massa-fina.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'pao-sirio-1-unidade',
-    name: "Pão sirio 1 unidade",
-    description: "Pão Sirio Valor a partir de — há variações de tamanho.",
-    price: 3.0,
-    image: '/produtos/pao-sirio-1-unidade.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'qualhada-seca-para-mesa',
-    name: "QUALHADA SECA PARA MESA",
-    description: "Coalhada Seca, Azeite, Pão Sirio Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/qualhada-seca-para-mesa.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'tabule-grande',
-    name: "TABULE GRANDE",
-    description: "Salsinha, Cebola, Tomate, Azeite Valor a partir de — há variações de tamanho.",
-    price: 35.0,
-    image: '/produtos/tabule-grande.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'tabule-medio',
-    name: "TABULE MEDIO",
-    description: "Salsinha, Cebola, Tomate, Azeite Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/tabule-medio.webp',
-    category: 'aperitivos',
-    available: true,
-  },
-  {
-    id: 'esfiha-zatar',
-    name: "Esfiha Zatar",
-    description: "Esfiha",
-    price: 12.0,
-    image: '/produtos/esfiha-zatar.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'esfiha-brocolis',
-    name: "Esfiha Brócolis",
-    description: "Esfiha",
-    price: 12.0,
-    image: '/produtos/esfiha-brocolis.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'esfiha-carne',
-    name: "Esfiha Carne",
-    description: "Esfiha",
-    price: 12.0,
-    image: '/produtos/esfiha-carne.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'esfiha-de-frango',
-    name: "esfiha de frango",
-    description: "esfiha de frango vcs vao amar",
-    price: 12.0,
-    image: '/produtos/esfiha-de-frango.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'esfiha-queijo',
-    name: "Esfiha Queijo",
-    description: "Esfiha",
-    price: 12.0,
-    image: '/produtos/esfiha-queijo.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'esfiha-espinafre',
-    name: "Esfiha Espínafre",
-    description: "Esfiha",
-    price: 12.0,
-    image: '/produtos/esfiha-espinafre.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'esfiha-de-queijo-com-zaatar',
-    name: "ESFIHA DE QUEIJO COM ZAATAR",
-    description: "QUEIJO MUSARELLA COM ZAATAR",
-    price: 14.0,
-    image: '/produtos/esfiha-de-queijo-com-zaatar.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'esfiha-espinafre-c-queijo',
-    name: "Esfiha Espinafre c/ Queijo",
-    description: "Esfiha",
-    price: 14.0,
-    image: '/produtos/esfiha-espinafre-c-queijo.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'esfiha-brocolis-c-catupiry',
-    name: "Esfiha Brócolis c/ Catupiry",
-    description: "Esfiha",
-    price: 14.0,
-    image: '/produtos/esfiha-brocolis-c-catupiry.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'esfiha-carne-c-queijo',
-    name: "Esfiha Carne c/ Queijo",
-    description: "Esfiha",
-    price: 14.0,
-    image: '/produtos/esfiha-carne-c-queijo.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'esfiha-de-chocolate',
-    name: "esfiha de chocolate",
-    description: "esfiha de chocolate",
-    price: 14.0,
-    image: '/produtos/esfiha-de-chocolate.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'esfiha-espinafre-c-catupiry',
-    name: "Esfiha Espinafre c/ Catupiry",
-    description: "Esfiha",
-    price: 14.0,
-    image: '/produtos/esfiha-espinafre-c-catupiry.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'manuche-de-carne-tamanho-prato-de-almoco',
-    name: "manuche de carne tamanho prato de almoço",
-    description: "esfiha de carne tamanho prato",
-    price: 25.0,
-    image: '/produtos/manuche-de-carne-tamanho-prato-de-almoco.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'manuche-de-zaatar',
-    name: "MANUCHE DE ZAATAR",
-    description: "MANUCHE DE ZAAATAR TAMANHO DE PRATO",
-    price: 25.0,
-    image: '/produtos/manuche-de-zaatar.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'manuche-de-carne-com-queiju',
-    name: "MANUCHE DE CARNE COM QUEIJU",
-    description: "MANUCHE DE CARNE COM QUEIJU",
-    price: 30.0,
-    image: '/produtos/manuche-de-carne-com-queiju.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'manuche-de-queijo-tamanho-de-prato',
-    name: "MANUCHE DE QUEIJO TAMANHO DE PRATO",
-    description: "MANUCHE DE QUEIJO",
-    price: 30.0,
-    image: '/produtos/manuche-de-queijo-tamanho-de-prato.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: '500-gr-esfiha-de-carne-arabe',
-    name: "500 gr esfiha de carne arabe",
-    description: "20 unidade massa fina",
-    price: 65.0,
-    image: '/produtos/500-gr-esfiha-de-carne-arabe.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: '500-gg-esfiha-de-carne-arabe-para-mesa',
-    name: "500 Gg Esfiha de carne arabe (PARA MESA)",
-    description: "20 UNIDADES ESFIHA PARA MESA",
-    price: 75.0,
-    image: '/produtos/500-gg-esfiha-de-carne-arabe-para-mesa.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: '1kg-esfiha-de-carne-arabe',
-    name: "1Kg Esfiha de Carne Árábe",
-    description: "40 unidades massa fina",
-    price: 130.0,
-    image: '/produtos/1kg-esfiha-de-carne-arabe.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: '1-kg-esfiha-de-carne-arabe-para-mesa',
-    name: "1 Kg Esfiha de carne arabe (PARA MESA)",
-    description: "40 UNIDADES ESFIHA PARA MESA",
-    price: 150.0,
-    image: '/produtos/1-kg-esfiha-de-carne-arabe-para-mesa.webp',
-    category: 'esfihas',
-    available: true,
-  },
-  {
-    id: 'pide-de-brocolis',
-    name: "Pide de Brócolis",
-    description: "Pide",
-    price: 45.0,
-    image: '/produtos/pide-de-brocolis.webp',
-    category: 'pide-turco',
-    available: true,
-  },
-  {
-    id: 'pide-de-carne',
-    name: "Pide de Carne",
-    description: "Pide",
-    price: 45.0,
-    image: '/produtos/pide-de-carne.webp',
-    category: 'pide-turco',
-    available: true,
-  },
-  {
-    id: 'pide-de-carne-c-queijo',
-    name: "Pide de Carne c/ Queijo",
-    description: "Pide",
-    price: 50.0,
-    image: '/produtos/pide-de-carne-c-queijo.webp',
-    category: 'pide-turco',
-    available: true,
-  },
-  {
-    id: 'pide-de-espinafre',
-    name: "Pide de Espinafre",
-    description: "Pide",
-    price: 45.0,
-    image: '/produtos/pide-de-espinafre.webp',
-    category: 'pide-turco',
-    available: true,
-  },
-  {
-    id: 'pide-de-espinafre-c-queijo',
-    name: "Pide de Espinafre c/ Queijo",
-    description: "Pide",
-    price: 50.0,
-    image: '/produtos/pide-de-espinafre-c-queijo.webp',
-    category: 'pide-turco',
-    available: true,
-  },
-  {
-    id: 'pide-de-frango',
-    name: "Pide de Frango",
-    description: "Pide",
-    price: 45.0,
-    image: '/produtos/pide-de-frango.webp',
-    category: 'pide-turco',
-    available: true,
-  },
-  {
-    id: 'pide-de-frango-c-catupiry',
-    name: "Pide de Frango c/ Catupiry",
-    description: "Pide",
-    price: 50.0,
-    image: '/produtos/pide-de-frango-c-catupiry.webp',
-    category: 'pide-turco',
-    available: true,
-  },
-  {
-    id: 'pide-de-mussarela',
-    name: "Pide de Mussarela",
-    description: "Pide",
-    price: 50.0,
-    image: '/produtos/pide-de-mussarela.webp',
-    category: 'pide-turco',
-    available: true,
-  },
-  {
-    id: 'pide-de-shawarma-frango',
-    name: "Pide de Shawarma Frango",
-    description: "Pide",
-    price: 55.0,
-    image: '/produtos/pide-de-shawarma-frango.webp',
-    category: 'pide-turco',
-    available: true,
-  },
-  {
-    id: 'pide-de-shawarme-carne',
-    name: "Pide de Shawarme Carne",
-    description: "Pide",
-    price: 55.0,
-    image: '/produtos/pide-de-shawarme-carne.webp',
-    category: 'pide-turco',
-    available: true,
-  },
-  {
-    id: 'pide-de-sujuki',
-    name: "Pide de Sujuki",
-    description: "Pide",
-    price: 50.0,
-    image: '/produtos/pide-de-sujuki.webp',
-    category: 'pide-turco',
-    available: true,
-  },
-  {
-    id: 'pide-demoserella-com-tomate-com-cebola',
-    name: "pide demoserella com tomate com cebola",
-    description: "pide de moserella com tomato com cebola",
-    price: 55.0,
-    image: '/produtos/pide-demoserella-com-tomate-com-cebola.webp',
-    category: 'pide-turco',
-    available: true,
-  },
-  {
-    id: 'burger-carne-com-ovo',
-    name: "burger carne com ovo",
-    description: "Tradicional Valor a partir de — há variações de tamanho.",
-    price: 28.0,
-    image: '/produtos/burger-carne-com-ovo.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'burger-carne-doublo-queijo',
-    name: "BURGER CARNE DOUBLO QUEIJO",
-    description: "Batata, carne, queijo Valor a partir de — há variações de tamanho.",
-    price: 28.0,
-    image: '/produtos/burger-carne-doublo-queijo.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'burger-crespi',
-    name: "Burger Crespi",
-    description: "Alface, Batata, Ketchup, Maionese, Picles Valor a partir de — há variações de tamanho.",
-    price: 30.0,
-    image: '/produtos/burger-crespi.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'burger-de-carne',
-    name: "Burger de Carne",
-    description: "Batata, Ketchup, Maionese, queijo, Tradicional Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/burger-de-carne.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'burger-de-carne-duplo',
-    name: "Burger de Carne Duplo",
-    description: "Tradicional Duplo Valor a partir de — há variações de tamanho.",
-    price: 35.0,
-    image: '/produtos/burger-de-carne-duplo.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'burger-de-falafel',
-    name: "Burger de Falafel",
-    description: "Vegetariano Valor a partir de — há variações de tamanho.",
-    price: 28.0,
-    image: '/produtos/burger-de-falafel.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'burger-de-frango',
-    name: "Burger de Frango",
-    description: "Batata, Ketchup, Maionese, queijo, Tradicional Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/burger-de-frango.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'burger-de-frango-duplo',
-    name: "Burger de Frango Duplo",
-    description: "Tradicional Duplo Valor a partir de — há variações de tamanho.",
-    price: 35.0,
-    image: '/produtos/burger-de-frango-duplo.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'burger-de-sujke-com-pimenta',
-    name: "Burger de Sujke com pimenta",
-    description: "Tradicional Valor a partir de — há variações de tamanho.",
-    price: 27.0,
-    image: '/produtos/burger-de-sujke-com-pimenta.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'burger-de-sujke-com-pimenta-c-ovo',
-    name: "Burger de Sujke com pimenta c/ Ovo",
-    description: "Ovo Valor a partir de — há variações de tamanho.",
-    price: 32.0,
-    image: '/produtos/burger-de-sujke-com-pimenta-c-ovo.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'burger-frango-com-ovo',
-    name: "burger frango com ovo",
-    description: "Tradicional Valor a partir de — há variações de tamanho.",
-    price: 28.0,
-    image: '/produtos/burger-frango-com-ovo.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'burger-frango-triplo',
-    name: "Burger frango triplo",
-    description: "Alface, Batata, Ketchup, TOMATE Valor a partir de — há variações de tamanho.",
-    price: 40.0,
-    image: '/produtos/burger-frango-triplo.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'burger-misto-em-dobro',
-    name: "burger misto em dobro",
-    description: "Ketchup, Maionese, Tradicional Duplo Valor a partir de — há variações de tamanho.",
-    price: 35.0,
-    image: '/produtos/burger-misto-em-dobro.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'burger-triplo-carne',
-    name: "Burger triplo carne",
-    description: "Alface, Batata, Ketchup, TOMATE Valor a partir de — há variações de tamanho.",
-    price: 40.0,
-    image: '/produtos/burger-triplo-carne.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'hamburguer-de-frango-grelhado',
-    name: "Hamburguer de Frango Grelhado",
-    description: "Alface, Ketchup, Maionese, queiju, TOMATE Valor a partir de — há variações de tamanho.",
-    price: 28.0,
-    image: '/produtos/hamburguer-de-frango-grelhado.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'x-burger-decarne',
-    name: "x burger decarne",
-    description: "Alface, Batata, Ketchup, Maionese, TOMATE Valor a partir de — há variações de tamanho.",
-    price: 27.0,
-    image: '/produtos/x-burger-decarne.webp',
-    category: 'burgers',
-    available: true,
-  },
-  {
-    id: 'pao-com-pimenta-1-und',
-    name: "PAO COM PIMENTA 1 und",
-    description: "Pão torrado c/ pimenta Valor a partir de — há variações de tamanho.",
-    price: 7.0,
-    image: '/produtos/pao-com-pimenta-1-und.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: 'coxa-assada-na-braza-300gg-1-und',
-    name: "Coxa Assada na Braza 300Gg 1 und",
-    description: "Batata, Pão Assado, Pasta de alho Valor a partir de — há variações de tamanho.",
-    price: 30.0,
-    image: '/produtos/coxa-assada-na-braza-300gg-1-und.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: '300-gr-misto-assado',
-    name: "300 gr misto assado",
-    description: "Cebola Assada, Pão Sírio 2 Unid, Pão torrado c/ pimenta, Tomate Valor a partir de — há variações de tamanho.",
-    price: 50.0,
-    image: '/produtos/300-gr-misto-assado.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: '300-gr-shokaf-carne-assada',
-    name: "300 Gr Shokaf (Carne Assada)",
-    description: "Cebola Assada, Pão Sírio 2 Unid, Pão torrado c/ pimenta, Tomate Valor a partir de — há variações de tamanho.",
-    price: 50.0,
-    image: '/produtos/300-gr-shokaf-carne-assada.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: '300-gr-tawook',
-    name: "300 Gr Tawook",
-    description: "Cebola Assada, Pão torrado c/ pimenta, Pasta de alho, Peito de Frango em cubo assado na braza, Tomate Valor a partir de — há variações de tamanho.",
-    price: 50.0,
-    image: '/produtos/300-gr-tawook.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: '500-gr-tawook',
-    name: "500 Gr Tawook",
-    description: "Cebola Assada, Pão Sírio 2 Unid, Pão torrado c/ pimenta, Peito de Frango em cubo assado na braza, Tomate Valor a partir de — há variações de tamanho.",
-    price: 75.0,
-    image: '/produtos/500-gr-tawook.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: '500-gr-shokaf-carne-assada',
-    name: "500 Gr (SHOKAF) Carne assada",
-    description: "Cebola Assada, Pão Sírio 2 Unid, Pão torrado c/ pimenta, Tomate Valor a partir de — há variações de tamanho.",
-    price: 80.0,
-    image: '/produtos/500-gr-shokaf-carne-assada.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: '500-gr-misto-assado',
-    name: "500 Gr misto assado",
-    description: "Cebola Assada, Pão Sírio 2 Unid, Pão torrado c/ pimenta, Tomate Valor a partir de — há variações de tamanho.",
-    price: 80.0,
-    image: '/produtos/500-gr-misto-assado.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: '600-gr-misto-assado',
-    name: "600 gr misto assado",
-    description: "Cebola Assada, Pão torrado c/ pimenta, Tomate Valor a partir de — há variações de tamanho.",
-    price: 90.0,
-    image: '/produtos/600-gr-misto-assado.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: '600-gr-shokaf-carne-assada',
-    name: "600 Gr Shokaf(Carne Assada)",
-    description: "Cebola Assada, Pão Sírio 2 Unid, Pão torrado c/ pimenta, Tomate Valor a partir de — há variações de tamanho.",
-    price: 90.0,
-    image: '/produtos/600-gr-shokaf-carne-assada.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: '600-gr-tawook',
-    name: "600 Gr Tawook",
-    description: "Cebola Assada, Pão torrado c/ pimenta, Pasta de alho, Peito de Frango em cubo assado na braza, Tomate Valor a partir de — há variações de tamanho.",
-    price: 90.0,
-    image: '/produtos/600-gr-tawook.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: '1-kg-tawook',
-    name: "1 Kg Tawook",
-    description: "Cebola Assada, Pão torrado c/ pimenta, Pasta de alho, Peito de Frango em cubo assado na braza, Tomate Valor a partir de — há variações de tamanho.",
-    price: 150.0,
-    image: '/produtos/1-kg-tawook.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: '1-kg-misto-assado',
-    name: "1 Kg misto assado",
-    description: "Cebola Assada, Pão torrado c/ pimenta, Tomate Valor a partir de — há variações de tamanho.",
-    price: 160.0,
-    image: '/produtos/1-kg-misto-assado.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: '1-kg-shokaf-carne-assada',
-    name: "1 Kg Shokaf(Carne Assada)",
-    description: "Cebola Assada, Pão Sírio 2 Unid, Pão torrado c/ pimenta, Tomate Valor a partir de — há variações de tamanho.",
-    price: 160.0,
-    image: '/produtos/1-kg-shokaf-carne-assada.webp',
-    category: 'churrasco-na-brasa',
-    available: true,
-  },
-  {
-    id: 'coxa-sobre-coxa-assado-na-braza-sem-osso-1-u',
-    name: "COXA SOBRE COXA ASSADO NA BRAZA SEM OSSO 1 und",
-    description: "Batata Frita, Pão Árabe Apimentado, Pasta de Alho Valor a partir de — há variações de tamanho.",
-    price: 30.0,
-    image: '/produtos/coxa-sobre-coxa-assado-na-braza-sem-osso-1-u.webp',
-    category: 'frango-assado-na-brasa',
-    available: true,
-  },
-  {
-    id: 'creme-de-alh0-250-grama',
-    name: "creme de alh0 250 grama",
-    description: "Pasta de Alho Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/creme-de-alh0-250-grama.webp',
-    category: 'frango-assado-na-brasa',
-    available: true,
-  },
-  {
-    id: 'frango-assado-delivery',
-    name: "Frango Assado (Delivery)",
-    description: "Batata Frita, Pão Árabe Apimentado, Pasta de Alho Valor a partir de — há variações de tamanho.",
-    price: 80.0,
-    image: '/produtos/frango-assado-delivery.webp',
-    category: 'frango-assado-na-brasa',
-    available: true,
-  },
-  {
-    id: 'frango-assado-mesa',
-    name: "Frango Assado (Mesa)",
-    description: "Batata Frita, Pão Árabe Apimentado, Pasta de Alho Valor a partir de — há variações de tamanho.",
-    price: 90.0,
-    image: '/produtos/frango-assado-mesa.webp',
-    category: 'frango-assado-na-brasa',
-    available: true,
-  },
-  {
-    id: 'pao-com-pimenta',
-    name: "PAO COM PIMENTA",
-    description: "Pão Árabe Apimentado Valor a partir de — há variações de tamanho.",
-    price: 7.0,
-    image: '/produtos/pao-com-pimenta.webp',
-    category: 'frango-assado-na-brasa',
-    available: true,
-  },
-  {
-    id: 'creme-de-alho-250-grama',
-    name: "creme de alho 250 grama",
-    description: "Pasta de alho Valor a partir de — há variações de tamanho.",
-    price: 25.0,
-    image: '/produtos/creme-de-alho-250-grama.webp',
-    category: 'frango-frito',
-    available: true,
-  },
-  {
-    id: 'frango-brost-metade',
-    name: "Frango Brost Metade",
-    description: "2 Pães, Batata Frita, Pasta de alho Valor a partir de — há variações de tamanho.",
-    price: 50.0,
-    image: '/produtos/frango-brost-metade.webp',
-    category: 'frango-frito',
-    available: true,
-  },
-  {
-    id: 'frango-crispi-6-unidade',
-    name: "Frango Crispi 6 unidade",
-    description: "2 Pães, Batata Frita, Pasta de alho Valor a partir de — há variações de tamanho.",
-    price: 50.0,
-    image: '/produtos/frango-crispi-6-unidade.webp',
-    category: 'frango-frito',
-    available: true,
-  },
-  {
-    id: 'pao-com-pimenta-torrado',
-    name: "PAO COM PIMENTA torrado",
-    description: "pao torrado com pimenta Valor a partir de — há variações de tamanho.",
-    price: 50.0,
-    image: '/produtos/pao-com-pimenta-torrado.webp',
-    category: 'prato-feito-na-brasa',
-    available: true,
-  },
-  {
-    id: 'shokaf',
-    name: "Shokaf",
-    description: "2 Espetos de Contra Filé em cubos, Batata, Homus, Salada Valor a partir de — há variações de tamanho.",
-    price: 50.0,
-    image: '/produtos/shokaf.webp',
-    category: 'prato-feito-na-brasa',
-    available: true,
-  },
-  {
-    id: 'tawook-2',
-    name: "Tawook",
-    description: "2 Espetos de Tawook, Batata, Homus, Salada Valor a partir de — há variações de tamanho.",
-    price: 50.0,
-    image: '/produtos/tawook-2.webp',
-    category: 'prato-feito-na-brasa',
-    available: true,
-  },
-  {
-    id: 'coca-cola-lata-350ml',
-    name: "Coca-Cola Lata 350ml",
-    description: "Refrigerante Cola",
+    id: 'p-01',
+    name: 'Produto 01',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
     price: 10.0,
-    image: '/produtos/coca-cola-lata-350ml.webp',
-    category: 'bebidas',
+    image: null,
+    category: 'categoria-1',
+    badge: { label: 'Mais vendido', tone: 'accent' },
+    servings: '1 unidade',
     available: true,
   },
   {
-    id: 'coca-cola-zero-lata-350ml',
-    name: "Coca-Cola Zero Lata 350ml",
-    description: "Refrigerante Cola",
-    price: 10.0,
-    image: '/produtos/coca-cola-zero-lata-350ml.webp',
-    category: 'bebidas',
-    available: true,
-  },
-  {
-    id: 'del-valle-uva-lata-290ml',
-    name: "Del Valle Uva Lata 290ml",
-    description: "Del Valle sucos acredita que quem planta amor, colhe carinho. Por isso, seleciona as melhores frutas para levar os melhores produtos até a sua família.",
-    price: 10.0,
-    image: '/produtos/del-valle-uva-lata-290ml.webp',
-    category: 'bebidas',
-    available: true,
-  },
-  {
-    id: 'fanta-laranja-lata-350ml',
-    name: "Fanta Laranja Lata 350ml",
-    description: "Refrigerante Laranja",
-    price: 10.0,
-    image: '/produtos/fanta-laranja-lata-350ml.webp',
-    category: 'bebidas',
-    available: true,
-  },
-  {
-    id: 'fanta-uva-lata-350ml',
-    name: "Fanta Uva Lata 350ml",
-    description: "Refrigerante Uva",
-    price: 10.0,
-    image: '/produtos/fanta-uva-lata-350ml.webp',
-    category: 'bebidas',
-    available: true,
-  },
-  {
-    id: 'guarana-antarctica-zero-acucar-lata-350ml',
-    name: "Guaraná Antarctica Zero Açúcar Lata 350ml",
-    description: "O clássico dos clássicos, combina com tudo!",
-    price: 10.0,
-    image: '/produtos/guarana-antarctica-zero-acucar-lata-350ml.webp',
-    category: 'bebidas',
-    available: true,
-  },
-  {
-    id: 'schweppes-citrus-lata-350ml',
-    name: "Schweppes Citrus Lata 350ml",
-    description: "Criada em 1792 por Jacob Schweppes, possui sabor marcante cítrico e refrescante, combinação de suco de maçã, grapefruit e laranja, uma bebida ideal para ser apreciada pura ou misturada ao drink.",
-    price: 10.0,
-    image: '/produtos/schweppes-citrus-lata-350ml.webp',
-    category: 'bebidas',
-    available: true,
-  },
-  {
-    id: 'schweppes-tonica-lata-350ml',
-    name: "Schweppes Tônica Lata 350ml",
-    description: "Elaborada a partir de água gaseificada e extrato vegetal de quinino, possui sabor natural e qualidades medicinais, agindo como um auxiliar na digestão. Pode ser consumida pura ou em drinks, como o famoso Gim-tônica!",
-    price: 10.0,
-    image: '/produtos/schweppes-tonica-lata-350ml.webp',
-    category: 'bebidas',
-    available: true,
-  },
-  {
-    id: 'soda-antarctica-lata-350ml',
-    name: "Soda Antarctica Lata 350ml",
-    description: "Refresque seu dia com a Soda Limonada Antarctica.",
-    price: 10.0,
-    image: '/produtos/soda-antarctica-lata-350ml.webp',
-    category: 'bebidas',
-    available: true,
-  },
-  {
-    id: 'sprite-lata-350ml',
-    name: "Sprite Lata 350ml",
-    description: "Refrigerante Limão",
-    price: 10.0,
-    image: '/produtos/sprite-lata-350ml.webp',
-    category: 'bebidas',
-    available: true,
-  },
-  {
-    id: 'suco-de-laranja-natural-300ml',
-    name: "Suco de Laranja Natural - 300ML",
-    description: "Suco de Laranja Natural - 300ML",
+    id: 'p-02',
+    name: 'Produto 02',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
     price: 15.0,
-    image: '/produtos/suco-de-laranja-natural-300ml.webp',
-    category: 'bebidas',
+    originalPrice: 20.0,
+    image: null,
+    category: 'categoria-1',
+    badge: { label: 'Promoção', tone: 'warning' },
+    servings: '1 unidade',
     available: true,
   },
   {
-    id: 'suco-de-laranja-natural-jarra',
-    name: "Suco de Laranja Natural - Jarra",
-    description: "Suco",
+    id: 'p-03',
+    name: 'Produto 03',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 22.5,
+    image: null,
+    category: 'categoria-1',
+    servings: '2 unidades',
+    available: true,
+  },
+  {
+    id: 'p-04',
+    name: 'Produto 04',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
     price: 30.0,
-    image: '/produtos/suco-de-laranja-natural-jarra.webp',
-    category: 'bebidas',
+    image: null,
+    category: 'categoria-2',
+    badge: { label: 'Novidade', tone: 'success' },
     available: true,
   },
   {
-    id: 'agua-500ml',
-    name: "Água 500ml",
-    description: "Água",
+    id: 'p-05',
+    name: 'Produto 05',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 35.9,
+    image: null,
+    category: 'categoria-2',
+    servings: '6 unidades',
+    available: true,
+  },
+  {
+    id: 'p-06',
+    name: 'Produto 06',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 42.0,
+    image: null,
+    category: 'categoria-2',
+    available: true,
+  },
+  {
+    id: 'p-07',
+    name: 'Produto 07',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 48.9,
+    image: null,
+    category: 'categoria-3',
+    badge: { label: 'Destaque', tone: 'info' },
+    servings: '8 a 10 porções',
+    available: true,
+  },
+  {
+    id: 'p-08',
+    name: 'Produto 08',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 55.0,
+    originalPrice: 65.0,
+    image: null,
+    category: 'categoria-3',
+    available: true,
+  },
+  {
+    id: 'p-09',
+    name: 'Produto 09',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 60.0,
+    image: null,
+    category: 'categoria-3',
+    available: true,
+  },
+  {
+    id: 'p-10',
+    name: 'Produto 10',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 12.5,
+    image: null,
+    category: 'categoria-4',
+    available: true,
+  },
+  {
+    id: 'p-11',
+    name: 'Produto 11',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 18.0,
+    image: null,
+    category: 'categoria-4',
+    badge: { label: 'Edição limitada', tone: 'neutral' },
+    available: true,
+  },
+  {
+    id: 'p-12',
+    name: 'Produto 12',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 25.0,
+    image: null,
+    category: 'categoria-4',
+    available: false,
+  },
+  {
+    id: 'p-13',
+    name: 'Produto 13',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
     price: 8.0,
-    image: '/produtos/agua-500ml.webp',
-    category: 'bebidas',
+    image: null,
+    category: 'categoria-5',
+    servings: '300 ml',
     available: true,
   },
   {
-    id: 'agua-c-gas-500ml',
-    name: "Água c/Gás 500ml",
-    description: "Água",
-    price: 8.0,
-    image: '/produtos/agua-c-gas-500ml.webp',
-    category: 'bebidas',
+    id: 'p-14',
+    name: 'Produto 14',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 9.5,
+    image: null,
+    category: 'categoria-5',
+    servings: '400 ml',
     available: true,
   },
   {
-    id: 'caixa-de-baklava',
-    name: "Caixa de baklava",
-    description: "caixa de baklava mista",
-    price: 45.0,
-    image: '/produtos/caixa-de-baklava.webp',
-    category: 'doces-e-sobremesas',
-    available: true,
-  },
-  {
-    id: 'docefolha-de-pistache',
-    name: "Docefolha de pistache",
-    description: "doce de pistache",
-    price: 20.0,
-    image: '/produtos/docefolha-de-pistache.webp',
-    category: 'doces-e-sobremesas',
-    available: true,
-  },
-  {
-    id: 'doce-de-mamul-tamara',
-    name: "Doce de Mamul Tamara",
-    description: "Doces e Sobremesas — servido no Restaurante Istambul.",
-    price: 15.0,
-    image: '/produtos/doce-de-mamul-tamara.webp',
-    category: 'doces-e-sobremesas',
-    available: true,
-  },
-  {
-    id: 'doce-de-ninho-de-pistache',
-    name: "Doce de ninho de pistache",
-    description: "doce de ninho pistache",
-    price: 15.0,
-    image: '/produtos/doce-de-ninho-de-pistache.webp',
-    category: 'doces-e-sobremesas',
-    available: true,
-  },
-  {
-    id: 'doce-de-ninho-nozes',
-    name: "doce de ninho nozes",
-    description: "doce de ninho nozes",
-    price: 15.0,
-    image: '/produtos/doce-de-ninho-nozes.webp',
-    category: 'doces-e-sobremesas',
-    available: true,
-  },
-  {
-    id: 'cafe',
-    name: "Café",
-    description: "Café Turco",
-    price: 10.0,
-    image: '/produtos/cafe.webp',
-    category: 'doces-e-sobremesas',
-    available: true,
-  },
-  {
-    id: 'halawa',
-    name: "HALAWA",
-    description: "Halava de pistache",
-    price: 10.0,
-    image: '/produtos/halawa.webp',
-    category: 'doces-e-sobremesas',
-    available: true,
-  },
-  {
-    id: 'delicia-turca',
-    name: "Delícia turca",
-    description: "Delicia Turco",
-    price: 6.0,
-    image: '/produtos/delicia-turca.webp',
-    category: 'doces-e-sobremesas',
+    id: 'p-15',
+    name: 'Produto 15',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 11.0,
+    image: null,
+    category: 'categoria-5',
     available: true,
   },
 ];
@@ -1435,14 +258,39 @@ export const products: Product[] = [
 /* -------------------------------------------------------------------------- */
 /* COMBOS                                                                      */
 /* -------------------------------------------------------------------------- */
-/*
-  Vazio de propósito. O restaurante anuncia quatro "COMBO FAMILIAR" no cardápio
-  online, mas nenhum deles exibe preço na listagem, e três são marcados
-  "⚠️ Apenas Retirada". Publicar combo sem preço quebraria o carrinho; publicar
-  com preço estimado seria inventar. Registrados em scraped-stores/.
-*/
-export const combos: Combo[] = [];
+/* Deixe [] para ocultar a seção inteira.                                      */
 
+export const combos: Combo[] = [
+  {
+    id: 'c-01',
+    name: 'Combo 01',
+    description: 'Descrição curta do combo.',
+    productIds: ['p-01', 'p-04', 'p-13'],
+    comboPrice: 45.0,
+  },
+  {
+    id: 'c-02',
+    name: 'Combo 02',
+    description: 'Descrição curta do combo.',
+    productIds: ['p-07', 'p-08'],
+    comboPrice: 95.0,
+  },
+  {
+    id: 'c-03',
+    name: 'Combo 03',
+    description: 'Descrição curta do combo.',
+    productIds: ['p-02', 'p-05', 'p-14'],
+    comboPrice: 55.0,
+  },
+];
+
+/**
+ * Converte um combo num item vendável.
+ *
+ * O combo entra no pedido como UMA linha, pelo preço do combo — se entrasse
+ * como produtos avulsos, o carrinho cobraria a soma dos preços cheios e
+ * contradiria o desconto anunciado no card.
+ */
 export function comboAsProduct(combo: Combo): Product {
   const names = combo.productIds
     .map((id) => products.find((p) => p.id === id)?.name)
@@ -1462,9 +310,14 @@ export function comboAsProduct(combo: Combo): Product {
   };
 }
 
+/**
+ * Resolve qualquer id vendável — produto avulso ou combo.
+ * Usado ao restaurar o carrinho do localStorage.
+ */
 export function findSellableById(id: string): Product | undefined {
   const product = products.find((p) => p.id === id);
   if (product) return product;
+
   const combo = combos.find((c) => `combo-${c.id}` === id);
   return combo ? comboAsProduct(combo) : undefined;
 }
@@ -1474,57 +327,78 @@ export function findSellableById(id: string): Product | undefined {
 /* -------------------------------------------------------------------------- */
 
 export const about: AboutSection = {
-  title: 'Cozinha árabe e turca, halal, no Tatuapé',
-  subtitle: 'Salão para refeição no local, na Rua Itapura',
+  title: 'Sobre',
+  subtitle: 'Subtítulo da seção sobre',
   paragraphs: [
-    'O Istambul serve shawarma, esfihas, pratos na brasa e doces árabes. A cozinha segue os preceitos halal.',
-    'O salão fica na Rua Itapura, 1342, com espaço amplo para refeição no local. O Google registra ticket médio de R$ 40 a 60 por pessoa, informado por 64 visitantes.',
-    'Este cardápio mostra uma seleção. O catálogo completo tem onze seções, incluindo churrasco na brasa, frango assado, pide turco e sobremesas.',
+    'Primeiro parágrafo sobre a loja: origem, proposta e o que a diferencia.',
+    'Segundo parágrafo: processo, matéria-prima ou forma de trabalho.',
+    'Terceiro parágrafo: posicionamento atual e público atendido.',
   ],
   values: [
-    { icon: '', title: 'Halal', description: 'Cozinha conforme os preceitos halal.' },
-    { icon: '', title: '4,8 no Google', description: '106 avaliações da unidade Tatuapé.' },
-    { icon: '', title: 'Salão amplo', description: 'Refeição no local, terça a domingo.' },
-    { icon: '', title: '11 seções', description: 'Da brasa ao pide turco e aos doces.' },
+    { icon: '', title: 'Valor 1', description: 'Descrição curta do primeiro diferencial.' },
+    { icon: '', title: 'Valor 2', description: 'Descrição curta do segundo diferencial.' },
+    { icon: '', title: 'Valor 3', description: 'Descrição curta do terceiro diferencial.' },
+    { icon: '', title: 'Valor 4', description: 'Descrição curta do quarto diferencial.' },
   ],
 };
 
 /* -------------------------------------------------------------------------- */
 /* AVALIAÇÕES                                                                  */
 /* -------------------------------------------------------------------------- */
-/* Vazio: as avaliações do Google desta unidade não foram transcritas nesta    */
-/* coleta. A seção fica oculta em vez de exibir depoimento genérico.           */
+/* Deixe [] para ocultar a seção inteira.                                      */
 
-export const reviews: Review[] = [];
-
-/* -------------------------------------------------------------------------- */
-/* FAQ                                                                         */
-/* -------------------------------------------------------------------------- */
-
-export const faqs: FAQ[] = [
+export const reviews: Review[] = [
   {
-    question: 'Como faço para pedir?',
-    answer:
-      'Monte seu pedido aqui e clique em "Enviar pedido pelo WhatsApp". Você também pode pedir direto pelo cardápio online do restaurante, com o catálogo completo.',
+    id: 'r-01',
+    name: 'Nome do cliente 1',
+    initials: 'C1',
+    rating: 5,
+    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
+    date: 'há 1 semana',
   },
   {
-    question: 'Por que alguns itens dizem "a partir de"?',
-    answer:
-      'Porque têm variações de tamanho. O valor mostrado é o menor da faixa; o preço final se confirma no atendimento.',
+    id: 'r-02',
+    name: 'Nome do cliente 2',
+    initials: 'C2',
+    rating: 5,
+    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
+    date: 'há 2 semanas',
   },
   {
-    question: 'A comida é halal?',
-    answer: 'Sim. A casa se apresenta como Restaurante Istambul halal.',
-  },
-  {
-    question: 'Qual o horário e onde fica?',
-    answer:
-      'R. Itapura, 1342 — Vila Gomes Cardim, Tatuapé. Terça a domingo, das 11h às 23h. Segunda não abre.',
+    id: 'r-03',
+    name: 'Nome do cliente 3',
+    initials: 'C3',
+    rating: 4,
+    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
+    date: 'há 1 mês',
   },
 ];
 
 /* -------------------------------------------------------------------------- */
-/* NAVEGAÇÃO                                                                   */
+/* FAQ                                                                         */
+/* -------------------------------------------------------------------------- */
+/* Deixe [] para ocultar a seção inteira.                                      */
+
+export const faqs: FAQ[] = [
+  {
+    question: 'Como faço para realizar um pedido?',
+    answer:
+      'Adicione os produtos ao carrinho, preencha seus dados e clique em "Enviar pedido pelo WhatsApp". Você será levado à conversa com a nota do pedido já montada.',
+  },
+  {
+    question: 'Qual o prazo de entrega?',
+    answer: 'Resposta sobre prazos de entrega e retirada.',
+  },
+  {
+    question: 'Quais são as formas de pagamento?',
+    answer: 'Resposta sobre as formas de pagamento aceitas.',
+  },
+  {
+    question: 'Vocês atendem quais regiões?',
+    answer: 'Resposta sobre a área de cobertura de entrega.',
+  },
+];
+
 /* -------------------------------------------------------------------------- */
 
 export interface NavSection {
