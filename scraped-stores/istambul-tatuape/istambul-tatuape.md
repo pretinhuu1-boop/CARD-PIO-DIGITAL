@@ -29,7 +29,7 @@ sources:
   - type: keeta
     url: ""
     status: not_found
-products_count: 10
+products_count: 146       # 152 registros na fonte, unificados por nome + preço
 ---
 
 # Restaurante Istambul Tatuapé (halal)
@@ -61,18 +61,42 @@ Escuro: `on-brand`/`brand` 4,88:1 · `accent`/`surface` 8,28:1.
 
 ## Produtos
 
-10 itens publicados, de duas das onze seções (Lanches e Esfihas), escolhidas
-por terem preço e **foto distinta**. Nome, descrição e preço são transcrição
-literal da fonte — inclusive a grafia da casa ("Sujke"), porque é por ela que
-o cliente procura.
+**Catálogo completo: as onze seções, 146 produtos.** Nome, descrição e preço
+são transcrição literal da fonte — inclusive a grafia da casa ("Sujke",
+"bresileiro", "MANUCHE DE QUEIJU"), porque é por ela que o cliente procura.
 
-**Lanches** (preço é piso): Shawarma de Carne árabe R$ 25 · Shawarma Misto
-R$ 25 · Falafel vegetariano R$ 25 · Tawook R$ 27 · Sujke com Pimenta R$ 27 ·
-Shawarma de Carne no pão folha R$ 28.
+| Seção | Itens | Seção | Itens |
+|---|--:|---|--:|
+| Lanches | 29 | Frango Frito | 5 |
+| Aperitivos | 22 | Prato Feito na Brasa | 3 |
+| Esfihas | 20 | Bebidas | 14 |
+| Pide Turco | 12 | Doces e Sobremesas | 8 |
+| Burgers | 17 | Churrasco na Brasa | 15 |
+| Frango Assado na Brasa | 7 | | |
 
-**Esfihas** (preço fechado): Carne, Zatar, Frango e Queijo, R$ 12 cada.
+Faixa de preço R$ 2 a R$ 160, mediana R$ 28.
+
+### Como foi extraído
+
+Cada card do cardápio traz um bloco `data-dadositem` com JSON
+(`coditem`, `nomeitem`, `precoitem`) além da marcação schema.org. Os dados vêm
+daí, não de raspagem de texto: o preço é o número do cadastro, não um valor
+lido de tela. As páginas de categoria são renderizadas no servidor, então não
+foi preciso navegador.
 
 ## Notas de coleta
+
+- **152 registros viraram 146 produtos.** A casa cadastra acompanhamento
+  separadamente em cada seção: "ALHO" aparece em cinco categorias e "molho de
+  pimenta" em três, cada ocorrência com `coditem` próprio. Numa página única
+  com filtro "Todos" isso vira repetição visível. Unificados por nome + preço,
+  mantendo a primeira categoria; as demais ficam anotadas em comentário no
+  item. Nenhum preço divergia entre as duplicatas.
+- **64% dos preços são piso.** 98 dos 152 registros vêm como *"à partir de"* —
+  há variação de tamanho. Só esses itens dizem isso na descrição.
+- **O preço não é valor-lixo.** O mais repetido é R$ 25, em 13% dos itens —
+  bem abaixo do limiar de suspeita. Comparar com o iFood de outra loja, onde
+  `originalPrice: 78.90` cobria 26 de 30 produtos.
 
 - **Duas formas de preço na mesma fonte.** Lanches vêm como *"à partir de
   R$ X"* — o valor é **piso**, há variações de tamanho. Esfihas vêm com preço
@@ -82,9 +106,12 @@ Shawarma de Carne no pão folha R$ 28.
   cardápio preços" devolveu uma tabela detalhada (Homus R$ 52, Michuí
   R$ 209,90…) que é do **@zainrestaurante**, na Rua Demétrio Ribeiro. Outro
   restaurante. Descartado.
-- **A plataforma reaproveita foto entre produtos.** Os três Shawarmas de
-  frango dividem a mesma imagem; os dois Falafels também. Os 10 itens foram
-  escolhidos também por foto distinta.
+- **A plataforma reaproveita foto entre produtos.** São 103 fotos distintas
+  para 146 produtos: os cinco tamanhos de "misto assado" dividem uma imagem,
+  assim como os Shawarmas de frango e os dois Falafels. Mantido como está —
+  é o acervo real da casa, e recortar o catálogo para forçar foto única
+  esconderia produto que existe. Enquanto só dez itens eram publicados, foto
+  distinta era critério de seleção; com o catálogo inteiro, deixa de ser.
 - **Cardápio white-label não serve para identidade.** Medir o CSS do site
   deles devolveu quase só a plataforma: `rgba(0,0,0,.87)`, `#EEEEEE`, azul
   Material `#448AFF`, fonte Lato. O `og:image` que parecia logo é banner

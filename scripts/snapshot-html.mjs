@@ -10,12 +10,19 @@ import { join } from 'node:path';
     SNAPSHOT_ORDER   'items' | 'customer'       (padrão: items)
                      'customer' inclui nome/telefone/entrega no pedido,
                      espelhando o app que ainda tem essa etapa.
+    SNAPSHOT_IMG_DIR pasta com um espelho reduzido das imagens de public/,
+                     usada só aqui. Base64 infla o binário em ~37%, então um
+                     catálogo grande em resolução de tela cheia produz arquivo
+                     de vários MB. O site servido continua com o original —
+                     o next/image escolhe o tamanho pelo srcset e não passa
+                     por aqui. Sem a variável, embute public/ direto.
 */
 const ORIGIN = process.argv[2] ?? 'http://localhost:3100';
 const REPO = new URL('..', import.meta.url).pathname;
 const OUT = join(REPO, process.env.SNAPSHOT_OUT ?? 'cardapio.html');
 const THEME = process.env.SNAPSHOT_THEME ?? 'auto';
 const ORDER = process.env.SNAPSHOT_ORDER ?? 'items';
+const IMG_DIR = process.env.SNAPSHOT_IMG_DIR ?? null;
 
 const mime = (f) =>
   f.endsWith('.webp') ? 'image/webp'
@@ -73,23 +80,35 @@ console.log(`  tema: ${THEME} (blocos dark: ${antes} -> ${depois})`);
 
 /* 3. Imagens ---------------------------------------------------------------- */
 let imgCount = 0;
+let imgBytes = 0;
+let doEspelho = 0;
+
+// O espelho reduzido tem prioridade, mas só quando o arquivo existe lá: uma
+// foto nova que ainda não foi espelhada cai no original em vez de sumir.
+const resolver = (publicPath) => {
+  if (IMG_DIR) {
+    const alt = join(REPO, IMG_DIR, publicPath);
+    if (existsSync(alt)) { doEspelho++; return alt; }
+  }
+  const file = join(REPO, 'public', publicPath);
+  return existsSync(file) ? file : null;
+};
+const asDataUri = (publicPath) => {
+  const file = resolver(publicPath);
+  if (!file) return null;
+  const buf = readFileSync(file);
+  imgBytes += buf.length;
+  return `data:${mime(file)};base64,${buf.toString('base64')}`;
+};
+
 html = html.replace(/(src|srcSet|srcset)="([^"]*\/_next\/image[^"]*)"/g, (full, attr, val) => {
   const m = decodeURIComponent(val).match(/url=(\/[^&\s]+)/);
-  if (!m) return '';
-  const file = join(REPO, 'public', m[1]);
-  if (!existsSync(file)) return '';
-  if (attr === 'src') {
-    imgCount++;
-    return `src="data:${mime(file)};base64,${readFileSync(file).toString('base64')}"`;
-  }
-  return '';
+  if (!m || attr !== 'src') return '';
+  const uri = asDataUri(m[1]);
+  if (!uri) return '';
+  imgCount++;
+  return `src="${uri}"`;
 });
-
-const asDataUri = (publicPath) => {
-  const file = join(REPO, 'public', publicPath);
-  if (!existsSync(file)) return null;
-  return `data:${mime(file)};base64,${readFileSync(file).toString('base64')}`;
-};
 html = html.replace(/url\((&quot;|"|')?(\/(?:produtos|pecas|loja)\/[^)"'&]+)\1?\)/g, (full, q, p) => {
   const uri = asDataUri(p); if (!uri) return full; imgCount++;
   return `url(${q ?? ''}${uri}${q ?? ''})`;
@@ -98,7 +117,10 @@ html = html.replace(/src="(\/(?:produtos|pecas|loja)\/[^"]+)"/g, (full, p) => {
   const uri = asDataUri(p); if (!uri) return full; imgCount++;
   return `src="${uri}"`;
 });
-console.log(`  imagens embutidas: ${imgCount}`);
+console.log(
+  `  imagens embutidas: ${imgCount} (${(imgBytes / 1e6).toFixed(2)} MB brutos` +
+    `${IMG_DIR ? `, ${doEspelho} do espelho ${IMG_DIR}` : ''})`,
+);
 
 /*
   A barra do navegador segue <meta name="theme-color" media="...">. Com o tema
