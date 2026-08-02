@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Clone das Sombras — demonstrações</title>
+<style>
+  :root{
+    --bg:#0d0f12; --bg2:#14171c; --line:#232830;
+    --ink:#f2f4f7; --ink2:#a9b2bf; --ink3:#6e7784;
+    --brand:#7fd1a8; --on-brand:#0a1410;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:5rem 1.5rem 6rem}
+  .eyebrow{
+    font-size:.75rem;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--brand);margin:0 0 1rem
+  }
+  h1{font-size:clamp(2rem,5vw,3rem);line-height:1.1;margin:0 0 1rem;letter-spacing:-.02em}
+  .lede{color:var(--ink2);max-width:60ch;margin:0 0 2.5rem;font-size:1.05rem}
+  .aviso{
+    border:1px solid var(--line);border-left:3px solid var(--brand);
+    background:var(--bg2);border-radius:.75rem;padding:1.25rem 1.4rem;
+    margin:0 0 3.5rem;color:var(--ink2);font-size:.9rem;max-width:70ch
+  }
+  .aviso strong{color:var(--ink)}
+  .grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+  a.card{
+    display:block;text-decoration:none;color:inherit;
+    border:1px solid var(--line);border-radius:1rem;padding:1.4rem;
+    background:var(--bg2);transition:border-color .2s,transform .2s
+  }
+  a.card:hover,a.card:focus-visible{border-color:var(--brand);transform:translateY(-2px)}
+  a.card:focus-visible{outline:2px solid var(--brand);outline-offset:3px}
+  .card h2{margin:0 0 .3rem;font-size:1.15rem;letter-spacing:-.01em}
+  .card .tipo{color:var(--brand);font-size:.75rem;text-transform:uppercase;letter-spacing:.14em}
+  .card p{margin:.7rem 0 0;color:var(--ink2);font-size:.875rem}
+  .card .meta{margin-top:.9rem;color:var(--ink3);font-size:.78rem}
+  footer{margin-top:4rem;padding-top:2rem;border-top:1px solid var(--line);color:var(--ink3);font-size:.85rem}
+  footer a{color:var(--ink2)}
+  @media (prefers-color-scheme: light){
+    :root{--bg:#fbfbfc;--bg2:#fff;--line:#e3e6ea;--ink:#14171c;--ink2:#4a525e;--ink3:#7d8794;
+          --brand:#1d7a52;--on-brand:#fff}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Clone das Sombras</p>
+  <h1>Quatro lojas do Tatuapé, quatro formatos</h1>
+  <p class="lede">
+    Cada página abaixo foi montada a partir de um único link de Google Maps,
+    usando só o que a loja publica em fonte pública. O formato não foi
+    escolhido: saiu do que a fonte sustentava.
+  </p>
+
+  <div class="aviso">
+    <strong>Estas páginas são demonstrações técnicas.</strong>
+    Não são sites oficiais, não têm vínculo com os estabelecimentos e não foram
+    encomendadas por eles. Os dados vêm de fontes públicas coletadas em
+    2&nbsp;de&nbsp;agosto&nbsp;de&nbsp;2026 e <strong>podem estar
+    desatualizados</strong> — preço, horário e disponibilidade mudam.
+    Para pedir de verdade, procure a loja pelos canais dela.
+    As páginas não são indexadas por buscadores, de propósito.
+  </div>
+
+  <div class="grid">
+    <a class="card" href="demos/caracol.html">
+      <span class="tipo">Cardápio com pedido</span>
+      <h2>Caracol Chocolates</h2>
+      <p>Cafeteria e chocolateria. Identidade medida no CSS do site oficial.</p>
+      <p class="meta">10 produtos · filtro, busca e carrinho</p>
+    </a>
+
+    <a class="card" href="demos/kokedami.html">
+      <span class="tipo">Expositor sem preço</span>
+      <h2>Kokedami</h2>
+      <p>Ateliê de kokedama. Não publica preço em fonte nenhuma — a foto é o produto.</p>
+      <p class="meta">6 peças · cada uma abre conversa</p>
+    </a>
+
+    <a class="card" href="demos/istambul.html">
+      <span class="tipo">Cardápio com pedido</span>
+      <h2>Restaurante Istambul</h2>
+      <p>Árabe e turco, halal. Catálogo do cardápio online do próprio restaurante.</p>
+      <p class="meta">10 itens · preços "a partir de" sinalizados</p>
+    </a>
+
+    <a class="card" href="demos/tbt-lounge.html">
+      <span class="tipo">Cardápio com pedido</span>
+      <h2>TBT Lounge</h2>
+      <p>Bar e lounge. Logo monocromático — a cor veio da iluminação do salão.</p>
+      <p class="meta">10 itens · escuro nos dois temas</p>
+    </a>
+  </div>
+
+  <footer>
+    <p>
+      Cada arquivo é autossuficiente: CSS, fontes e imagens em base64.
+      Abre por duplo clique, sem servidor e sem rede.
+    </p>
+    <p>
+      Processo e limites declarados por loja em
+      <a href="https://github.com/pretinhuu1-boop/CARD-PIO-DIGITAL">CARD-PIO-DIGITAL</a>.
+    </p>
+  </footer>
+</div>
+</body>
+</html>
