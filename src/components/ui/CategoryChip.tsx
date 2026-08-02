@@ -22,6 +22,18 @@ interface CategoryChipProps {
  * Aqui o scroll é feito manualmente enquanto o botão está pressionado, e um
  * ref marca se houve arrasto para suprimir o clique acidental no fim dele.
  */
+/*
+  Duas guardas impedem que a supressão de arrasto engula clique legítimo:
+
+  1. Só suprime se a faixa REALMENTE rola (`scrollWidth > clientWidth`). Com
+     poucas categorias os chips cabem na tela e não há o que arrastar —
+     qualquer movimento ali é tremor de mão.
+  2. Limiar de 10px, não 4px. A mão de quem clica se move de 4 a 8px entre o
+     apertar e o soltar; com 4px, TODO clique de mouse virava "arrasto" e o
+     filtro não trocava nunca.
+*/
+const DRAG_THRESHOLD_PX = 10;
+
 function CategoryChip({ categories, selected, onChange, className }: CategoryChipProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const dragStartX = useRef(0);
@@ -43,8 +55,10 @@ function CategoryChip({ categories, selected, onChange, className }: CategoryChi
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     const el = scrollRef.current;
     if (!el || !pointerDown.current) return;
+    // Faixa que cabe inteira na tela não tem o que arrastar.
+    if (el.scrollWidth <= el.clientWidth) return;
     const dx = e.clientX - dragStartX.current;
-    if (Math.abs(dx) > 4) didDrag.current = true;
+    if (Math.abs(dx) > DRAG_THRESHOLD_PX) didDrag.current = true;
     if (didDrag.current) el.scrollLeft = scrollStartX.current - dx;
   }, []);
 
@@ -86,6 +100,7 @@ function CategoryChip({ categories, selected, onChange, className }: CategoryChi
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             onClick={() => handleChipClick(category.slug)}
             aria-pressed={isSelected}
+            data-category-slug={category.slug}
             className={cn(
               'focus-ring flex shrink-0 items-center gap-2 whitespace-nowrap',
               'min-h-[44px] rounded-full px-4 text-sm font-medium',

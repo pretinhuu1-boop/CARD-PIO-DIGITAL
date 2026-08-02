@@ -97,9 +97,9 @@ export function HeroBanner() {
             className={cn(
               'focus-ring min-h-[52px] rounded-full px-8 text-[15px] font-medium',
               'transition-colors duration-200',
-              hasImage
-                ? 'bg-on-overlay text-ink hover:opacity-90'
-                : 'bg-brand text-on-brand hover:bg-brand-hover',
+              // `bg-on-overlay text-ink` é par instável: on-overlay é branco
+              // fixo e ink inverte no modo escuro — dava 1,05:1, invisível.
+              'bg-brand text-on-brand hover:bg-brand-hover',
             )}
           >
             Ver cardápio
