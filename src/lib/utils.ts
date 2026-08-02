@@ -19,13 +19,13 @@ export function calculateDiscount(
   return Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
 }
 
-export function slugify(text: string): string {
+/**
+ * Minúsculas sem acento, para busca.
+ * Sem isso "cafe" não encontra "Café" — e é assim que a maioria digita.
+ */
+export function normalize(text: string): string {
   return text
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .trim();
+    .replace(/[̀-ͯ]/g, "");
 }

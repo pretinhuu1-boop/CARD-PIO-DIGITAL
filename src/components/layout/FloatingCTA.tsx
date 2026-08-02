@@ -3,12 +3,13 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, ChevronRight } from 'lucide-react';
 import { useCart } from '@/lib/store';
-import { cn, formatCurrency } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 
 interface FloatingCTAProps {
   onOpenCart: () => void;
 }
 
+/** Barra fixa com o total. Aparece assim que há algo no pedido. */
 function FloatingCTA({ onOpenCart }: FloatingCTAProps) {
   const { count, total } = useCart();
 
@@ -20,70 +21,30 @@ function FloatingCTA({ onOpenCart }: FloatingCTAProps) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-          className={cn(
-            'fixed bottom-0 left-0 right-0 z-40',
-            'pb-[env(safe-area-inset-bottom)]',
-            'pointer-events-none',
-          )}
+          className="pointer-events-none fixed inset-x-0 bottom-0 z-40 pb-[env(safe-area-inset-bottom)]"
         >
-          <div
-            className={cn(
-              'mx-auto max-w-5xl px-4 pb-4 sm:px-6 sm:pb-6',
-              'pointer-events-auto',
-            )}
-          >
+          {/* Espaço à direita para não cobrir o botão flutuante do WhatsApp. */}
+          <div className="pointer-events-auto mx-auto max-w-5xl px-4 pb-4 pr-24 sm:px-6 sm:pb-6 sm:pr-28">
             <motion.button
+              type="button"
               onClick={onOpenCart}
-              whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-              className={cn(
-                'flex items-center w-full gap-3 px-5 py-3.5 sm:py-4',
-                'rounded-2xl',
-                'bg-chocolate-800/95 dark:bg-cream-100/95',
-                'backdrop-blur-xl',
-                'shadow-2xl shadow-chocolate-900/20',
-                'border border-chocolate-700/20 dark:border-cream-300/20',
-                'text-cream-50 dark:text-chocolate-900',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-caramel-400 focus-visible:ring-offset-2',
-                'transition-colors duration-200',
-              )}
+              className="focus-ring flex min-h-[56px] w-full items-center gap-3 rounded-card bg-brand px-5 text-on-brand shadow-lg transition-colors hover:bg-brand-hover"
             >
-              <div className="relative flex-shrink-0">
-                <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" />
-                <motion.span
-                  key={count}
-                  initial={{ scale: 0.5 }}
-                  animate={{ scale: 1 }}
-                  className={cn(
-                    'absolute -top-1.5 -right-1.5',
-                    'flex items-center justify-center',
-                    'min-w-[18px] h-[18px] px-1',
-                    'rounded-full bg-caramel-500',
-                    'text-[10px] font-bold text-white',
-                    'tabular-nums',
-                  )}
-                >
+              <span className="relative shrink-0">
+                <ShoppingBag className="h-5 w-5" aria-hidden="true" />
+                <span className="absolute -right-2 -top-2 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-on-brand px-1 text-[10px] font-bold text-brand tabular-nums">
                   {count}
-                </motion.span>
-              </div>
-
-              <span className="text-sm sm:text-base font-semibold">
-                Ver Pedido
+                </span>
               </span>
 
-              <div className="flex-1" />
-
-              <motion.span
-                key={total.toFixed(2)}
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-sm sm:text-base font-bold tabular-nums"
-              >
+              <span className="text-[15px] font-semibold">Ver pedido</span>
+              <span className="flex-1" />
+              <span className="text-[15px] font-bold tabular-nums">
                 {formatCurrency(total)}
-              </motion.span>
-
-              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 opacity-60" />
+              </span>
+              <ChevronRight className="h-5 w-5 opacity-70" aria-hidden="true" />
             </motion.button>
           </div>
         </motion.div>

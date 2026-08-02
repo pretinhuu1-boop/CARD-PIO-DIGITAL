@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { X, Plus, Minus } from 'lucide-react';
 import { type Product } from '@/lib/data';
 import { useCart } from '@/lib/store';
 import { cn, formatCurrency } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
+import { ProductImage } from '@/components/ui/ProductImage';
 
 interface ProductBottomSheetProps {
   product: Product;
@@ -14,14 +15,17 @@ interface ProductBottomSheetProps {
 }
 
 export function ProductBottomSheet({ product, onClose }: ProductBottomSheetProps) {
-  const { items, addItem, updateQuantity, removeItem } = useCart();
-  const cartItem = items.find((i) => i.product.id === product.id);
-  const [quantity, setQuantity] = useState(cartItem?.quantity ?? 1);
+  const { addItem } = useCart();
+  const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState('');
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
+    closeRef.current?.focus();
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, []);
 
   useEffect(() => {
@@ -32,17 +36,13 @@ export function ProductBottomSheet({ product, onClose }: ProductBottomSheetProps
     return () => window.removeEventListener('keydown', handleKey);
   }, [onClose]);
 
+  /**
+   * Adiciona SOMA ao que já existe no carrinho — antes substituía a
+   * quantidade, o que contradizia o rótulo "Adicionar".
+   * A observação vai junto: cada texto diferente vira uma linha própria.
+   */
   const handleAddToCart = () => {
-    if (cartItem) {
-      updateQuantity(product.id, quantity);
-    } else {
-      for (let i = 0; i < quantity; i++) {
-        addItem(product);
-      }
-      if (quantity > 1) {
-        updateQuantity(product.id, quantity);
-      }
-    }
+    addItem(product, quantity, notes);
     onClose();
   };
 
@@ -54,7 +54,7 @@ export function ProductBottomSheet({ product, onClose }: ProductBottomSheetProps
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
         onClick={onClose}
-        className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm"
+        className="fixed inset-0 z-[60] bg-black/50"
         aria-hidden="true"
       />
 
@@ -64,93 +64,66 @@ export function ProductBottomSheet({ product, onClose }: ProductBottomSheetProps
         exit={{ y: '100%' }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         className={cn(
-          'fixed inset-x-0 bottom-0 z-[70]',
-          'max-h-[90vh] overflow-y-auto overscroll-contain',
-          'bg-[var(--background)] dark:bg-chocolate-900',
-          'rounded-t-3xl shadow-2xl shadow-black/20',
+          'fixed inset-x-0 bottom-0 z-[70] mx-auto max-w-lg',
+          'max-h-[92vh] overflow-y-auto overscroll-contain',
+          'rounded-t-sheet bg-surface shadow-lg',
         )}
         role="dialog"
         aria-modal="true"
         aria-label={product.name}
       >
-        <div className="sticky top-0 z-10 flex justify-center pt-3 pb-2 bg-[var(--background)] dark:bg-chocolate-900">
-          <div className="w-10 h-1 rounded-full bg-cream-400" />
+        <div className="sticky top-0 z-10 flex justify-center bg-surface pb-2 pt-3">
+          <div className="h-1 w-10 rounded-full bg-line-strong" />
         </div>
 
         <button
+          ref={closeRef}
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-cream-200/80 dark:bg-chocolate-700 flex items-center justify-center text-cream-700 dark:text-cream-300 hover:bg-cream-300 transition-colors"
+          className="focus-ring absolute right-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-surface-2 text-ink-2 transition-colors hover:bg-surface-3 hover:text-ink"
           aria-label="Fechar"
         >
-          <X className="w-4.5 h-4.5" />
+          <X className="h-5 w-5" />
         </button>
 
-        {product.image && (
-          <div className="relative w-full aspect-[16/10] overflow-hidden">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-full object-cover"
-            />
-            {product.badge && (
-              <div className="absolute bottom-4 left-4">
-                <Badge variant={product.badge} />
-              </div>
+        <div className="relative aspect-[16/10] w-full overflow-hidden">
+          <ProductImage
+            src={product.image}
+            alt={product.name}
+            iconClassName="h-12 w-12"
+          />
+          {product.badge && (
+            <div className="absolute bottom-4 left-4">
+              <Badge badge={product.badge} />
+            </div>
+          )}
+        </div>
+
+        <div className="px-6 pb-8 pt-5">
+          <h2 className="font-display text-2xl text-ink">{product.name}</h2>
+
+          <div className="mt-2 flex items-center gap-3">
+            <span className="text-xl font-semibold text-ink tabular-nums">
+              {formatCurrency(product.price)}
+            </span>
+            {product.originalPrice && (
+              <span className="text-sm text-ink-3 line-through tabular-nums">
+                {formatCurrency(product.originalPrice)}
+              </span>
             )}
           </div>
-        )}
 
-        <div className="px-6 pb-6">
-          <div className="pt-5">
-            <h2 className="font-display text-2xl text-chocolate-800 dark:text-cream-100">
-              {product.name}
-            </h2>
-
-            <div className="mt-2 flex items-center gap-3">
-              <span className="text-xl font-semibold text-chocolate-800 dark:text-cream-100">
-                {formatCurrency(product.price)}
-              </span>
-              {product.originalPrice && (
-                <span className="text-sm text-cream-600 line-through">
-                  {formatCurrency(product.originalPrice)}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <p className="mt-4 text-sm text-cream-700 dark:text-cream-400 leading-relaxed">
+          <p className="mt-4 text-sm leading-relaxed text-ink-2">
             {product.description}
           </p>
 
           {product.servings && (
-            <div className="mt-4 flex items-center gap-2 text-sm text-cream-600">
-              <span className="w-1.5 h-1.5 rounded-full bg-caramel-400" />
-              {product.servings}
-            </div>
+            <p className="mt-3 text-sm text-ink-3">{product.servings}</p>
           )}
 
-          {product.ingredients && product.ingredients.length > 0 && (
-            <div className="mt-5 pt-5 border-t border-cream-300 dark:border-chocolate-700">
-              <h3 className="text-xs tracking-[0.15em] uppercase text-cream-600 font-medium mb-3">
-                Ingredientes
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {product.ingredients.map((ingredient) => (
-                  <span
-                    key={ingredient}
-                    className="px-3 py-1.5 rounded-full text-xs bg-cream-200 text-cream-700 dark:bg-chocolate-700 dark:text-cream-400"
-                  >
-                    {ingredient}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="mt-5 pt-5 border-t border-cream-300 dark:border-chocolate-700">
+          <div className="mt-6 border-t border-line pt-5">
             <label
               htmlFor="product-notes"
-              className="text-xs tracking-[0.15em] uppercase text-cream-600 font-medium"
+              className="text-xs font-medium uppercase tracking-[0.12em] text-ink-3"
             >
               Observações
             </label>
@@ -158,54 +131,62 @@ export function ProductBottomSheet({ product, onClose }: ProductBottomSheetProps
               id="product-notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Alguma observação sobre o produto?"
+              placeholder="Ex.: sem cebola, embalar para presente..."
               rows={2}
-              className="mt-2 w-full rounded-xl bg-cream-100 dark:bg-chocolate-800 border border-cream-300 dark:border-chocolate-600 px-4 py-3 text-sm text-chocolate-800 dark:text-cream-200 placeholder:text-cream-500 resize-none outline-none focus:border-caramel-400 transition-colors"
+              maxLength={200}
+              className="focus-ring mt-2 w-full resize-none rounded-control border border-line bg-surface-2 px-4 py-3 text-sm text-ink placeholder:text-ink-3"
             />
+            <p className="mt-1 text-xs text-ink-3">
+              A observação é enviada junto no pedido pelo WhatsApp.
+            </p>
           </div>
 
-          <div className="mt-6 flex items-center gap-4">
-            <div className="flex items-center gap-3 bg-cream-100 dark:bg-chocolate-800 rounded-xl px-2 py-1.5">
-              <motion.button
-                whileTap={{ scale: 0.9 }}
+          <div className="mt-6 flex items-center gap-3">
+            <div className="flex items-center gap-1 rounded-control border border-line bg-surface-2 p-1">
+              <button
+                type="button"
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-9 h-9 rounded-lg bg-white dark:bg-chocolate-700 shadow-sm flex items-center justify-center text-chocolate-700 dark:text-cream-300 hover:bg-cream-50 transition-colors"
+                disabled={quantity <= 1}
+                className="focus-ring flex h-11 w-11 items-center justify-center rounded-lg text-ink transition-colors hover:bg-surface-3 disabled:opacity-40"
                 aria-label="Diminuir quantidade"
               >
-                <Minus className="w-4 h-4" />
-              </motion.button>
-              <span className="w-8 text-center font-semibold text-chocolate-800 dark:text-cream-100 tabular-nums">
+                <Minus className="h-4 w-4" />
+              </button>
+              <span
+                className="w-8 text-center font-semibold text-ink tabular-nums"
+                aria-live="polite"
+              >
                 {quantity}
               </span>
-              <motion.button
-                whileTap={{ scale: 0.9 }}
+              <button
+                type="button"
                 onClick={() => setQuantity(quantity + 1)}
-                className="w-9 h-9 rounded-lg bg-chocolate-800 dark:bg-cream-200 shadow-sm flex items-center justify-center text-cream-50 dark:text-chocolate-900 hover:bg-chocolate-700 dark:hover:bg-cream-100 transition-colors"
+                className="focus-ring flex h-11 w-11 items-center justify-center rounded-lg text-ink transition-colors hover:bg-surface-3"
                 aria-label="Aumentar quantidade"
               >
-                <Plus className="w-4 h-4" />
-              </motion.button>
+                <Plus className="h-4 w-4" />
+              </button>
             </div>
 
             <motion.button
-              whileHover={{ scale: 1.02 }}
+              type="button"
               whileTap={{ scale: 0.98 }}
               onClick={handleAddToCart}
               disabled={!product.available}
               className={cn(
-                'flex-1 py-4 rounded-xl font-medium text-[15px] transition-colors',
-                'bg-chocolate-800 text-cream-50 hover:bg-chocolate-700 shadow-md shadow-chocolate-800/10',
-                'dark:bg-cream-200 dark:text-chocolate-900 dark:hover:bg-cream-100',
-                'disabled:opacity-50 disabled:cursor-not-allowed',
+                'focus-ring flex min-h-[52px] flex-1 items-center justify-center gap-2',
+                'rounded-control bg-brand px-5 font-medium text-on-brand',
+                'transition-colors hover:bg-brand-hover',
+                'disabled:cursor-not-allowed disabled:opacity-50',
               )}
             >
               {product.available ? (
-                <span className="flex items-center justify-center gap-2">
-                  Adicionar ao Pedido
-                  <span className="text-cream-300 dark:text-chocolate-600">
+                <>
+                  <span>Adicionar</span>
+                  <span className="opacity-75 tabular-nums">
                     {formatCurrency(product.price * quantity)}
                   </span>
-                </span>
+                </>
               ) : (
                 'Indisponível'
               )}

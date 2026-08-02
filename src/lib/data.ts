@@ -1,687 +1,74 @@
+/**
+ * ============================================================================
+ * CATÁLOGO — ARQUIVO DE PREENCHIMENTO
+ * ============================================================================
+ *
+ * Produtos, categorias, combos, avaliações, FAQ e a seção "sobre".
+ * Dados de contato/loja ficam em `src/lib/config.ts`.
+ *
+ * IMAGENS: todo produto tem `image: null` neste template em branco. A grade
+ * renderiza um placeholder neutro quando `image` é `null`, então o layout
+ * continua correto sem nenhuma imagem. Ao preencher, use caminhos locais
+ * (ex.: '/produtos/nome-do-produto.webp') e não URLs externas.
+ * ============================================================================
+ */
+
+/** Tom visual de um selo. Mapeado para as cores semânticas em globals.css. */
+export type BadgeTone = 'neutral' | 'accent' | 'success' | 'warning' | 'info';
+
+export interface Badge {
+  /** Texto exibido no selo. Ex.: 'Mais vendido' */
+  label: string;
+  tone: BadgeTone;
+}
+
 export interface Product {
+  /** Identificador único e estável. Usado no carrinho e no pedido. */
   id: string;
   name: string;
   description: string;
+  /** Preço de venda em R$. */
   price: number;
+  /** Preço "de" riscado. Omita quando não houver desconto. */
   originalPrice?: number;
-  image: string;
+  /** Caminho da imagem em /public, ou `null` para usar o placeholder. */
+  image: string | null;
+  /** Deve corresponder a um `slug` de `categories`. */
   category: string;
-  badge?: 'maisVendido' | 'novo' | 'promo' | 'zeroLactose' | 'vegano' | 'chefRecomenda' | 'edicaoLimitada';
-  rating: number;
-  reviews: number;
-  ingredients?: string[];
-  available: boolean;
-  tags?: string[];
-  isNew?: boolean;
-  isBestSeller?: boolean;
-  isPromo?: boolean;
+  badge?: Badge;
+  /** Rendimento/porção. Ex.: '12 unidades'. Omita se não se aplica. */
   servings?: string;
+  /** Produtos indisponíveis aparecem esmaecidos e não podem ser adicionados. */
+  available: boolean;
 }
 
 export interface Category {
+  /** Usado no filtro. Deve bater com `Product.category`. */
   slug: string;
   name: string;
-  description: string;
+  /** Emoji ou string vazia para não exibir ícone. */
   emoji: string;
-  productCount: number;
-}
-
-export interface Promo {
-  id: string;
-  title: string;
-  description: string;
-  discount: number;
-  code: string;
-  bgGradient: string;
 }
 
 export interface Combo {
   id: string;
   name: string;
   description: string;
-  products: string[];
-  originalPrice: number;
+  /** IDs de `products`. Ao adicionar o combo, todos entram no carrinho. */
+  productIds: string[];
+  /** Preço promocional do conjunto. */
   comboPrice: number;
-  savings: number;
 }
-
-export interface BrandStory {
-  title: string;
-  subtitle: string;
-  paragraphs: string[];
-  values: { icon: string; title: string; description: string }[];
-}
-
-export interface Tier {
-  name: string;
-  minPoints: number;
-  benefits: string[];
-  icon: string;
-  color: string;
-}
-
-export const freeShippingThreshold = 89.90;
-export const freeGiftThreshold = 150.00;
-
-export const categories: Category[] = [
-  { slug: 'todos', name: 'Todos', description: 'Todos os produtos', emoji: '✨', productCount: 0 },
-  { slug: 'doces-finos', name: 'Doces Finos', description: 'Brigadeiros gourmet, trufas e delícias artesanais', emoji: '🍬', productCount: 6 },
-  { slug: 'tortas', name: 'Tortas & Fatias', description: 'Tortas inteiras e fatias individuais', emoji: '🥧', productCount: 5 },
-  { slug: 'bolos', name: 'Bolos Artesanais', description: 'Bolos decorados para todas as ocasiões', emoji: '🎂', productCount: 4 },
-  { slug: 'brownies', name: 'Brownies & Cookies', description: 'Brownies trufados e cookies artesanais', emoji: '🍫', productCount: 4 },
-  { slug: 'sobremesas', name: 'Sobremesas', description: 'Parfaits, zeppole e sobremesas especiais', emoji: '🍨', productCount: 4 },
-  { slug: 'salgados', name: 'Salgados Gourmet', description: 'Quiches, empadas e salgados finos', emoji: '🥐', productCount: 4 },
-  { slug: 'cafes', name: 'Cafés & Bebidas', description: 'Cafés especiais e bebidas artesanais', emoji: '☕', productCount: 5 },
-  { slug: 'zero-lactose', name: 'Zero Lactose', description: 'Opções sem lactose com muito sabor', emoji: '🌿', productCount: 3 },
-];
-
-export const products: Product[] = [
-  // Doces Finos
-  {
-    id: 'df-1',
-    name: 'Brigadeiro Gourmet (cx 12un)',
-    description: 'Caixa premium com 12 brigadeiros em sabores exclusivos: belga, pistache, maracujá e mais',
-    price: 54.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183404_76c441ad-f2d2-4218-9ec0-a359cf44a4e1_min.webp',
-    category: 'doces-finos',
-    badge: 'maisVendido',
-    rating: 4.9,
-    reviews: 324,
-    available: true,
-    tags: ['gourmet', 'presente', 'premium'],
-    isBestSeller: true,
-    servings: '12 unidades',
-  },
-  {
-    id: 'df-2',
-    name: 'Trufas Artesanais (cx 6un)',
-    description: 'Seleção de trufas com chocolate belga 70%, recheios cremosos e acabamento impecável',
-    price: 42.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183441_516af657-545c-402d-847c-8f48026dbefe_min.webp',
-    category: 'doces-finos',
-    rating: 4.8,
-    reviews: 187,
-    available: true,
-    tags: ['chocolate', 'presente'],
-    servings: '6 unidades',
-  },
-  {
-    id: 'df-3',
-    name: 'Palha Italiana Premium',
-    description: 'Palha italiana com chocolate nobre, leite condensado artesanal e biscoito crocante',
-    price: 38.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183443_67e28cc2-78c8-4d76-9fa5-0ab3125b3603_min.webp',
-    category: 'doces-finos',
-    badge: 'novo',
-    rating: 4.7,
-    reviews: 98,
-    available: true,
-    tags: ['chocolate', 'crocante'],
-    isNew: true,
-    servings: '8 unidades',
-  },
-  {
-    id: 'df-4',
-    name: 'Bem-Casados (cx 20un)',
-    description: 'Bem-casados tradicionais com massa amanteigada e doce de leite caseiro',
-    price: 69.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183445_9685cd06-021f-4385-9721-1b9ec648f1a3_min.webp',
-    category: 'doces-finos',
-    rating: 4.9,
-    reviews: 156,
-    available: true,
-    tags: ['casamento', 'presente', 'tradicional'],
-    servings: '20 unidades',
-  },
-  {
-    id: 'df-5',
-    name: 'Cajuzinho Gourmet (cx 12un)',
-    description: 'Cajuzinhos artesanais com amendoim premium torrado e cobertura especial',
-    price: 44.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183446_999f2063-132f-4bac-b11f-073417faa43a_min.webp',
-    category: 'doces-finos',
-    rating: 4.6,
-    reviews: 72,
-    available: true,
-    tags: ['tradicional', 'amendoim'],
-    servings: '12 unidades',
-  },
-  {
-    id: 'df-6',
-    name: 'Olho de Sogra (cx 12un)',
-    description: 'Ameixa recheada com doce de leite e coco, coberta com chocolate',
-    price: 49.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183453_6c340108-5f55-4123-a8f8-ae366dcbc932_min.webp',
-    category: 'doces-finos',
-    rating: 4.7,
-    reviews: 63,
-    available: true,
-    tags: ['ameixa', 'tradicional'],
-    servings: '12 unidades',
-  },
-
-  // Tortas & Fatias
-  {
-    id: 'to-1',
-    name: 'Torta de Limão Siciliano',
-    description: 'Base crocante de biscoito, curd de limão siciliano fresco e merengue italiano maçaricado',
-    price: 89.90,
-    originalPrice: 109.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183454_c08d616a-32b6-497c-807a-57e83ad9b9a6_min.webp',
-    category: 'tortas',
-    badge: 'promo',
-    rating: 4.9,
-    reviews: 213,
-    available: true,
-    tags: ['cítrico', 'premium'],
-    isPromo: true,
-    servings: '8-10 fatias',
-  },
-  {
-    id: 'to-2',
-    name: 'Cheesecake Frutas Vermelhas',
-    description: 'Cheesecake NY style ultra cremoso com calda artesanal de frutas vermelhas frescas',
-    price: 79.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183456_51bc9c38-08ac-4322-83e6-d84edafc43f8_min.webp',
-    category: 'tortas',
-    badge: 'maisVendido',
-    rating: 4.9,
-    reviews: 289,
-    available: true,
-    tags: ['cremoso', 'frutas'],
-    isBestSeller: true,
-    servings: '8-10 fatias',
-  },
-  {
-    id: 'to-3',
-    name: 'Torta Holandesa',
-    description: 'Camadas de creme de baunilha, biscoito e calda de chocolate belga',
-    price: 74.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183457_67f0d36b-3932-4cb4-bd70-109d76ba0abb_min.webp',
-    category: 'tortas',
-    rating: 4.7,
-    reviews: 145,
-    available: true,
-    tags: ['chocolate', 'clássico'],
-    servings: '8-10 fatias',
-  },
-  {
-    id: 'to-4',
-    name: 'Fatia de Torta (escolha o sabor)',
-    description: 'Fatia generosa da torta do dia - consulte sabores disponíveis',
-    price: 16.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183505_29c79ed5-724f-435e-8915-ea2f3e79a630_min.webp',
-    category: 'tortas',
-    rating: 4.8,
-    reviews: 167,
-    available: true,
-    tags: ['individual', 'lanche'],
-    servings: '1 fatia',
-  },
-  {
-    id: 'to-5',
-    name: 'Torta de Morango com Chocolate',
-    description: 'Base de brownie, ganache de chocolate meio amargo e morangos frescos',
-    price: 94.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183506_92d9a2d1-92f3-428c-9cd7-5b6c86de497c_min.webp',
-    category: 'tortas',
-    badge: 'novo',
-    rating: 4.8,
-    reviews: 56,
-    available: true,
-    tags: ['morango', 'chocolate'],
-    isNew: true,
-    servings: '8-10 fatias',
-  },
-
-  // Bolos Artesanais
-  {
-    id: 'bo-1',
-    name: 'Bolo Red Velvet Premium',
-    description: 'Bolo red velvet com camadas de cream cheese artesanal e frutas vermelhas frescas',
-    price: 99.90,
-    originalPrice: 119.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183507_6a414511-e5ce-45b1-9087-023f83b05c42_min.webp',
-    category: 'bolos',
-    badge: 'maisVendido',
-    rating: 4.9,
-    reviews: 267,
-    available: true,
-    tags: ['premium', 'festa', 'aniversário'],
-    isBestSeller: true,
-    isPromo: true,
-    servings: '12-15 fatias',
-  },
-  {
-    id: 'bo-2',
-    name: 'Bolo de Cenoura com Brigadeiro',
-    description: 'Bolo de cenoura ultra fofinho com cobertura generosa de brigadeiro cremoso',
-    price: 64.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183508_cb814870-a0a8-486a-bf68-f254fd2c3092_min.webp',
-    category: 'bolos',
-    rating: 4.8,
-    reviews: 198,
-    available: true,
-    tags: ['clássico', 'família'],
-    servings: '10-12 fatias',
-  },
-  {
-    id: 'bo-3',
-    name: 'Bolo de Chocolate Belga',
-    description: 'Três camadas de bolo de chocolate com ganache de chocolate belga 60%',
-    price: 89.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183515_2bc41537-4f05-43f3-9244-76bcf6f980f3_min.webp',
-    category: 'bolos',
-    rating: 4.9,
-    reviews: 234,
-    available: true,
-    tags: ['chocolate', 'festa'],
-    servings: '12-15 fatias',
-  },
-  {
-    id: 'bo-4',
-    name: 'Naked Cake Frutas',
-    description: 'Naked cake rústico com creme de confeiteiro, frutas frescas da estação e flores comestíveis',
-    price: 109.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183516_0cad6709-b85e-4581-93ca-0d069e160b36_min.webp',
-    category: 'bolos',
-    badge: 'novo',
-    rating: 4.8,
-    reviews: 87,
-    available: true,
-    tags: ['rústico', 'casamento', 'festa'],
-    isNew: true,
-    servings: '15-20 fatias',
-  },
-
-  // Brownies & Cookies
-  {
-    id: 'br-1',
-    name: 'Brownie Belga Trufado',
-    description: 'Brownie intenso com chocolate belga 70%, centro trufado e crocância perfeita',
-    price: 16.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183518_4b0dcb7b-51f8-4607-94ee-7e8ddd667436_min.webp',
-    category: 'brownies',
-    badge: 'maisVendido',
-    rating: 4.8,
-    reviews: 312,
-    available: true,
-    tags: ['gourmet', 'chocolate'],
-    isBestSeller: true,
-    servings: '1 unidade',
-  },
-  {
-    id: 'br-2',
-    name: 'Cookie Double Chocolate',
-    description: 'Cookie gigante artesanal com gotas de chocolate branco e ao leite, center soft',
-    price: 14.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183519_5c6b3f2c-b79c-47b4-8ece-fd1151aec5f2_min.webp',
-    category: 'brownies',
-    rating: 4.7,
-    reviews: 178,
-    available: true,
-    tags: ['crocante', 'chocolate'],
-    servings: '1 unidade',
-  },
-  {
-    id: 'br-3',
-    name: 'Brownie Box (4un)',
-    description: 'Caixa com 4 brownies sortidos: tradicional, nozes, cream cheese e Nutella',
-    price: 49.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183525_a7b2d23a-1f36-450d-8afe-6d4744e15785_min.webp',
-    category: 'brownies',
-    badge: 'promo',
-    rating: 4.9,
-    reviews: 145,
-    originalPrice: 59.90,
-    available: true,
-    tags: ['caixa', 'presente'],
-    isPromo: true,
-    servings: '4 unidades',
-  },
-  {
-    id: 'br-4',
-    name: 'Cookie Jar (6un)',
-    description: 'Pote com 6 cookies artesanais em sabores variados - perfeito para presentear',
-    price: 54.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183527_0970cee7-b59a-459b-8de0-c6a6162eb8aa_min.webp',
-    category: 'brownies',
-    rating: 4.6,
-    reviews: 89,
-    available: true,
-    tags: ['presente', 'sortido'],
-    servings: '6 unidades',
-  },
-
-  // Sobremesas
-  {
-    id: 'sb-1',
-    name: 'Parfait de Frutas & Granola',
-    description: 'Camadas de iogurte grego, frutas frescas da estação, granola artesanal e mel orgânico',
-    price: 24.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183529_8fef5684-83b7-436c-869a-e6326cc2a9c6_min.webp',
-    category: 'sobremesas',
-    badge: 'novo',
-    rating: 4.7,
-    reviews: 112,
-    available: true,
-    tags: ['saudável', 'frutas'],
-    isNew: true,
-    servings: '1 porção',
-  },
-  {
-    id: 'sb-2',
-    name: 'Zeppola com Nutella',
-    description: 'Zeppole italianas quentinhas, fritas na hora, com Nutella e açúcar de confeiteiro',
-    price: 22.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183529_99058cff-9767-4edc-8116-8a8bc159274c_min.webp',
-    category: 'sobremesas',
-    badge: 'maisVendido',
-    rating: 4.9,
-    reviews: 245,
-    available: true,
-    tags: ['quente', 'italiano'],
-    isBestSeller: true,
-    servings: '6 unidades',
-  },
-  {
-    id: 'sb-3',
-    name: 'Bolo de Pote (escolha o sabor)',
-    description: 'Bolo de pote cremoso nos sabores: Ninho, Prestígio, Brigadeiro ou Red Velvet',
-    price: 18.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183536_c26b0d76-6189-4be4-b5e8-f95d6c141702_min.webp',
-    category: 'sobremesas',
-    rating: 4.6,
-    reviews: 167,
-    available: true,
-    tags: ['individual', 'cremoso'],
-    servings: '1 pote (300ml)',
-  },
-  {
-    id: 'sb-4',
-    name: 'Pudim de Leite Condensado',
-    description: 'Pudim artesanal de leite condensado com calda de caramelo na medida certa',
-    price: 14.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183537_7f9a2b38-c8ed-406e-9137-c3c2ffc8a450_min.webp',
-    category: 'sobremesas',
-    rating: 4.8,
-    reviews: 198,
-    available: true,
-    tags: ['tradicional', 'caramelo'],
-    servings: '1 fatia',
-  },
-
-  // Salgados Gourmet
-  {
-    id: 'sg-1',
-    name: 'Quiche Lorraine',
-    description: 'Quiche clássica com bacon artesanal, queijo gruyère e creme fresco',
-    price: 59.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183539_2f8b4ce5-3c73-46c7-acfa-309c59bd5dcb_min.webp',
-    category: 'salgados',
-    rating: 4.7,
-    reviews: 134,
-    available: true,
-    tags: ['quiche', 'almoço'],
-    servings: '6-8 fatias',
-  },
-  {
-    id: 'sg-2',
-    name: 'Empada Gourmet (6un)',
-    description: 'Mini empadas artesanais: frango com catupiry, palmito e camarão',
-    price: 34.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183541_a0dca5fc-09d6-405d-b053-6e8ceca78cc0_min.webp',
-    category: 'salgados',
-    badge: 'maisVendido',
-    rating: 4.8,
-    reviews: 223,
-    available: true,
-    tags: ['mini', 'sortido'],
-    isBestSeller: true,
-    servings: '6 unidades',
-  },
-  {
-    id: 'sg-3',
-    name: 'Coxinha Gourmet (6un)',
-    description: 'Coxinhas artesanais com recheio cremoso de frango desfiado e catupiry',
-    price: 29.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183555_ce3f0e10-a6f9-401f-b8eb-058751a60ae8_min.webp',
-    category: 'salgados',
-    rating: 4.7,
-    reviews: 189,
-    available: true,
-    tags: ['frito', 'tradicional'],
-    servings: '6 unidades',
-  },
-  {
-    id: 'sg-4',
-    name: 'Mini Quiche Sortida (8un)',
-    description: 'Seleção de mini quiches: queijo, espinafre, tomate seco e cogumelos',
-    price: 44.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183556_05e67c99-c50c-447f-93f9-d15a01a758dd_min.webp',
-    category: 'salgados',
-    badge: 'vegano',
-    rating: 4.6,
-    reviews: 78,
-    available: true,
-    tags: ['mini', 'vegetariano'],
-    servings: '8 unidades',
-  },
-
-  // Cafés & Bebidas
-  {
-    id: 'cf-1',
-    name: 'Café Especial Coado',
-    description: 'Café de origem única, torrado artesanalmente e coado na hora',
-    price: 9.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183558_048fdcd2-88b9-4ae6-96c2-ceef10d78cdd_min.webp',
-    category: 'cafes',
-    rating: 4.8,
-    reviews: 345,
-    available: true,
-    tags: ['quente', 'especial'],
-    servings: '200ml',
-  },
-  {
-    id: 'cf-2',
-    name: 'Cappuccino Cremoso',
-    description: 'Espresso duplo com leite vaporizado e espuma aveludada, finalizado com canela',
-    price: 14.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183559_83a2f41f-9caf-471c-86f2-e2d2e618e5eb_min.webp',
-    category: 'cafes',
-    badge: 'maisVendido',
-    rating: 4.9,
-    reviews: 278,
-    available: true,
-    tags: ['quente', 'cremoso'],
-    isBestSeller: true,
-    servings: '300ml',
-  },
-  {
-    id: 'cf-3',
-    name: 'Chocolate Quente Belga',
-    description: 'Chocolate quente feito com chocolate belga derretido e leite integral',
-    price: 16.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183607_6817d955-ee74-41e5-bbe0-b774a0fbea53_min.webp',
-    category: 'cafes',
-    rating: 4.8,
-    reviews: 167,
-    available: true,
-    tags: ['quente', 'chocolate'],
-    servings: '300ml',
-  },
-  {
-    id: 'cf-4',
-    name: 'Suco Natural da Estação',
-    description: 'Suco natural feito na hora com frutas frescas da estação',
-    price: 12.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183609_bb89dde1-b0de-4f49-9099-e232040f478b_min.webp',
-    category: 'cafes',
-    rating: 4.5,
-    reviews: 89,
-    available: true,
-    tags: ['frio', 'natural', 'saudável'],
-    servings: '400ml',
-  },
-  {
-    id: 'cf-5',
-    name: 'Limonada Suíça',
-    description: 'Limonada cremosa com leite condensado, limão fresco e gelo',
-    price: 13.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183612_6a9b36e3-00fe-45b1-8497-5a1f846fad84_min.webp',
-    category: 'cafes',
-    badge: 'novo',
-    rating: 4.7,
-    reviews: 56,
-    available: true,
-    tags: ['frio', 'refrescante'],
-    isNew: true,
-    servings: '400ml',
-  },
-
-  // Zero Lactose
-  {
-    id: 'zl-1',
-    name: 'Brownie Zero Lactose',
-    description: 'Brownie intenso sem lactose, feito com chocolate 70% e óleo de coco',
-    price: 18.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183613_e65b3b71-a985-47d6-8a10-82e4dea9a3be_min.webp',
-    category: 'zero-lactose',
-    badge: 'zeroLactose',
-    rating: 4.7,
-    reviews: 89,
-    available: true,
-    tags: ['sem lactose', 'chocolate'],
-    servings: '1 unidade',
-  },
-  {
-    id: 'zl-2',
-    name: 'Bolo de Banana Zero Lactose',
-    description: 'Bolo úmido de banana com canela, sem lactose, cobertura de chocolate vegano',
-    price: 54.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183625_bf251b4b-9a1b-451b-86a6-1737179cb6f1_min.webp',
-    category: 'zero-lactose',
-    badge: 'zeroLactose',
-    rating: 4.8,
-    reviews: 67,
-    available: true,
-    tags: ['sem lactose', 'banana'],
-    servings: '8-10 fatias',
-  },
-  {
-    id: 'zl-3',
-    name: 'Brigadeiro Zero Lactose (cx 8un)',
-    description: 'Brigadeiros gourmet sem lactose em sabores exclusivos',
-    price: 44.90,
-    image: 'https://d8j0ntlcm91z4.cloudfront.net/user_32LW5eC5KZQPF2BSp47dcBMOdI6/hf_20260713_183626_a94384cb-4102-459c-ac44-5c36493c65e5_min.webp',
-    category: 'zero-lactose',
-    badge: 'zeroLactose',
-    rating: 4.6,
-    reviews: 45,
-    available: true,
-    tags: ['sem lactose', 'gourmet'],
-    servings: '8 unidades',
-  },
-];
-
-export const promos: Promo[] = [
-  {
-    id: 'promo-1',
-    title: 'Semana do Brigadeiro',
-    description: 'Todos os brigadeiros gourmet com 20% OFF',
-    discount: 20,
-    code: 'BRIGADEIRO20',
-    bgGradient: 'from-[#3D2B1F] to-[#5C3D2E]',
-  },
-  {
-    id: 'promo-2',
-    title: 'Combo Café da Tarde',
-    description: 'Café + fatia de bolo a partir de R$ 19,90',
-    discount: 15,
-    code: 'CAFETARDE15',
-    bgGradient: 'from-[#5C3D2E] to-[#C8956C]',
-  },
-  {
-    id: 'promo-3',
-    title: 'Frete Grátis',
-    description: 'Em pedidos acima de R$ 89,90 para toda São Paulo',
-    discount: 100,
-    code: 'FRETEGRATIS',
-    bgGradient: 'from-[#2A1D15] to-[#3D2B1F]',
-  },
-  {
-    id: 'promo-4',
-    title: 'Ganhe um Brinde',
-    description: 'Brinde especial em compras acima de R$ 150',
-    discount: 0,
-    code: 'BRINDE150',
-    bgGradient: 'from-[#3D2B1F] via-[#5C3D2E] to-[#C8956C]',
-  },
-];
-
-export const combos: Combo[] = [
-  {
-    id: 'combo-1',
-    name: 'Combo Festa Completa',
-    description: 'Tudo para uma festa inesquecível',
-    products: ['Bolo Red Velvet Premium', 'Brigadeiro Gourmet (cx 12un)', 'Palha Italiana Premium'],
-    originalPrice: 193.70,
-    comboPrice: 159.90,
-    savings: 33.80,
-  },
-  {
-    id: 'combo-2',
-    name: 'Combo Café & Doce',
-    description: 'O par perfeito para o lanche da tarde',
-    products: ['Cappuccino Cremoso', 'Brownie Belga Trufado', 'Cookie Double Chocolate'],
-    originalPrice: 46.70,
-    comboPrice: 36.90,
-    savings: 9.80,
-  },
-  {
-    id: 'combo-3',
-    name: 'Combo Tortas Premium',
-    description: 'Seleção gourmet das nossas melhores tortas',
-    products: ['Torta de Limão Siciliano', 'Cheesecake Frutas Vermelhas'],
-    originalPrice: 169.80,
-    comboPrice: 144.90,
-    savings: 24.90,
-  },
-  {
-    id: 'combo-4',
-    name: 'Combo Presente Especial',
-    description: 'Surpreenda quem você ama',
-    products: ['Bem-Casados (cx 20un)', 'Trufas Artesanais (cx 6un)', 'Brigadeiro Gourmet (cx 12un)'],
-    originalPrice: 167.70,
-    comboPrice: 139.90,
-    savings: 27.80,
-  },
-];
-
-export const brandStory: BrandStory = {
-  title: 'Nossa História',
-  subtitle: 'Feito com amor desde 2018',
-  paragraphs: [
-    'A Doces Dondoca nasceu de uma paixão genuína pela confeitaria artesanal e do desejo de criar experiências memoráveis através de cada sabor.',
-    'Na nossa cozinha na Vila Gomes Cardim, cada receita é desenvolvida com ingredientes criteriosamente selecionados, técnicas refinadas e a dedicação de quem acredita que um doce bem feito tem o poder de transformar momentos simples em memórias inesquecíveis.',
-    'Hoje, somos referência em São Paulo por nossos bolos decorados, doces finos gourmet e cafés especiais — sempre preservando a essência artesanal que nos define.',
-  ],
-  values: [
-    { icon: '🎨', title: 'Artesanal', description: 'Cada peça é feita à mão com atenção obsessiva aos detalhes' },
-    { icon: '🌿', title: 'Ingredientes Nobres', description: 'Chocolate belga, frutas frescas e insumos premium selecionados' },
-    { icon: '💜', title: 'Feito com Amor', description: 'Carinho e dedicação em cada etapa da produção' },
-    { icon: '⭐', title: 'Excelência', description: 'Compromisso inabalável com a qualidade e sua satisfação' },
-  ],
-};
 
 export interface Review {
   id: string;
   name: string;
-  avatar: string;
+  /** Iniciais exibidas no avatar. */
+  initials: string;
+  /** 1 a 5. */
   rating: number;
   text: string;
   date: string;
-  product?: string;
 }
 
 export interface FAQ {
@@ -689,117 +76,325 @@ export interface FAQ {
   answer: string;
 }
 
-export const reviews: Review[] = [
+export interface AboutSection {
+  title: string;
+  subtitle: string;
+  paragraphs: string[];
+  values: { icon: string; title: string; description: string }[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* CATEGORIAS                                                                  */
+/* -------------------------------------------------------------------------- */
+/* A categoria 'todos' é obrigatória e sempre a primeira.                      */
+
+export const categories: Category[] = [
+  { slug: 'todos', name: 'Todos', emoji: '' },
+  { slug: 'categoria-1', name: 'Categoria 1', emoji: '' },
+  { slug: 'categoria-2', name: 'Categoria 2', emoji: '' },
+  { slug: 'categoria-3', name: 'Categoria 3', emoji: '' },
+  { slug: 'categoria-4', name: 'Categoria 4', emoji: '' },
+  { slug: 'categoria-5', name: 'Categoria 5', emoji: '' },
+];
+
+/* -------------------------------------------------------------------------- */
+/* PRODUTOS                                                                    */
+/* -------------------------------------------------------------------------- */
+/* 15 itens de exemplo distribuídos nas 5 categorias, sem imagem.              */
+/* Substitua nome, descrição, preço e categoria pelos dados reais da loja.     */
+
+export const products: Product[] = [
   {
-    id: 'r-1',
-    name: 'Camila S.',
-    avatar: 'CS',
-    rating: 5,
-    text: 'Os brigadeiros gourmet são simplesmente divinos. A caixa veio lindamente embalada, perfeita para presente. Já é minha confeitaria favorita no Tatuapé!',
-    date: '2 dias atrás',
-    product: 'Brigadeiro Gourmet',
+    id: 'p-01',
+    name: 'Produto 01',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 10.0,
+    image: null,
+    category: 'categoria-1',
+    badge: { label: 'Mais vendido', tone: 'accent' },
+    servings: '1 unidade',
+    available: true,
   },
   {
-    id: 'r-2',
-    name: 'Rafael M.',
-    avatar: 'RM',
-    rating: 5,
-    text: 'Encomendei o bolo Red Velvet para o aniversário da minha esposa. Todo mundo elogiou! Sabor incrível e decoração impecável.',
-    date: '1 semana atrás',
-    product: 'Bolo Red Velvet',
+    id: 'p-02',
+    name: 'Produto 02',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 15.0,
+    originalPrice: 20.0,
+    image: null,
+    category: 'categoria-1',
+    badge: { label: 'Promoção', tone: 'warning' },
+    servings: '1 unidade',
+    available: true,
   },
   {
-    id: 'r-3',
-    name: 'Juliana P.',
-    avatar: 'JP',
-    rating: 5,
-    text: 'O cheesecake de frutas vermelhas é o melhor que já comi em São Paulo. Cremoso na medida certa, com frutas frescas de verdade.',
-    date: '2 semanas atrás',
-    product: 'Cheesecake Frutas Vermelhas',
+    id: 'p-03',
+    name: 'Produto 03',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 22.5,
+    image: null,
+    category: 'categoria-1',
+    servings: '2 unidades',
+    available: true,
   },
   {
-    id: 'r-4',
-    name: 'Marcos T.',
-    avatar: 'MT',
-    rating: 5,
-    text: 'Peço as empadas gourmet toda semana. A massa é incrivelmente crocante e o recheio é super generoso. Viciante!',
-    date: '3 semanas atrás',
-    product: 'Empada Gourmet',
+    id: 'p-04',
+    name: 'Produto 04',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 30.0,
+    image: null,
+    category: 'categoria-2',
+    badge: { label: 'Novidade', tone: 'success' },
+    available: true,
   },
   {
-    id: 'r-5',
-    name: 'Ana Luísa R.',
-    avatar: 'AR',
-    rating: 5,
-    text: 'Sou intolerante à lactose e finalmente encontrei uma confeitaria que se preocupa de verdade. Os brownies zero lactose são maravilhosos.',
-    date: '1 mês atrás',
-    product: 'Brownie Zero Lactose',
+    id: 'p-05',
+    name: 'Produto 05',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 35.9,
+    image: null,
+    category: 'categoria-2',
+    servings: '6 unidades',
+    available: true,
   },
   {
-    id: 'r-6',
-    name: 'Fernando C.',
-    avatar: 'FC',
-    rating: 5,
-    text: 'O cappuccino cremoso com o brownie belga trufado é a combinação perfeita. Atendimento sempre atencioso e carinhoso.',
-    date: '1 mês atrás',
-    product: 'Cappuccino Cremoso',
+    id: 'p-06',
+    name: 'Produto 06',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 42.0,
+    image: null,
+    category: 'categoria-2',
+    available: true,
+  },
+  {
+    id: 'p-07',
+    name: 'Produto 07',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 48.9,
+    image: null,
+    category: 'categoria-3',
+    badge: { label: 'Destaque', tone: 'info' },
+    servings: '8 a 10 porções',
+    available: true,
+  },
+  {
+    id: 'p-08',
+    name: 'Produto 08',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 55.0,
+    originalPrice: 65.0,
+    image: null,
+    category: 'categoria-3',
+    available: true,
+  },
+  {
+    id: 'p-09',
+    name: 'Produto 09',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 60.0,
+    image: null,
+    category: 'categoria-3',
+    available: true,
+  },
+  {
+    id: 'p-10',
+    name: 'Produto 10',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 12.5,
+    image: null,
+    category: 'categoria-4',
+    available: true,
+  },
+  {
+    id: 'p-11',
+    name: 'Produto 11',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 18.0,
+    image: null,
+    category: 'categoria-4',
+    badge: { label: 'Edição limitada', tone: 'neutral' },
+    available: true,
+  },
+  {
+    id: 'p-12',
+    name: 'Produto 12',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 25.0,
+    image: null,
+    category: 'categoria-4',
+    available: false,
+  },
+  {
+    id: 'p-13',
+    name: 'Produto 13',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 8.0,
+    image: null,
+    category: 'categoria-5',
+    servings: '300 ml',
+    available: true,
+  },
+  {
+    id: 'p-14',
+    name: 'Produto 14',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 9.5,
+    image: null,
+    category: 'categoria-5',
+    servings: '400 ml',
+    available: true,
+  },
+  {
+    id: 'p-15',
+    name: 'Produto 15',
+    description: 'Descrição curta do produto, com até duas linhas de texto.',
+    price: 11.0,
+    image: null,
+    category: 'categoria-5',
+    available: true,
   },
 ];
+
+/* -------------------------------------------------------------------------- */
+/* COMBOS                                                                      */
+/* -------------------------------------------------------------------------- */
+/* Deixe [] para ocultar a seção inteira.                                      */
+
+export const combos: Combo[] = [
+  {
+    id: 'c-01',
+    name: 'Combo 01',
+    description: 'Descrição curta do combo.',
+    productIds: ['p-01', 'p-04', 'p-13'],
+    comboPrice: 45.0,
+  },
+  {
+    id: 'c-02',
+    name: 'Combo 02',
+    description: 'Descrição curta do combo.',
+    productIds: ['p-07', 'p-08'],
+    comboPrice: 95.0,
+  },
+  {
+    id: 'c-03',
+    name: 'Combo 03',
+    description: 'Descrição curta do combo.',
+    productIds: ['p-02', 'p-05', 'p-14'],
+    comboPrice: 55.0,
+  },
+];
+
+/**
+ * Converte um combo num item vendável.
+ *
+ * O combo entra no pedido como UMA linha, pelo preço do combo — se entrasse
+ * como produtos avulsos, o carrinho cobraria a soma dos preços cheios e
+ * contradiria o desconto anunciado no card.
+ */
+export function comboAsProduct(combo: Combo): Product {
+  const names = combo.productIds
+    .map((id) => products.find((p) => p.id === id)?.name)
+    .filter(Boolean)
+    .join(' + ');
+
+  return {
+    id: `combo-${combo.id}`,
+    name: combo.name,
+    description: names,
+    price: combo.comboPrice,
+    image: null,
+    category: 'combos',
+    available: combo.productIds.every(
+      (id) => products.find((p) => p.id === id)?.available,
+    ),
+  };
+}
+
+/**
+ * Resolve qualquer id vendável — produto avulso ou combo.
+ * Usado ao restaurar o carrinho do localStorage.
+ */
+export function findSellableById(id: string): Product | undefined {
+  const product = products.find((p) => p.id === id);
+  if (product) return product;
+
+  const combo = combos.find((c) => `combo-${c.id}` === id);
+  return combo ? comboAsProduct(combo) : undefined;
+}
+
+/* -------------------------------------------------------------------------- */
+/* SOBRE                                                                       */
+/* -------------------------------------------------------------------------- */
+
+export const about: AboutSection = {
+  title: 'Sobre',
+  subtitle: 'Subtítulo da seção sobre',
+  paragraphs: [
+    'Primeiro parágrafo sobre a loja: origem, proposta e o que a diferencia.',
+    'Segundo parágrafo: processo, matéria-prima ou forma de trabalho.',
+    'Terceiro parágrafo: posicionamento atual e público atendido.',
+  ],
+  values: [
+    { icon: '', title: 'Valor 1', description: 'Descrição curta do primeiro diferencial.' },
+    { icon: '', title: 'Valor 2', description: 'Descrição curta do segundo diferencial.' },
+    { icon: '', title: 'Valor 3', description: 'Descrição curta do terceiro diferencial.' },
+    { icon: '', title: 'Valor 4', description: 'Descrição curta do quarto diferencial.' },
+  ],
+};
+
+/* -------------------------------------------------------------------------- */
+/* AVALIAÇÕES                                                                  */
+/* -------------------------------------------------------------------------- */
+/* Deixe [] para ocultar a seção inteira.                                      */
+
+export const reviews: Review[] = [
+  {
+    id: 'r-01',
+    name: 'Nome do cliente 1',
+    initials: 'C1',
+    rating: 5,
+    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
+    date: 'há 1 semana',
+  },
+  {
+    id: 'r-02',
+    name: 'Nome do cliente 2',
+    initials: 'C2',
+    rating: 5,
+    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
+    date: 'há 2 semanas',
+  },
+  {
+    id: 'r-03',
+    name: 'Nome do cliente 3',
+    initials: 'C3',
+    rating: 4,
+    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
+    date: 'há 1 mês',
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/* FAQ                                                                         */
+/* -------------------------------------------------------------------------- */
+/* Deixe [] para ocultar a seção inteira.                                      */
 
 export const faqs: FAQ[] = [
   {
     question: 'Como faço para realizar um pedido?',
-    answer: 'Basta adicionar os produtos desejados ao carrinho e clicar em "Finalizar Pedido via WhatsApp". Você será redirecionado para o nosso WhatsApp com o resumo do pedido pronto.',
+    answer:
+      'Adicione os produtos ao carrinho, preencha seus dados e clique em "Enviar pedido pelo WhatsApp". Você será levado à conversa com a nota do pedido já montada.',
   },
   {
     question: 'Qual o prazo de entrega?',
-    answer: 'Para pedidos no Tatuapé e região, entregamos em até 2 horas. Para outras regiões de São Paulo, o prazo é de até 4 horas. Encomendas de bolos e tortas inteiras precisam de pelo menos 24 horas de antecedência.',
-  },
-  {
-    question: 'Vocês fazem bolos e doces sob encomenda?',
-    answer: 'Sim! Trabalhamos com encomendas personalizadas para aniversários, casamentos, chás de bebê e eventos corporativos. Entre em contato pelo WhatsApp para solicitar um orçamento.',
-  },
-  {
-    question: 'Qual o valor mínimo para entrega?',
-    answer: 'O pedido mínimo para entrega é de R$ 30,00. Frete grátis em pedidos acima de R$ 89,90 para o Tatuapé e região. Para outras regiões, consulte o valor do frete.',
-  },
-  {
-    question: 'Vocês possuem opções sem lactose ou veganas?',
-    answer: 'Sim! Temos uma linha especial zero lactose com brownies, bolos e brigadeiros. Também oferecemos opções veganas sob encomenda. Confira nossa categoria Zero Lactose no cardápio.',
+    answer: 'Resposta sobre prazos de entrega e retirada.',
   },
   {
     question: 'Quais são as formas de pagamento?',
-    answer: 'Aceitamos Pix, cartão de crédito e débito (todas as bandeiras), dinheiro e vale-refeição (Alelo, VR, Sodexo). O pagamento é realizado na entrega ou retirada.',
-  },
-];
-
-export const loyaltyTiers: Tier[] = [
-  {
-    name: 'Bronze',
-    minPoints: 0,
-    benefits: ['Acúmulo de 1 ponto por real', 'Acesso antecipado a promoções'],
-    icon: '🥉',
-    color: '#CD7F32',
+    answer: 'Resposta sobre as formas de pagamento aceitas.',
   },
   {
-    name: 'Prata',
-    minPoints: 500,
-    benefits: ['1.5 pontos por real gasto', 'Frete grátis acima de R$ 50', '5% de desconto em bolos'],
-    icon: '🥈',
-    color: '#C0C0C0',
-  },
-  {
-    name: 'Ouro',
-    minPoints: 1500,
-    benefits: ['2 pontos por real gasto', 'Frete grátis sem mínimo', '10% de desconto em tudo', 'Brinde no aniversário'],
-    icon: '🥇',
-    color: '#D4A853',
-  },
-  {
-    name: 'Diamante',
-    minPoints: 5000,
-    benefits: ['3 pontos por real gasto', 'Frete grátis sempre', '15% de desconto em tudo', 'Degustação exclusiva', 'Atendimento VIP'],
-    icon: '💎',
-    color: '#B9F2FF',
+    question: 'Vocês atendem quais regiões?',
+    answer: 'Resposta sobre a área de cobertura de entrega.',
   },
 ];

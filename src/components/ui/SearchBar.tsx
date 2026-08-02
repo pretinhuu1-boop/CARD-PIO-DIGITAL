@@ -16,8 +16,8 @@ interface SearchBarProps {
 function SearchBar({
   value,
   onChange,
-  placeholder = 'Buscar doces, bolos, cafés...',
-  debounceMs = 300,
+  placeholder = 'Buscar no cardápio...',
+  debounceMs = 250,
   className,
 }: SearchBarProps) {
   const [localValue, setLocalValue] = useState(value);
@@ -25,16 +25,18 @@ function SearchBar({
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
+  // Sincroniza com o valor externo durante a renderização, não num efeito:
+  // um efeito aqui dispararia uma renderização em cascata a cada tecla.
+  const [syncedValue, setSyncedValue] = useState(value);
+  if (value !== syncedValue) {
+    setSyncedValue(value);
     setLocalValue(value);
-  }, [value]);
+  }
 
   const debouncedOnChange = useCallback(
     (val: string) => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
-      debounceRef.current = setTimeout(() => {
-        onChange(val);
-      }, debounceMs);
+      debounceRef.current = setTimeout(() => onChange(val), debounceMs);
     },
     [onChange, debounceMs],
   );
@@ -52,70 +54,59 @@ function SearchBar({
   };
 
   const handleClear = () => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
     setLocalValue('');
     onChange('');
     inputRef.current?.focus();
   };
 
   return (
-    <motion.div
-      animate={{ scale: isFocused ? 1.01 : 1 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+    <div
       className={cn(
-        'relative flex items-center rounded-2xl transition-all duration-300',
-        'bg-cream-100 border border-cream-300',
-        'dark:bg-chocolate-800/50 dark:border-chocolate-600',
-        isFocused && 'border-caramel-400 ring-2 ring-caramel-400/10 dark:border-caramel-500',
+        'relative flex items-center rounded-control border bg-surface-2',
+        'transition-colors duration-200',
+        isFocused ? 'border-brand' : 'border-line',
         className,
       )}
     >
       <Search
-        className={cn(
-          'absolute left-4 h-4.5 w-4.5 transition-colors duration-200 pointer-events-none',
-          isFocused
-            ? 'text-caramel-600 dark:text-caramel-400'
-            : 'text-cream-600 dark:text-cream-600',
-        )}
+        className="pointer-events-none absolute left-4 h-4 w-4 text-ink-3"
+        aria-hidden="true"
       />
 
       <input
         ref={inputRef}
-        type="text"
+        type="search"
         value={localValue}
         onChange={handleChange}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         placeholder={placeholder}
+        aria-label="Buscar no cardápio"
         className={cn(
-          'w-full bg-transparent py-3.5 pl-12 pr-10 text-sm',
-          'text-chocolate-800 placeholder:text-cream-600',
-          'dark:text-cream-200 dark:placeholder:text-cream-600',
-          'outline-none',
+          'w-full bg-transparent py-3.5 pl-11 pr-11 text-sm',
+          'text-ink placeholder:text-ink-3',
+          'outline-none [&::-webkit-search-cancel-button]:hidden',
         )}
       />
 
       <AnimatePresence>
         {localValue.length > 0 && (
           <motion.button
-            initial={{ opacity: 0, scale: 0.5 }}
+            initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
+            exit={{ opacity: 0, scale: 0.6 }}
             transition={{ duration: 0.15 }}
             onClick={handleClear}
-            className={cn(
-              'absolute right-3 p-1.5 rounded-full',
-              'text-cream-600 hover:text-chocolate-700 hover:bg-cream-200',
-              'dark:text-cream-500 dark:hover:text-cream-200 dark:hover:bg-chocolate-700',
-              'transition-colors duration-150',
-            )}
             type="button"
             aria-label="Limpar busca"
+            className="focus-ring absolute right-2 flex h-9 w-9 items-center justify-center rounded-full text-ink-3 transition-colors hover:bg-surface-3 hover:text-ink"
           >
             <X className="h-4 w-4" />
           </motion.button>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
 

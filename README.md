@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Template Padrão — Cardápio Digital com Pedido no WhatsApp
 
-## Getting Started
+Template em branco para cardápios digitais de loja. Página única, com o pedido
+finalizado no WhatsApp — o cliente cai na conversa com a mensagem já montada.
 
-First, run the development server:
+Neutro por padrão: escala de cinza, tipografia de sistema, produtos de exemplo
+sem imagem. Sem cadastro de usuário, sem login, sem cupom, sem programa de
+pontos.
+
+## Rodar
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # build de produção
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Preencher uma loja nova
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Três arquivos, nesta ordem:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Arquivo | O que preencher |
+|---|---|
+| `src/app/globals.css` | Cores da marca e fontes (bloco IDENTIDADE VISUAL) |
+| `src/lib/config.ts` | Nome, WhatsApp, endereço, horários, frete, pagamento |
+| `src/lib/data.ts` | Categorias, produtos, combos, avaliações, FAQ, sobre |
 
-## Learn More
+Imagens de produto vão em `public/produtos/` e são referenciadas por caminho
+local em `data.ts`. O campo `image: null` renderiza um placeholder neutro — o
+layout funciona sem nenhuma imagem.
 
-To learn more about Next.js, take a look at the following resources:
+O campo `whatsapp` em `config.ts` é obrigatório: enquanto estiver vazio, os
+botões de pedido não aparecem e o checkout avisa que falta configurar.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Documentação
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **[docs/ESPECIFICACAO-TEMPLATE.md](docs/ESPECIFICACAO-TEMPLATE.md)** —
+  estrutura de arquivos, ordem das seções, fluxo de compra, formato da mensagem,
+  sistema de tokens, contrato de dados, acessibilidade e checklist de publicação.
+- **[docs/PROCESSO-CLONAGEM-LOJA.md](docs/PROCESSO-CLONAGEM-LOJA.md)** — o fluxo
+  de trabalho do link da loja até o cardápio publicado: coleta de identidade e
+  produtos, catalogação de imagens, suíte de testes e o checklist de armadilhas
+  já encontradas na prática.
+- **[docs/BRIEFING-PESQUISA-LOJA.md](docs/BRIEFING-PESQUISA-LOJA.md)** — prompt
+  pronto para rodar a coleta numa sessão com internet, quando o ambiente de
+  build não alcança as fontes. A saída já sai no formato dos arquivos de
+  preenchimento.
 
-## Deploy on Vercel
+## Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS 4 ·
+framer-motion · lucide-react. Sem backend e sem banco: o pedido sai por link
+`wa.me` e o carrinho vive no `localStorage`.

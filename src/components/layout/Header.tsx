@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { motion, AnimatePresence, useMotionValueEvent, useScroll } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Menu, X } from 'lucide-react';
+import { store } from '@/lib/config';
 import { useCart } from '@/lib/store';
 import { cn } from '@/lib/utils';
 
@@ -12,124 +13,81 @@ interface HeaderProps {
 
 const navItems = [
   { label: 'Cardápio', href: 'cardapio' },
+  { label: 'Combos', href: 'combos' },
   { label: 'Sobre', href: 'sobre' },
   { label: 'Avaliações', href: 'avaliacoes' },
   { label: 'FAQ', href: 'faq' },
 ];
 
+/**
+ * O header é sempre translúcido (classe `.glass`), nunca transparente.
+ * A versão anterior ficava transparente no topo e pintava o texto de branco
+ * via classes que não existiam — o logo sumia contra o hero.
+ */
 function Header({ onOpenCart }: HeaderProps) {
   const { count } = useCart();
-  const { scrollY } = useScroll();
-  const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [prevCount, setPrevCount] = useState(count);
-  const [bouncing, setBouncing] = useState(false);
-
-  useMotionValueEvent(scrollY, 'change', (latest) => {
-    setScrolled(latest > 80);
-  });
 
   const updateActiveSection = useCallback(() => {
-    const sections = navItems.map((item) => ({
-      id: item.href,
-      el: document.getElementById(item.href),
-    }));
-
     const scrollTop = window.scrollY + 120;
     let current = '';
-
-    for (const section of sections) {
-      if (section.el && section.el.offsetTop <= scrollTop) {
-        current = section.id;
-      }
+    for (const item of navItems) {
+      const el = document.getElementById(item.href);
+      if (el && el.offsetTop <= scrollTop) current = item.href;
     }
-
     setActiveSection(current);
   }, []);
 
   useEffect(() => {
+    // A primeira medição espera o layout assentar (o navegador pode restaurar
+    // a rolagem sem disparar `scroll`), por isso vai num rAF em vez de rodar
+    // de forma síncrona dentro do efeito.
+    const frame = requestAnimationFrame(updateActiveSection);
     window.addEventListener('scroll', updateActiveSection, { passive: true });
-    return () => window.removeEventListener('scroll', updateActiveSection);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', updateActiveSection);
+    };
   }, [updateActiveSection]);
 
-  useEffect(() => {
-    if (count !== prevCount && count > 0) {
-      setBouncing(true);
-      const timer = setTimeout(() => setBouncing(false), 500);
-      setPrevCount(count);
-      return () => clearTimeout(timer);
-    }
-    setPrevCount(count);
-  }, [count, prevCount]);
-
   const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     setMobileMenuOpen(false);
   };
 
   return (
     <>
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
-          scrolled
-            ? 'glass shadow-sm'
-            : 'bg-transparent',
-        )}
-      >
+      <header className="glass fixed inset-x-0 top-0 z-50">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div
-            className={cn(
-              'flex items-center justify-between transition-all duration-500',
-              scrolled ? 'h-14 sm:h-16' : 'h-16 sm:h-20',
-            )}
-          >
-            <motion.div
-              className="flex items-center gap-2"
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+          <div className="flex h-16 items-center justify-between">
+            <button
+              type="button"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="focus-ring flex min-h-[44px] items-center rounded-sm font-display text-xl tracking-tight text-ink"
             >
-              <h1
-                className={cn(
-                  'font-display tracking-tight transition-all duration-500',
-                  scrolled
-                    ? 'text-lg sm:text-xl text-chocolate-800 dark:text-cream-200'
-                    : 'text-xl sm:text-2xl text-cream-50',
-                )}
-              >
-                Doces Dondoca
-              </h1>
-            </motion.div>
+              {store.name}
+            </button>
 
-            <nav className="hidden md:flex items-center gap-8">
+            <nav className="hidden items-center gap-7 md:flex">
               {navItems.map((item) => (
                 <button
                   key={item.href}
+                  type="button"
                   onClick={() => scrollTo(item.href)}
+                  aria-current={activeSection === item.href ? 'true' : undefined}
                   className={cn(
-                    'text-sm font-medium transition-all duration-300 relative',
-                    scrolled
-                      ? activeSection === item.href
-                        ? 'text-chocolate-800 dark:text-cream-100'
-                        : 'text-cream-600 hover:text-chocolate-800 dark:text-cream-500 dark:hover:text-cream-200'
-                      : activeSection === item.href
-                        ? 'text-cream-50'
-                        : 'text-cream-200/70 hover:text-cream-50',
+                    'focus-ring relative rounded-sm py-2 text-sm font-medium transition-colors',
+                    activeSection === item.href
+                      ? 'text-ink'
+                      : 'text-ink-2 hover:text-ink',
                   )}
                 >
                   {item.label}
                   {activeSection === item.href && (
-                    <motion.div
+                    <motion.span
                       layoutId="nav-indicator"
-                      className={cn(
-                        'absolute -bottom-1 left-0 right-0 h-0.5 rounded-full',
-                        scrolled ? 'bg-caramel-500' : 'bg-cream-50',
-                      )}
+                      className="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-brand"
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -137,50 +95,24 @@ function Header({ onOpenCart }: HeaderProps) {
               ))}
             </nav>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <motion.button
+                type="button"
                 onClick={onOpenCart}
-                whileHover={{ scale: 1.06 }}
                 whileTap={{ scale: 0.94 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-                className={cn(
-                  'relative flex items-center justify-center rounded-full transition-colors duration-200',
-                  'w-10 h-10 sm:w-11 sm:h-11',
-                  scrolled
-                    ? 'bg-chocolate-800/8 hover:bg-chocolate-800/15 dark:bg-cream-200/10 dark:hover:bg-cream-200/15'
-                    : 'bg-cream-50/10 hover:bg-cream-50/20',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-caramel-400/50 focus-visible:ring-offset-2',
-                )}
-                aria-label={`Carrinho com ${count} ${count === 1 ? 'item' : 'itens'}`}
+                className="focus-ring relative flex h-11 w-11 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface-2"
+                aria-label={`Abrir pedido — ${count} ${count === 1 ? 'item' : 'itens'}`}
               >
-                <ShoppingBag
-                  className={cn(
-                    'w-5 h-5',
-                    scrolled
-                      ? 'text-chocolate-800 dark:text-cream-200'
-                      : 'text-cream-50',
-                  )}
-                />
-
+                <ShoppingBag className="h-5 w-5" aria-hidden="true" />
                 <AnimatePresence>
                   {count > 0 && (
                     <motion.span
                       key="badge"
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{
-                        scale: bouncing ? [1, 1.3, 1] : 1,
-                        opacity: 1,
-                      }}
-                      exit={{ scale: 0, opacity: 0 }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-                      className={cn(
-                        'absolute -top-1 -right-1 flex items-center justify-center',
-                        'min-w-[18px] h-[18px] px-1 rounded-full',
-                        'bg-caramel-500 text-white',
-                        'text-[10px] font-bold',
-                        'shadow-sm',
-                        'tabular-nums',
-                      )}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 18 }}
+                      className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand px-1 text-[10px] font-bold text-on-brand tabular-nums"
                     >
                       {count > 99 ? '99+' : count}
                     </motion.span>
@@ -188,52 +120,44 @@ function Header({ onOpenCart }: HeaderProps) {
                 </AnimatePresence>
               </motion.button>
 
-              <motion.button
-                whileTap={{ scale: 0.9 }}
+              <button
+                type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className={cn(
-                  'md:hidden flex items-center justify-center w-10 h-10 rounded-full transition-colors',
-                  scrolled
-                    ? 'text-chocolate-800 dark:text-cream-200'
-                    : 'text-cream-50',
-                )}
-                aria-label="Menu"
+                className="focus-ring flex h-11 w-11 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface-2 md:hidden"
+                aria-label="Menu de navegação"
+                aria-expanded={mobileMenuOpen}
               >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </motion.button>
+                {mobileMenuOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
+              </button>
             </div>
           </div>
         </div>
-
-        <motion.div
-          className={cn(
-            'h-px',
-            scrolled ? 'bg-border' : 'bg-transparent',
-          )}
-          animate={{ opacity: scrolled ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-        />
-      </motion.header>
+      </header>
 
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 top-14 z-40 glass md:hidden"
+            className="glass fixed inset-x-0 top-16 z-40 md:hidden"
           >
-            <nav className="flex flex-col px-6 py-4 gap-1">
+            <nav className="flex flex-col gap-1 px-4 py-3">
               {navItems.map((item) => (
                 <button
                   key={item.href}
+                  type="button"
                   onClick={() => scrollTo(item.href)}
                   className={cn(
-                    'text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors',
+                    'focus-ring min-h-[48px] rounded-control px-4 text-left text-sm font-medium transition-colors',
                     activeSection === item.href
-                      ? 'bg-caramel-100 text-chocolate-800'
-                      : 'text-cream-700 hover:bg-cream-200',
+                      ? 'bg-surface-3 text-ink'
+                      : 'text-ink-2 hover:bg-surface-2 hover:text-ink',
                   )}
                 >
                   {item.label}

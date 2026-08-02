@@ -1,86 +1,96 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { MapPin, Clock, Phone, Camera } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { MapPin, Clock, Phone } from 'lucide-react';
+import { store } from '@/lib/config';
 
 const navLinks = [
   { label: 'Cardápio', href: '#cardapio' },
+  { label: 'Combos', href: '#combos' },
+  { label: 'Sobre', href: '#sobre' },
   { label: 'Avaliações', href: '#avaliacoes' },
-  { label: 'Perguntas Frequentes', href: '#faq' },
-];
-
-const hours = [
-  { day: 'Seg a Sex', time: '8h – 20h' },
-  { day: 'Sábado', time: '9h – 18h' },
-  { day: 'Domingo', time: '9h – 14h' },
+  { label: 'Perguntas frequentes', href: '#faq' },
 ];
 
 export function Footer() {
-  return (
-    <footer id="contato" className="bg-chocolate-900 text-cream-300">
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-caramel-600/40 to-transparent" />
+  const year = new Date().getFullYear();
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.1 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
-        className="max-w-6xl mx-auto px-6 py-16"
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-          <div className="space-y-4">
-            <h2 className="font-display text-2xl text-cream-100">Doces Dondoca</h2>
-            <p className="text-sm text-cream-500 leading-relaxed">
-              Confeitaria artesanal no coração do Tatuapé. Doces, salgados e cafés feitos com carinho.
-            </p>
+  return (
+    <footer id="contato" className="border-t border-line bg-surface-2">
+      <div className="mx-auto max-w-6xl px-6 py-16">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="space-y-3">
+            <h2 className="font-display text-xl text-ink">{store.name}</h2>
+            <p className="text-sm leading-relaxed text-ink-2">{store.description}</p>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="font-medium text-cream-200 text-sm tracking-[0.1em] uppercase">Navegação</h3>
-            <ul className="space-y-2">
+          <nav className="space-y-3" aria-label="Rodapé">
+            <h3 className="text-xs font-medium uppercase tracking-[0.12em] text-ink-3">
+              Navegação
+            </h3>
+            <ul className="space-y-1">
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    className="text-cream-500 hover:text-caramel-400 transition-colors duration-200 text-sm"
+                    className="focus-ring inline-flex min-h-[44px] min-w-[44px] items-center rounded-sm text-sm text-ink-2 transition-colors hover:text-ink"
                   >
                     {link.label}
                   </a>
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
-          <div className="space-y-4">
-            <h3 className="font-medium text-cream-200 text-sm tracking-[0.1em] uppercase">Contato</h3>
+          <div className="space-y-3">
+            <h3 className="text-xs font-medium uppercase tracking-[0.12em] text-ink-3">
+              Contato
+            </h3>
             <ul className="space-y-3">
-              <li className="flex items-start gap-3 text-sm text-cream-500">
-                <Phone className="w-4 h-4 mt-0.5 shrink-0 text-caramel-500" />
-                <span>(11) 98399-0000</span>
+              <li className="flex items-start gap-3 text-sm text-ink-2">
+                <Phone className="mt-0.5 h-4 w-4 shrink-0 text-ink-3" aria-hidden="true" />
+                <span>{store.phoneDisplay}</span>
               </li>
-              <li className="flex items-start gap-3 text-sm text-cream-500">
-                <Camera className="w-4 h-4 mt-0.5 shrink-0 text-caramel-500" />
-                <span>@docesdondocaoficial</span>
-              </li>
-              <li className="flex items-start gap-3 text-sm text-cream-500">
-                <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-caramel-500" />
-                <span>Rua Otelo Rizzo, 13 — Vila Gomes Cardim, SP</span>
-              </li>
+              {store.address && (
+                <li className="flex items-start gap-3 text-sm text-ink-2">
+                  <MapPin
+                    className="mt-0.5 h-4 w-4 shrink-0 text-ink-3"
+                    aria-hidden="true"
+                  />
+                  <span>{store.address}</span>
+                </li>
+              )}
+              {store.social.map((item) => (
+                <li key={item.url}>
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="focus-ring inline-flex min-h-[44px] min-w-[44px] items-center rounded-sm text-sm text-ink-2 transition-colors hover:text-ink"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="font-medium text-cream-200 text-sm tracking-[0.1em] uppercase">Horário</h3>
+          <div className="space-y-3">
+            <h3 className="text-xs font-medium uppercase tracking-[0.12em] text-ink-3">
+              Horário
+            </h3>
             <ul className="space-y-3">
-              {hours.map((item) => (
+              {store.hours.map((item) => (
                 <li
                   key={item.day}
-                  className="flex items-start gap-3 text-sm text-cream-500"
+                  className="flex items-start gap-3 text-sm text-ink-2"
                 >
-                  <Clock className="w-4 h-4 mt-0.5 shrink-0 text-caramel-500" />
+                  <Clock
+                    className="mt-0.5 h-4 w-4 shrink-0 text-ink-3"
+                    aria-hidden="true"
+                  />
                   <span>
-                    <strong className="text-cream-300">{item.day}:</strong> {item.time}
+                    <strong className="font-medium text-ink">{item.day}:</strong>{' '}
+                    {item.time ?? 'Fechado'}
                   </span>
                 </li>
               ))}
@@ -88,30 +98,12 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-chocolate-700/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-cream-600">
-            &copy; 2024 Doces Dondoca. Todos os direitos reservados.
+        <div className="mt-12 border-t border-line pt-8">
+          <p className="text-sm text-ink-3">
+            &copy; {year} {store.name}. Todos os direitos reservados.
           </p>
-          <div className="flex items-center gap-3">
-            <a
-              href="https://instagram.com/docesdondocaoficial"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-chocolate-700/50 hover:bg-caramel-600 text-cream-400 hover:text-white transition-colors duration-200 p-2"
-              aria-label="Instagram"
-            >
-              <Camera className="w-4 h-4" />
-            </a>
-            <a
-              href="tel:+5511983990000"
-              className="rounded-full bg-chocolate-700/50 hover:bg-caramel-600 text-cream-400 hover:text-white transition-colors duration-200 p-2"
-              aria-label="Telefone"
-            >
-              <Phone className="w-4 h-4" />
-            </a>
-          </div>
         </div>
-      </motion.div>
+      </div>
     </footer>
   );
 }
