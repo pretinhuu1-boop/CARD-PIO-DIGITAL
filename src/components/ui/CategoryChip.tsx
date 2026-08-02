@@ -99,6 +99,7 @@ function CategoryChip({ categories, selected, onChange, className }: CategoryChi
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             onClick={() => handleChipClick(category.slug)}
             aria-pressed={isSelected}
+            data-category-slug={category.slug}
             className={cn(
               'focus-ring flex shrink-0 items-center gap-2 whitespace-nowrap',
               'min-h-[44px] rounded-full px-4 text-sm font-medium',

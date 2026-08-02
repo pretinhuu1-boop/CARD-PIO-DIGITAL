@@ -101,6 +101,16 @@ export function ProductGrid() {
             return (
               <motion.article
                 key={product.id}
+                /*
+                  O catálogo de cada card fica legível no próprio DOM. Serve à
+                  suíte de testes de navegador e é o que permite ao snapshot
+                  estático (scripts/snapshot-html.mjs) recriar filtro, busca e
+                  carrinho sem o runtime do React.
+                */
+                data-product-id={product.id}
+                data-product-name={product.name}
+                data-product-price={product.price}
+                data-product-category={product.category}
                 variants={{
                   hidden: { opacity: 0, y: 16 },
                   visible: {
