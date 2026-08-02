@@ -35,9 +35,13 @@ botões de pedido não aparecem e o checkout avisa que falta configurar.
 
 ## Documentação
 
-**[docs/ESPECIFICACAO-TEMPLATE.md](docs/ESPECIFICACAO-TEMPLATE.md)** — estrutura
-de arquivos, ordem das seções, fluxo de compra, formato da mensagem, sistema de
-tokens, contrato de dados, acessibilidade e checklist de publicação.
+- **[docs/ESPECIFICACAO-TEMPLATE.md](docs/ESPECIFICACAO-TEMPLATE.md)** —
+  estrutura de arquivos, ordem das seções, fluxo de compra, formato da mensagem,
+  sistema de tokens, contrato de dados, acessibilidade e checklist de publicação.
+- **[docs/PROCESSO-CLONAGEM-LOJA.md](docs/PROCESSO-CLONAGEM-LOJA.md)** — o fluxo
+  de trabalho do link da loja até o cardápio publicado: coleta de identidade e
+  produtos, catalogação de imagens, suíte de testes e o checklist de armadilhas
+  já encontradas na prática.
 
 ## Stack
 
