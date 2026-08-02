@@ -63,8 +63,29 @@ export function ProductGrid() {
           <SearchX className="mx-auto mb-4 h-10 w-10 text-ink-3" aria-hidden="true" />
           <p className="font-display text-lg text-ink">Nenhum produto encontrado</p>
           <p className="mt-2 text-sm text-ink-2">
-            Tente outro termo ou selecione outra categoria
+            {/*
+              Busca e categoria são combinadas com E. Procurar "chai" com o
+              filtro em "Salgados" não devolve nada — e a causa não é o termo.
+              Dizer qual filtro está ativo evita que a pessoa conclua que o
+              produto não existe.
+            */}
+            {selectedCategory !== 'todos' && query
+              ? `Nada com esse termo dentro de "${
+                  categories.find((c) => c.slug === selectedCategory)?.name ??
+                  selectedCategory
+                }".`
+              : 'Tente outro termo ou escolha outra categoria.'}
           </p>
+          <button
+            type="button"
+            onClick={() => {
+              setSearchQuery('');
+              setSelectedCategory('todos');
+            }}
+            className="focus-ring mt-6 inline-flex min-h-[44px] items-center rounded-full bg-brand px-6 text-sm font-medium text-on-brand transition-colors hover:bg-brand-hover"
+          >
+            Ver o cardápio inteiro
+          </button>
         </div>
       ) : (
         <motion.div

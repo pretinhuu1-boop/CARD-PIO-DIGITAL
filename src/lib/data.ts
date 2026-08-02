@@ -355,3 +355,32 @@ export const faqs: FAQ[] = [
       'Sim, e o acesso é gratuito: mini cozinha, mesa de desenho, videogame e jogos de tabuleiro. A casa também recebe eventos.',
   },
 ];
+
+/* -------------------------------------------------------------------------- */
+/* NAVEGAÇÃO                                                                   */
+/* -------------------------------------------------------------------------- */
+
+export interface NavSection {
+  id: string;
+  /** Rótulo curto, usado no header. */
+  label: string;
+  /** Rótulo do rodapé, quando ele usa um nome mais longo. */
+  footerLabel?: string;
+}
+
+/**
+ * Seções que existem de fato na página.
+ *
+ * Header e rodapé derivam a navegação daqui em vez de manterem cada um a sua
+ * lista fixa. Combos, avaliações e FAQ somem da página quando seus dados estão
+ * vazios — e antes o link continuava no menu, levando a uma âncora inexistente.
+ */
+export const navSections: NavSection[] = [
+  { id: 'cardapio', label: 'Cardápio' },
+  ...(combos.length > 0 ? [{ id: 'combos', label: 'Combos' }] : []),
+  { id: 'sobre', label: 'Sobre' },
+  ...(reviews.length > 0 ? [{ id: 'avaliacoes', label: 'Avaliações' }] : []),
+  ...(faqs.length > 0
+    ? [{ id: 'faq', label: 'FAQ', footerLabel: 'Perguntas frequentes' }]
+    : []),
+];
