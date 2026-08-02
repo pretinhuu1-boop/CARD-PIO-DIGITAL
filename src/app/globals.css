@@ -30,33 +30,41 @@
 
 :root {
   /* --- Superfícies ------------------------------------------------------ */
-  /* Papel quente, quase branco. A cor forte fica nas fotos, não no fundo.  */
-  --surface: #fdfcfa;        /* fundo de cards, header, modais              */
-  --surface-2: #f5f2ec;      /* fundo alternado de seção                    */
-  --surface-3: #ebe6dc;      /* preenchimento de campos, placeholders       */
+  /*
+    ESTE TEMPLATE FICA ESCURO NOS DOIS ESQUEMAS, de propósito.
+    O TBT é uma casa noturna: as fotos do lugar têm fundo quase preto
+    (#030303 a #050705 medidos) com neon por cima. Uma versão clara não
+    seria "acessibilidade", seria descrever outro lugar.
+  */
+  --surface: #0a0c0a;        /* fundo de cards, header, modais              */
+  --surface-2: #12160f;      /* fundo alternado de seção                    */
+  --surface-3: #1b2019;      /* preenchimento de campos, placeholders       */
 
   /* --- Texto ------------------------------------------------------------ */
-  --ink: #1c2a1e;            /* títulos e texto principal      15.01:1      */
-  --ink-2: #4a5a4c;          /* texto de apoio                  7.35:1      */
-  --ink-3: #8a938a;          /* legendas                                    */
+  --ink: #f2f4f1;            /* títulos e texto principal      17.75:1      */
+  --ink-2: #aeb6ac;          /* texto de apoio                  9.43:1      */
+  --ink-3: #7c857b;          /* legendas                        5.14:1      */
 
   /* --- Traços ----------------------------------------------------------- */
-  --line: #e4e0d6;           /* bordas padrão                               */
-  --line-strong: #cfc9bb;    /* bordas em destaque / hover                  */
+  --line: #1f2a1e;
+  --line-strong: #2f3d2d;
 
   /* --- Marca (CTA principal) ------------------------------------------- */
-  /* Verde amostrado da fachada da loja. As duas fotos divergem por causa   */
-  /* da luz (#205020 na sombra, #509060 no sol) — este é o meio, escolhido  */
-  /* pelo contraste, que é o critério que não depende de iluminação.        */
-  --brand: #2e6b3b;          /* verde Kokedami                  6.40:1      */
-  --brand-hover: #245430;
-  --brand-soft: #e8f0e6;
-  --on-brand: #ffffff;
+  /*
+    Verde neon amostrado da iluminação do camarote. O logo da casa é
+    monocromático (preto sobre transparente), então a cor da marca não vem
+    dele — vem da luz do lugar.
+    `on-brand` é ESCURO: verde neon com texto branco dá 2,37:1 e reprova.
+  */
+  --brand: #00c080;          /* verde neon TBT                  8.27:1      */
+  --brand-hover: #12d18c;
+  --brand-soft: #0e2a1f;
+  --on-brand: #07120c;       /* texto sobre a marca             8.04:1      */
 
   /* --- Destaque secundário --------------------------------------------- */
-  /* Terracota da parede interna, onde fica o logo em verde.                */
-  --accent: #b04a1e;         /* ênfases, eyebrow                5.46:1      */
-  --accent-soft: #f8ece5;
+  /* Âmbar das garrafas retroiluminadas do bar. */
+  --accent: #d9a05b;         /* eyebrow, ênfases                8.53:1      */
+  --accent-soft: #2a1f12;
 
   /* --- Estados ---------------------------------------------------------- */
   --success: #1f7a4d;
@@ -74,8 +82,8 @@
   --on-overlay: #ffffff;
 
   /* --- Vidro (header fixo) ---------------------------------------------- */
-  --glass-bg: rgba(255, 255, 255, 0.82);
-  --glass-line: rgba(0, 0, 0, 0.07);
+  --glass-bg: rgba(10, 12, 10, 0.86);
+  --glass-line: rgba(255, 255, 255, 0.08);
 
   /* --- Canal do WhatsApp ------------------------------------------------ */
   /* Cor institucional do canal, não da loja. Manter para reconhecimento. */
@@ -96,26 +104,25 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Escuro com tinta de folha, não cinza neutro. */
-    --surface: #12160f;
-    --surface-2: #1a1f16;
-    --surface-3: #252b20;
+    /* Mesmos valores do bloco acima: a casa é escura em qualquer preferência. */
+    --surface: #0a0c0a;
+    --surface-2: #12160f;
+    --surface-3: #1b2019;
 
-    --ink: #f2f1e8;
-    --ink-2: #b7bcae;
-    --ink-3: #868c7e;
+    --ink: #f2f4f1;
+    --ink-2: #aeb6ac;
+    --ink-3: #7c857b;
 
-    --line: #2a3123;
-    --line-strong: #3b4433;
+    --line: #1f2a1e;
+    --line-strong: #2f3d2d;
 
-    /* O verde da fachada some no escuro: sobe para a folha nova. */
-    --brand: #6aab74;
-    --brand-hover: #82bd8a;
-    --brand-soft: #1e2a1d;
-    --on-brand: #10160f;
+    --brand: #00c080;
+    --brand-hover: #12d18c;
+    --brand-soft: #0e2a1f;
+    --on-brand: #07120c;
 
-    --accent: #e08c5e;
-    --accent-soft: #2b1d15;
+    --accent: #d9a05b;
+    --accent-soft: #2a1f12;
 
     --success: #5cc08d;
     --success-soft: #16281f;

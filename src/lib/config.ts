@@ -1,14 +1,10 @@
 /**
  * ============================================================================
- * CONFIGURAÇÃO DA LOJA — ARQUIVO DE PREENCHIMENTO
+ * CONFIGURAÇÃO — TBT Lounge Tatuapé
  * ============================================================================
  *
- * Este é o ÚNICO arquivo que precisa ser editado para trocar a loja do
- * template. Nenhum componente contém texto, telefone ou endereço fixo.
- *
- * Para as cores e fontes, edite `src/app/globals.css` (bloco IDENTIDADE VISUAL).
- *
- * Campos marcados com «PREENCHER» são placeholders neutros.
+ * Coletado em 2026-08-02. Procedência e lacunas declaradas em
+ * `scraped-stores/tbt-lounge-tatuape/`.
  * ============================================================================
  */
 
@@ -16,40 +12,47 @@ import type { StoreConfig } from './types';
 
 export type { StoreConfig, StoreHours, StoreSocial } from './types';
 
-
 export const store: StoreConfig = {
-  name: 'Nome da Loja', // «PREENCHER»
-  orderMode: 'cart', // «PREENCHER» — 'cart' vende, 'enquiry' agenda/orça
-  tagline: 'Categoria do negócio', // «PREENCHER»
+  name: 'TBT Lounge',
+  orderMode: 'cart',
+  tagline: 'Bar e lounge · Tatuapé',
   description:
-    'Descrição curta da loja em uma ou duas linhas, usada no hero e no SEO.', // «PREENCHER»
+    'O famoso baile do TBT. Drinks, garrafas, narguilé e camarote na Rua Itapura.',
 
-  whatsapp: '', // «PREENCHER» — ex.: '5511999998888'
-  phoneDisplay: '(00) 00000-0000', // «PREENCHER»
+  // O Linktree da casa publica `wa.me/11951240157`, SEM o código do país —
+  // assim o WhatsApp interpreta como número dos EUA. O correto, a partir do
+  // telefone (11) 95124-0157, é 55 + 11 + 951240157.
+  whatsapp: '5511951240157',
+  phoneDisplay: '(11) 95124-0157',
 
-  address: 'Rua, número — Bairro, Cidade', // «PREENCHER»
-  city: 'Cidade - UF', // «PREENCHER»
+  address: 'R. Itapura, 1267 — Vila Gomes Cardim, São Paulo - SP',
+  city: 'Tatuapé, São Paulo',
 
-  hours: [
-    { day: 'Seg a Sex', time: '09h - 18h' },
-    { day: 'Sábado', time: '09h - 14h' },
-    { day: 'Domingo', time: null },
+  // Grade completa não publicada em fonte nenhuma. "Consulte no WhatsApp" em
+  // vez de inventar horário para uma casa noturna.
+  hours: [{ day: 'Consulte no WhatsApp', time: null }],
+
+  social: [
+    { label: '@tbtloungetatuape', url: 'https://www.instagram.com/tbtloungetatuape' },
+    { label: 'Cardápio completo', url: 'https://tbt-lounge.cluvi.com.br/tbt-lounge/menu-digital' },
   ],
 
-  social: [], // «PREENCHER» — ex.: [{ label: '@minhaloja', url: 'https://instagram.com/minhaloja' }]
-
-  heroImage: null,
+  heroImage: '/loja/camarote.webp',
   aboutImage: null,
 
-  shippingFee: null, // «PREENCHER» — null = "a combinar", 0 = grátis de fato
+  // CORRIGIDO na v2. A v1 trazia `shippingFee: 0`, que a página renderizava
+  // como "Grátis" — mas a procedência diz que frete NÃO foi verificado. Era
+  // uma política de entrega afirmada em nome da casa sem nenhuma fonte.
+  shippingFee: null,
   freeShippingThreshold: null,
   freeGiftThreshold: null,
   minimumOrder: 0,
 
-  // «PREENCHER» com o que a loja de fato aceita. Vazio esconde o campo — é
-  // melhor não perguntar do que oferecer uma forma que a loja não aceita.
+  // CORRIGIDO na v2. A v1 listava Pix/crédito/débito/dinheiro, que é o chute
+  // padrão do template, não dado desta casa.
   paymentMethods: [],
 };
 
 /** Texto da mensagem do botão flutuante de WhatsApp (contato, fora do pedido). */
-export const contactMessage = 'Olá! Gostaria de mais informações.';
+export const contactMessage =
+  'Olá! Gostaria de informações sobre mesas e camarotes no TBT Lounge.';
