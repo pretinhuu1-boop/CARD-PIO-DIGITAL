@@ -13,100 +13,41 @@
  * ============================================================================
  */
 
-/** Tom visual de um selo. Mapeado para as cores semânticas em globals.css. */
-export type BadgeTone = 'neutral' | 'accent' | 'success' | 'warning' | 'info';
+/*
+ * As FORMAS destes dados vivem em `src/lib/types.ts` e são reexportadas aqui
+ * por conveniência de import. Ao montar uma loja você mexe SÓ no conteúdo
+ * abaixo — campo novo entra no contrato, não numa cópia local.
+ */
+export type {
+  BadgeTone,
+  Badge,
+  Product,
+  Category,
+  Combo,
+  Review,
+  FAQ,
+  AboutSection,
+  NavSection,
+} from './types';
 
-export interface Badge {
-  /** Texto exibido no selo. Ex.: 'Mais vendido' */
-  label: string;
-  tone: BadgeTone;
-}
-
-export interface Product {
-  /** Identificador único e estável. Usado no carrinho e no pedido. */
-  id: string;
-  name: string;
-  description: string;
-  /**
-   * Preço de venda em R$, ou `null` para "sob consulta".
-   *
-   * `null` não é lacuna a preencher: é a resposta correta quando a loja não
-   * publica preço em fonte nenhuma. Peça artesanal, sob medida ou orçada caso
-   * a caso funciona assim. Um catálogo inteiro com `price: null` faz a página
-   * virar expositor sozinha — ver `src/lib/format.ts`.
-   *
-   * NUNCA preencha com preço vindo de busca genérica do ramo: isso é preço de
-   * concorrente publicado em nome desta loja.
-   */
-  price: number | null;
-  /**
-   * `true` quando a fonte diz "a partir de" — o valor é PISO, não preço final.
-   *
-   * Publicar piso como valor fechado subestima a conta do cliente. Marque item
-   * a item, exatamente como a fonte marca; não deduza pela categoria.
-   */
-  priceFrom?: boolean;
-  /** Preço "de" riscado. Omita quando não houver desconto. */
-  originalPrice?: number;
-  /** Caminho da imagem em /public, ou `null` para usar o placeholder. */
-  image: string | null;
-  /** Deve corresponder a um `slug` de `categories`. */
-  category: string;
-  badge?: Badge;
-  /** Rendimento/porção. Ex.: '12 unidades'. Omita se não se aplica. */
-  servings?: string;
-  /** Produtos indisponíveis aparecem esmaecidos e não podem ser adicionados. */
-  available: boolean;
-}
-
-export interface Category {
-  /** Usado no filtro. Deve bater com `Product.category`. */
-  slug: string;
-  name: string;
-  /** Emoji ou string vazia para não exibir ícone. */
-  emoji: string;
-}
-
-export interface Combo {
-  id: string;
-  name: string;
-  description: string;
-  /** IDs de `products`. Ao adicionar o combo, todos entram no carrinho. */
-  productIds: string[];
-  /** Preço promocional do conjunto. */
-  comboPrice: number;
-}
-
-export interface Review {
-  id: string;
-  name: string;
-  /** Iniciais exibidas no avatar. */
-  initials: string;
-  /** 1 a 5. */
-  rating: number;
-  text: string;
-  date: string;
-}
-
-export interface FAQ {
-  question: string;
-  answer: string;
-}
-
-export interface AboutSection {
-  title: string;
-  subtitle: string;
-  paragraphs: string[];
-  values: { icon: string; title: string; description: string }[];
-}
+import type {
+  Product,
+  Category,
+  Combo,
+  Review,
+  FAQ,
+  AboutSection,
+} from './types';
 
 /* -------------------------------------------------------------------------- */
 /* CATEGORIAS                                                                  */
 /* -------------------------------------------------------------------------- */
-/* A categoria 'todos' é obrigatória e sempre a primeira.                      */
+/* NÃO existe mais a categoria 'todos'. Ela servia ao filtro; a página agora   */
+/* mostra o catálogo inteiro e o controle de categoria NAVEGA por âncora, então */
+/* um "todos" seria um botão que rola para o lugar onde já se está.             */
+/* A ordem daqui é a ordem das seções na página.                                */
 
 export const categories: Category[] = [
-  { slug: 'todos', name: 'Todos', emoji: '' },
   { slug: 'categoria-1', name: 'Categoria 1', emoji: '' },
   { slug: 'categoria-2', name: 'Categoria 2', emoji: '' },
   { slug: 'categoria-3', name: 'Categoria 3', emoji: '' },
@@ -418,11 +359,6 @@ export const faqs: FAQ[] = [
 
 /* -------------------------------------------------------------------------- */
 
-export interface NavSection {
-  id: string;
-  label: string;
-  footerLabel?: string;
-}
 
 /* A lista `navSections` é DERIVADA e vive em `src/lib/format.ts`, junto com a
    regra de formato — as duas dependem do mesmo dado e separá-las já produziu
