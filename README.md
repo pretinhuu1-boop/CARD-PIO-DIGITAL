@@ -42,6 +42,10 @@ botões de pedido não aparecem e o checkout avisa que falta configurar.
   de trabalho do link da loja até o cardápio publicado: coleta de identidade e
   produtos, catalogação de imagens, suíte de testes e o checklist de armadilhas
   já encontradas na prática.
+- **[docs/BRIEFING-PESQUISA-LOJA.md](docs/BRIEFING-PESQUISA-LOJA.md)** — prompt
+  pronto para rodar a coleta numa sessão com internet, quando o ambiente de
+  build não alcança as fontes. A saída já sai no formato dos arquivos de
+  preenchimento.
 
 ## Stack
 
