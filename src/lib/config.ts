@@ -62,8 +62,18 @@ export interface StoreConfig {
    */
   heroImage: string | null;
 
-  /** Valor do frete padrão em R$. Use 0 para frete sempre grátis. */
-  shippingFee: number;
+  /**
+   * Valor do frete em R$. `null` = **não informado** pela loja.
+   *
+   * Não use 0 para dizer "não sei": 0 significa gratuidade, e afirmar frete
+   * grátis em nome do lojista sem fonte cria uma política de entrega que ele
+   * nunca declarou. Com `null` a página escreve "a combinar".
+   *
+   * Este campo já foi APAGADO do schema por uma loja que não tinha o dado —
+   * o efeito foi um contrato incompatível entre lojas. Ausência é valor, não
+   * mudança de forma.
+   */
+  shippingFee: number | null;
   /**
    * Valor mínimo do subtotal para frete grátis.
    * `null` desativa a barra de progresso de frete grátis.
@@ -80,8 +90,22 @@ export interface StoreConfig {
    */
   minimumOrder: number;
 
-  /** Formas de pagamento oferecidas na etapa de checkout. */
+  /**
+   * Formas de pagamento oferecidas no checkout.
+   *
+   * `[]` = não informado: o campo some do checkout em vez de exibir uma lista
+   * padrão que ninguém confirmou. A lista genérica "Pix / Crédito / Débito /
+   * Dinheiro" é chute do template, não dado da loja.
+   */
   paymentMethods: string[];
+
+  /**
+   * Imagem da seção "sobre" (caminho em /public), ou `null`.
+   *
+   * Existe para lojas cujo acervo de fotos é o próprio argumento de venda —
+   * ateliê, salão, espaço físico.
+   */
+  aboutImage: string | null;
 }
 
 export const store: StoreConfig = {
@@ -105,13 +129,16 @@ export const store: StoreConfig = {
   social: [], // «PREENCHER» — ex.: [{ label: '@minhaloja', url: 'https://instagram.com/minhaloja' }]
 
   heroImage: null,
+  aboutImage: null,
 
-  shippingFee: 0,
+  shippingFee: null, // «PREENCHER» — null = "a combinar", 0 = grátis de fato
   freeShippingThreshold: null,
   freeGiftThreshold: null,
   minimumOrder: 0,
 
-  paymentMethods: ['Pix', 'Cartão de crédito', 'Cartão de débito', 'Dinheiro'],
+  // «PREENCHER» com o que a loja de fato aceita. Vazio esconde o campo — é
+  // melhor não perguntar do que oferecer uma forma que a loja não aceita.
+  paymentMethods: [],
 };
 
 /** Texto da mensagem do botão flutuante de WhatsApp (contato, fora do pedido). */

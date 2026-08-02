@@ -17,7 +17,8 @@ import { formatCurrency } from '@/lib/utils';
 export interface OrderSummary {
   items: CartItem[];
   subtotal: number;
-  shipping: number;
+  /** `null` = não informado pela loja. Ver `StoreConfig.shippingFee`. */
+  shipping: number | null;
   total: number;
   customer: CustomerData;
 }
@@ -42,15 +43,17 @@ export function buildOrderMessage(order: OrderSummary): string {
   lines.push('');
   lines.push(`📦 Subtotal: ${formatCurrency(subtotal)}`);
   lines.push(
+    // `null` é "não informado" e `0` é gratuidade de fato — a distinção agora
+    // está no tipo. Antes os dois casos moravam no mesmo `0`, e a página
+    // prometia frete grátis que o lojista nunca declarou.
     `🚚 Entrega: ${
       isPickup
         ? 'Retirada no local'
-        : shipping === 0
-          // `shippingFee: 0` significa "não informado" com a mesma frequência
-          // com que significa "grátis". Afirmar gratuidade em nome do lojista
-          // sem fonte é criar política de entrega que ele nunca declarou.
+        : shipping === null
           ? 'a combinar'
-          : formatCurrency(shipping)
+          : shipping === 0
+            ? 'Grátis'
+            : formatCurrency(shipping)
     }`,
   );
   lines.push(`💰 *Total: ${formatCurrency(total)}*`);

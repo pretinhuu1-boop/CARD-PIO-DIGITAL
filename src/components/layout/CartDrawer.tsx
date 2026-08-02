@@ -193,8 +193,10 @@ function CartPanel({ onClose }: { onClose: () => void }) {
   const freeByThreshold =
     store.freeShippingThreshold !== null &&
     total >= store.freeShippingThreshold;
+  // `null` = frete não informado. Só entra no total o que tem valor: somar 0
+  // por desconhecimento mostraria um total que a loja não confirmou.
   const shipping = isPickup || freeByThreshold ? 0 : store.shippingFee;
-  const orderTotal = total + shipping;
+  const orderTotal = total + (shipping ?? 0);
   const belowMinimum = store.minimumOrder > 0 && total < store.minimumOrder;
 
   const cartProductIds = new Set(items.map((i) => i.product.id));
@@ -528,9 +530,11 @@ function CartPanel({ onClose }: { onClose: () => void }) {
                   >
                     {isPickup
                       ? "Retirada"
-                      : shipping === 0
-                        ? "Grátis"
-                        : formatCurrency(shipping)}
+                      : shipping === null
+                        ? "a combinar"
+                        : shipping === 0
+                          ? "Grátis"
+                          : formatCurrency(shipping)}
                   </span>
                 </div>
                 <div className="h-px bg-line" />

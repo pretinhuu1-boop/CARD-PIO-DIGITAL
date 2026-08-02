@@ -1,7 +1,9 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { about } from '@/lib/data';
+import { store } from '@/lib/config';
 
 const containerVariants = {
   hidden: {},
@@ -41,6 +43,27 @@ export function AboutSection() {
             {about.subtitle}
           </motion.h2>
         </motion.div>
+
+        {/* Só aparece quando a loja tem foto própria do espaço. Em negócio
+            cujo acervo É o argumento (ateliê, salão), o texto sozinho vende
+            menos que uma imagem do lugar. */}
+        {store.aboutImage && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.6 }}
+            className="relative mb-12 aspect-[4/3] w-full overflow-hidden rounded-card sm:aspect-[16/9]"
+          >
+            <Image
+              src={store.aboutImage}
+              alt={`Espaço da ${store.name}`}
+              fill
+              sizes="(min-width: 1024px) 72rem, 100vw"
+              className="object-cover"
+            />
+          </motion.div>
+        )}
 
         <div className="mb-16 space-y-5">
           {about.paragraphs.map((paragraph, index) => (
