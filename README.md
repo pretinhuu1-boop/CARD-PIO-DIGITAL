@@ -1,7 +1,7 @@
 # Template Padrão — Cardápio Digital com Pedido no WhatsApp
 
-Template em branco para cardápios digitais de loja. Página única, pedido
-finalizado no WhatsApp em formato de **nota PDV**.
+Template em branco para cardápios digitais de loja. Página única, com o pedido
+finalizado no WhatsApp — o cliente cai na conversa com a mensagem já montada.
 
 Neutro por padrão: escala de cinza, tipografia de sistema, produtos de exemplo
 sem imagem. Sem cadastro de usuário, sem login, sem cupom, sem programa de
@@ -36,7 +36,7 @@ botões de pedido não aparecem e o checkout avisa que falta configurar.
 ## Documentação
 
 **[docs/ESPECIFICACAO-TEMPLATE.md](docs/ESPECIFICACAO-TEMPLATE.md)** — estrutura
-de arquivos, ordem das seções, fluxo de compra, formato da nota PDV, sistema de
+de arquivos, ordem das seções, fluxo de compra, formato da mensagem, sistema de
 tokens, contrato de dados, acessibilidade e checklist de publicação.
 
 ## Stack

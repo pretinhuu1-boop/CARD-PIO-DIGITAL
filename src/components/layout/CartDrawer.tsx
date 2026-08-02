@@ -12,7 +12,7 @@ import {
   ShoppingBag,
   AlertCircle,
 } from "lucide-react";
-import { useCart, nextOrderNumber, type CartItem } from "@/lib/store";
+import { useCart, type CartItem } from "@/lib/store";
 import { store } from "@/lib/config";
 import { products } from "@/lib/data";
 import { buildOrderMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
@@ -224,8 +224,6 @@ function CartPanel({ onClose }: { onClose: () => void }) {
       shipping,
       total: orderTotal,
       customer,
-      orderNumber: nextOrderNumber(),
-      issuedAt: new Date(),
     });
 
     window.open(buildWhatsAppUrl(message), "_blank", "noopener,noreferrer");
@@ -560,7 +558,7 @@ function CartPanel({ onClose }: { onClose: () => void }) {
               )}
 
               <p className="text-center text-xs text-ink-3">
-                O pedido abre no WhatsApp já formatado como nota PDV.
+                O pedido abre no WhatsApp já formatado, pronto para enviar.
               </p>
             </div>
           </>

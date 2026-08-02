@@ -8,7 +8,7 @@ import { findSellableById, type Product } from '@/lib/data';
  *
  * Linhas do pedido são identificadas por `lineId` (produto + observação), e não
  * pelo id do produto: o mesmo item com observações diferentes vira duas linhas,
- * como numa nota de PDV real.
+ * como numa comanda real.
  */
 
 export interface CartItem {
@@ -39,7 +39,6 @@ interface CartState {
 }
 
 const STORAGE_KEY = 'cardapio:cart:v1';
-const ORDER_SEQ_KEY = 'cardapio:order-seq:v1';
 
 const emptyCustomer: CustomerData = {
   name: '',
@@ -212,19 +211,6 @@ function setSearchQuery(searchQuery: string) {
 function setSelectedCategory(selectedCategory: string) {
   state = { ...state, selectedCategory };
   emitChange();
-}
-
-/** Número sequencial do pedido, por navegador. Usado no cabeçalho da nota PDV. */
-export function nextOrderNumber(): string {
-  if (typeof window === 'undefined') return '0001';
-  try {
-    const current = Number(window.localStorage.getItem(ORDER_SEQ_KEY) ?? '0');
-    const next = Number.isFinite(current) ? current + 1 : 1;
-    window.localStorage.setItem(ORDER_SEQ_KEY, String(next));
-    return String(next).padStart(4, '0');
-  } catch {
-    return '0001';
-  }
 }
 
 /* -------------------------------------------------------------------------- */

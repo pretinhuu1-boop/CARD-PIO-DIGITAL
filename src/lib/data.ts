@@ -23,7 +23,7 @@ export interface Badge {
 }
 
 export interface Product {
-  /** Identificador único e estável. Usado no carrinho e na nota PDV. */
+  /** Identificador único e estável. Usado no carrinho e no pedido. */
   id: string;
   name: string;
   description: string;

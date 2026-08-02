@@ -1,8 +1,8 @@
 # Especificação — Template Padrão de Cardápio Digital
 
-Página única de cardápio com pedido finalizado no WhatsApp em formato de nota
-PDV. Este documento descreve o que o template faz, como está organizado e o que
-precisa ser preenchido para colocar uma loja no ar.
+Página única de cardápio com o pedido finalizado no WhatsApp. Este documento
+descreve o que o template faz, como está organizado e o que precisa ser
+preenchido para colocar uma loja no ar.
 
 O template é **neutro**: escala de cinza, tipografia de sistema, produtos de
 exemplo sem imagem. Nada de identidade visual de nenhuma marca.
@@ -27,7 +27,7 @@ src/
 │   ├── config.ts           ◆ DADOS DA LOJA — nome, WhatsApp, endereço, horários, taxas
 │   ├── data.ts             ◆ CATÁLOGO — produtos, categorias, combos, avaliações, FAQ
 │   ├── store.ts            Carrinho global (useSyncExternalStore + localStorage)
-│   ├── whatsapp.ts         Montagem da mensagem no formato nota PDV
+│   ├── whatsapp.ts         Montagem da mensagem do pedido
 │   └── utils.ts            cn, formatCurrency, calculateDiscount, normalize
 └── components/
     ├── layout/
@@ -109,7 +109,7 @@ Sobrepostos: `Header` (fixo, topo), `CartDrawer` (lateral direita),
                     │  [ Enviar pelo WhatsApp ]│
                     └───────────┬─────────────┘
                                 ↓
-                  wa.me com a nota PDV + carrinho limpo
+          wa.me com a mensagem do pedido + carrinho limpo
 ```
 
 `*` obrigatório. Endereço só é exigido na modalidade "entrega".
@@ -125,37 +125,36 @@ quantidade.
 
 ---
 
-## 4. Mensagem de WhatsApp (nota PDV)
+## 4. Mensagem de WhatsApp
 
-Gerada por `src/lib/whatsapp.ts`. O WhatsApp não renderiza tabela, então as
-colunas são separadas por barras literais.
+Gerada por `src/lib/whatsapp.ts`. Cabeçalho com o nome da loja, uma linha com
+marcador por item e o bloco de valores prefixado por emoji. O WhatsApp não
+renderiza tabela, e texto em colunas quebra na tela do celular — por isso o
+formato é em lista.
 
 ```
-*PEDIDO DE VENDA (NOTA PDV)*
-Nome da Loja · Nº 0001 · 02/08/2026, 09:06
+🛒 *Pedido — Nome da Loja*
 
-*PRODUTO | QTD | VALOR | TOTAL*
-Produto 01 | 2 | R$ 10,00 | R$ 20,00
-_obs: sem cebola, entregar 15h_
-Combo 01 | 1 | R$ 45,00 | R$ 45,00
+• 2x Produto 01 — R$ 20,00
+  _obs: sem cebola, entregar 15h_
+• 1x Combo 01 — R$ 45,00
 
-Subtotal | R$ 65,00
-Entrega | Grátis
-*TOTAL | R$ 65,00*
+📦 Subtotal: R$ 65,00
+🚚 Entrega: Grátis
+💰 *Total: R$ 65,00*
 
-*DADOS DO CLIENTE*
-Nome | Maria Silva
-Telefone | (11) 98888-7777
-Modalidade | Entrega
-Endereço | Rua Exemplo, 100 - Centro
-Pagamento | Dinheiro
-Troco para | R$ 100,00
+👤 Maria Silva
+📱 (11) 98888-7777
+📍 Rua Exemplo, 100 - Centro
+💳 Dinheiro (troco para R$ 100,00)
+
+Obrigado!
 ```
 
-- **Nº do pedido:** contador sequencial por navegador (`localStorage`), 4 dígitos.
-  Não é numeração fiscal — serve para o lojista referenciar a conversa.
-- **Linhas condicionais:** `Endereço` só na entrega; `Pagamento` e `Troco para`
-  só se preenchidos; `obs:` só se houver observação.
+- **Valor por linha:** o total da linha (preço × quantidade), não o unitário.
+- **Blocos condicionais:** `obs:` só se houver observação; o bloco do cliente
+  inteiro só aparece se algum dado foi preenchido; `📍` só na entrega; o troco
+  só quando informado. Um pedido simples fica tão curto quanto era antes.
 - **Entrega:** mostra `Retirada no local`, `Grátis` ou o valor.
 
 ---
