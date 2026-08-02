@@ -21,6 +21,7 @@ export const store: StoreConfig = {
 
   whatsapp: '5511959343335', // (11) 95934-3335 — Maps e cardápio online
   phoneDisplay: '(11) 95934-3335',
+  bookingUrl: null,
 
   // O CEP que o Google registra (15390-000) é do interior e não bate com o
   // Tatuapé (03xxx); foi omitido de propósito em vez de repetido. Ficha não
