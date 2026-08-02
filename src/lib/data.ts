@@ -27,8 +27,25 @@ export interface Product {
   id: string;
   name: string;
   description: string;
-  /** Preço de venda em R$. */
-  price: number;
+  /**
+   * Preço de venda em R$, ou `null` para "sob consulta".
+   *
+   * `null` não é lacuna a preencher: é a resposta correta quando a loja não
+   * publica preço em fonte nenhuma. Peça artesanal, sob medida ou orçada caso
+   * a caso funciona assim. Um catálogo inteiro com `price: null` faz a página
+   * virar expositor sozinha — ver `src/lib/format.ts`.
+   *
+   * NUNCA preencha com preço vindo de busca genérica do ramo: isso é preço de
+   * concorrente publicado em nome desta loja.
+   */
+  price: number | null;
+  /**
+   * `true` quando a fonte diz "a partir de" — o valor é PISO, não preço final.
+   *
+   * Publicar piso como valor fechado subestima a conta do cliente. Marque item
+   * a item, exatamente como a fonte marca; não deduza pela categoria.
+   */
+  priceFrom?: boolean;
   /** Preço "de" riscado. Omita quando não houver desconto. */
   originalPrice?: number;
   /** Caminho da imagem em /public, ou `null` para usar o placeholder. */
@@ -407,13 +424,6 @@ export interface NavSection {
   footerLabel?: string;
 }
 
-/** Derivada do conteúdo: seção sem dado não vira link para âncora inexistente. */
-export const navSections: NavSection[] = [
-  { id: 'cardapio', label: 'Cardápio' },
-  ...(combos.length > 0 ? [{ id: 'combos', label: 'Combos' }] : []),
-  ...(reviews.length > 0 ? [{ id: 'avaliacoes', label: 'Avaliações' }] : []),
-  { id: 'sobre', label: 'Sobre' },
-  ...(faqs.length > 0
-    ? [{ id: 'faq', label: 'FAQ', footerLabel: 'Perguntas frequentes' }]
-    : []),
-];
+/* A lista `navSections` é DERIVADA e vive em `src/lib/format.ts`, junto com a
+   regra de formato — as duas dependem do mesmo dado e separá-las já produziu
+   menu apontando para âncora inexistente. */

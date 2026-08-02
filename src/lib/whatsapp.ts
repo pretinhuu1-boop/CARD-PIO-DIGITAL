@@ -78,6 +78,17 @@ export function buildOrderMessage(order: OrderSummary): string {
   return lines.join('\n');
 }
 
+/**
+ * Mensagem de interesse numa peça, para o formato expositor.
+ *
+ * O expositor não tem carrinho — a peça é única e o preço é orçado. O que a
+ * página entrega é uma conversa que JÁ DIZ de qual peça se trata, para o
+ * lojista não precisar perguntar "qual delas?" a cada contato.
+ */
+export function buildItemEnquiryMessage(productName: string): string {
+  return `Olá! Vi *${productName}* no site e queria saber mais — preço, disponibilidade e prazo.`;
+}
+
 /** Monta a URL wa.me com a mensagem já codificada. */
 export function buildWhatsAppUrl(message: string): string {
   return `https://wa.me/${store.whatsapp}?text=${encodeURIComponent(message)}`;

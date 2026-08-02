@@ -2,7 +2,7 @@
 
 import { MapPin, Clock, Phone } from 'lucide-react';
 import { store } from '@/lib/config';
-import { navSections } from '@/lib/data';
+import { navSections } from '@/lib/format';
 
 /** Mesma fonte do header. */
 const navLinks = navSections.map((s) => ({

@@ -201,52 +201,117 @@ const enhance = `
     desc: (c.querySelector('h3') ? (c.querySelector('h3').parentElement.innerText || '') : '').trim(),
   }; });
 
-  /* ---------- filtro + busca ---------- */
-  let categoria = 'todos', termo = '';
+  /* ---------- navegação por âncora + busca ----------
+
+     A página não FILTRA por categoria: mostra o catálogo inteiro em seções
+     ancoradas, e o controle de categoria navega. Só a busca reduz o conjunto,
+     porque aí reduzir é o pedido explícito de quem digitou.
+
+     Os botões são pegos por 'button[data-category-slug]', NUNCA por
+     '[data-category-slug]' solto: as <section> carregam o mesmo atributo, e o
+     seletor global pegaria a seção no lugar do chip.
+  */
+  const navBtns = $$('button[data-category-slug]');
+  const secoes = $$('section[data-category-slug]');
+  const barraNav = navBtns[0] && navBtns[0].closest('.sticky');
+  let termo = '';
+
+  function marcar(slug) {
+    navBtns.forEach((b) => {
+      const on = b.dataset.categorySlug === slug;
+      b.setAttribute('aria-current', on ? 'true' : 'false');
+      b.style.cssText = on
+        ? 'background:var(--brand);color:var(--on-brand);border-color:transparent'
+        : '';
+    });
+  }
+
+  navBtns.forEach((b) => {
+    b.addEventListener('click', () => {
+      const alvo = document.getElementById('cat-' + b.dataset.categorySlug);
+      if (alvo) alvo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      marcar(b.dataset.categorySlug);
+    });
+  });
+
+  /* Scroll-spy: a categoria acompanha a rolagem em vez de comandá-la. */
+  if (window.IntersectionObserver && secoes.length) {
+    const io = new IntersectionObserver((es) => {
+      if (termo) return;
+      const v = es.find((e) => e.isIntersecting);
+      if (v) marcar(v.target.dataset.categorySlug);
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    secoes.forEach((s) => io.observe(s));
+  }
+
+  const ancora = secoes[0] && secoes[0].parentElement;
   const vazio = document.createElement('div');
-  vazio.style.cssText = 'padding:6rem 0;text-align:center;display:none';
+  vazio.style.cssText = 'padding:5rem 0;text-align:center;display:none';
   vazio.innerHTML =
-    '<p style="font-size:1.125rem;color:var(--ink)">Nenhum produto encontrado</p>' +
+    '<p style="font-size:1.125rem;color:var(--ink)">Nada encontrado</p>' +
     '<p id="sx-empty-msg" style="margin-top:.5rem;font-size:.875rem;color:var(--ink-2)"></p>' +
     '<button id="sx-clear" style="margin-top:1.5rem;min-height:44px;padding:0 1.5rem;border:0;' +
     'border-radius:9999px;background:var(--brand);color:var(--on-brand);font-size:.875rem;' +
-    'font-weight:500;cursor:pointer">Ver o cardápio inteiro</button>';
-  grid.parentElement.insertBefore(vazio, grid.nextSibling);
+    'font-weight:500;cursor:pointer">Limpar busca e ver tudo</button>';
+  if (ancora) ancora.appendChild(vazio);
 
   function aplicar() {
     let n = 0;
     for (const c of cards) {
-      const okC = categoria === 'todos' || c.dataset.productCategory === categoria;
-      const okT = !termo || norm(c.innerText).includes(termo);
-      c.style.display = (okC && okT) ? '' : 'none';
-      if (okC && okT) n++;
+      const ok = !termo || norm(c.innerText).includes(termo);
+      c.style.display = ok ? '' : 'none';
+      if (ok) n++;
     }
-    grid.style.display = n ? '' : 'none';
+    /* Seção sem nenhum card visível some inteira — senão fica um título
+       de categoria pairando sobre uma grade vazia. */
+    secoes.forEach((s) => {
+      const algum = $$('article[data-product-id]', s)
+        .some((c) => c.style.display !== 'none');
+      s.style.display = algum ? '' : 'none';
+    });
+    /* Durante a busca a barra de categorias sai: navegar por seção dentro de
+       um resultado de busca não quer dizer nada. */
+    if (barraNav) barraNav.style.display = termo ? 'none' : '';
     vazio.style.display = n ? 'none' : '';
     if (!n) {
-      const chip = $('[data-category-slug="' + categoria + '"]');
-      $('#sx-empty-msg').textContent = (categoria !== 'todos' && termo)
-        ? 'Nada com esse termo dentro de "' + (chip ? chip.innerText.trim() : categoria) + '".'
-        : 'Tente outro termo ou escolha outra categoria.';
+      $('#sx-empty-msg').textContent =
+        'A busca cobre nome e descrição de todos os itens do catálogo.';
     }
   }
-  $$('[data-category-slug]').forEach((chip) => {
-    chip.addEventListener('click', () => {
-      categoria = chip.dataset.categorySlug;
-      $$('[data-category-slug]').forEach((c) => {
-        const on = c === chip;
-        c.setAttribute('aria-pressed', String(on));
-        c.style.cssText = on ? 'background:var(--brand);color:var(--on-brand);border-color:transparent' : '';
-      });
+
+  /*
+     São DOIS campos de busca: o do desktop e o da barra do celular, um oculto
+     por CSS conforme a largura. Um '$' simples pegaria sempre o primeiro (o do
+     desktop) e, no celular, a busca do arquivo solto ficaria ligada a um campo
+     invisível — digitar não faria nada e nada acusaria o erro.
+  */
+  const buscas = $$('input[type=search]');
+  buscas.forEach((b) => {
+    b.addEventListener('input', () => {
+      termo = norm(b.value.trim());
+      buscas.forEach((o) => { if (o !== b) o.value = b.value; });
       aplicar();
     });
   });
-  const busca = $('input[type=search]');
-  if (busca) busca.addEventListener('input', () => { termo = norm(busca.value.trim()); aplicar(); });
   $('#sx-clear').addEventListener('click', () => {
-    categoria = 'todos'; termo = ''; if (busca) busca.value = '';
-    const t = $('[data-category-slug="todos"]'); if (t) t.click(); aplicar();
+    termo = '';
+    buscas.forEach((b) => { b.value = ''; });
+    aplicar();
+    if (secoes[0]) secoes[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
+
+  /* ---------- portão do formato ----------
+
+     Loja sem preço público é EXPOSITOR: cada peça abre conversa no WhatsApp e
+     não existe carrinho. Sem este portão, 'Number("")' devolveria 0 e o
+     snapshot montaria um pedido cobrando zero por peça artesanal orçada caso
+     a caso. Navegação e busca acima já estão ligadas e continuam valendo.
+  */
+  const temPreco = cards.some((c) => {
+    const p = c.dataset.productPrice;
+    return p !== '' && p != null && !isNaN(Number(p));
+  });
+  if (!temPreco) return;
 
   /* ---------- pedido (linha = produto + observação) ---------- */
   let linhas = [];

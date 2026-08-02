@@ -35,7 +35,12 @@ export function ComboSection() {
               .map((id) => products.find((p) => p.id === id))
               .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
-            const originalPrice = comboProducts.reduce((sum, p) => sum + p.price, 0);
+            // Item sem preço não entra na soma "de": um `null` tratado como 0
+            // inflaria o desconto anunciado com um valor que ninguém publicou.
+            const originalPrice = comboProducts.reduce(
+              (sum, p) => sum + (p.price ?? 0),
+              0,
+            );
             const savings = originalPrice - combo.comboPrice;
             const unavailable = comboProducts.some((p) => !p.available);
 

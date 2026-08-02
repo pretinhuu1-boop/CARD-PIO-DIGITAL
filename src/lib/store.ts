@@ -2,6 +2,7 @@
 
 import { useEffect, useSyncExternalStore } from 'react';
 import { findSellableById, type Product } from '@/lib/data';
+import { isSellable, type SellableProduct } from '@/lib/format';
 
 /**
  * Carrinho global sem dependência externa.
@@ -14,7 +15,8 @@ import { findSellableById, type Product } from '@/lib/data';
 export interface CartItem {
   /** `${product.id}::${notes}` — chave estável da linha do pedido. */
   lineId: string;
-  product: Product;
+  /** Só produto com preço entra no carrinho — ver `isSellable`. */
+  product: SellableProduct;
   quantity: number;
   /** Observação do cliente para esta linha. String vazia quando não há. */
   notes: string;
@@ -130,7 +132,9 @@ function hydrate() {
     const items: CartItem[] = [];
     for (const saved of parsed.items ?? []) {
       const product = findSellableById(saved.productId);
-      if (!product || !product.available) continue;
+      // `isSellable` cobre indisponível E sem preço: um item que perdeu o
+      // preço desde a última visita não pode voltar ao carrinho valendo zero.
+      if (!product || !isSellable(product)) continue;
       const quantity = Math.max(1, Math.floor(Number(saved.quantity) || 1));
       const notes = typeof saved.notes === 'string' ? saved.notes : '';
       items.push({ lineId: makeLineId(product.id, notes), product, quantity, notes });
@@ -152,7 +156,8 @@ function hydrate() {
 /* -------------------------------------------------------------------------- */
 
 function addItem(product: Product, quantity = 1, notes = '') {
-  if (!product.available) return;
+  // Estreita para SellableProduct: daqui pra baixo o compilador garante preço.
+  if (!isSellable(product)) return;
 
   const qty = Math.max(1, Math.floor(quantity));
   const cleanNotes = notes.trim();

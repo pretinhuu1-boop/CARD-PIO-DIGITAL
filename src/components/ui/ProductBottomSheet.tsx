@@ -2,11 +2,15 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { X, Plus, Minus } from 'lucide-react';
+import { X, Plus, Minus, MessageCircle } from 'lucide-react';
 import { type Product } from '@/lib/data';
+import { hasPrice } from '@/lib/format';
 import { useCart } from '@/lib/store';
+import { store } from '@/lib/config';
+import { buildItemEnquiryMessage, buildWhatsAppUrl } from '@/lib/whatsapp';
 import { cn, formatCurrency } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
+import { Price } from '@/components/ui/Price';
 import { ProductImage } from '@/components/ui/ProductImage';
 
 interface ProductBottomSheetProps {
@@ -19,6 +23,16 @@ export function ProductBottomSheet({ product, onClose }: ProductBottomSheetProps
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState('');
   const closeRef = useRef<HTMLButtonElement>(null);
+
+  /**
+   * Produto com preço resolvido, ou `null` para "sob consulta".
+   *
+   * Repare que a checagem é `hasPrice`, não `isSellable`: item indisponível
+   * MAS com preço continua mostrando valor e o botão desabilitado — quem
+   * chegou ali precisa saber quanto custava. Sem preço nenhum é outro caso, e
+   * a folha inteira muda de comportamento.
+   */
+  const sellable = hasPrice(product) ? product : null;
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -101,15 +115,8 @@ export function ProductBottomSheet({ product, onClose }: ProductBottomSheetProps
         <div className="px-6 pb-8 pt-5">
           <h2 className="font-display text-2xl text-ink">{product.name}</h2>
 
-          <div className="mt-2 flex items-center gap-3">
-            <span className="text-xl font-semibold text-ink tabular-nums">
-              {formatCurrency(product.price)}
-            </span>
-            {product.originalPrice && (
-              <span className="text-sm text-ink-3 line-through tabular-nums">
-                {formatCurrency(product.originalPrice)}
-              </span>
-            )}
+          <div className="mt-2">
+            <Price product={product} size="lg" />
           </div>
 
           <p className="mt-4 text-sm leading-relaxed text-ink-2">
@@ -120,27 +127,46 @@ export function ProductBottomSheet({ product, onClose }: ProductBottomSheetProps
             <p className="mt-3 text-sm text-ink-3">{product.servings}</p>
           )}
 
-          <div className="mt-6 border-t border-line pt-5">
-            <label
-              htmlFor="product-notes"
-              className="text-xs font-medium uppercase tracking-[0.12em] text-ink-3"
-            >
-              Observações
-            </label>
-            <textarea
-              id="product-notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Ex.: sem cebola, embalar para presente..."
-              rows={2}
-              maxLength={200}
-              className="focus-ring mt-2 w-full resize-none rounded-control border border-line bg-surface-2 px-4 py-3 text-sm text-ink placeholder:text-ink-3"
-            />
-            <p className="mt-1 text-xs text-ink-3">
-              A observação é enviada junto no pedido pelo WhatsApp.
-            </p>
-          </div>
+          {/* Observação pertence ao PEDIDO. No expositor não há pedido, então
+              pedir "observações" aqui seria campo sem destino. */}
+          {sellable && (
+            <div className="mt-6 border-t border-line pt-5">
+              <label
+                htmlFor="product-notes"
+                className="text-xs font-medium uppercase tracking-[0.12em] text-ink-3"
+              >
+                Observações
+              </label>
+              <textarea
+                id="product-notes"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Ex.: sem cebola, embalar para presente..."
+                rows={2}
+                maxLength={200}
+                className="focus-ring mt-2 w-full resize-none rounded-control border border-line bg-surface-2 px-4 py-3 text-sm text-ink placeholder:text-ink-3"
+              />
+              <p className="mt-1 text-xs text-ink-3">
+                A observação é enviada junto no pedido pelo WhatsApp.
+              </p>
+            </div>
+          )}
 
+          {/* Sem preço: a peça é orçada. O botão abre a conversa já dizendo
+              qual peça, para o lojista não ter de perguntar "qual delas?". */}
+          {!sellable && store.whatsapp && (
+            <a
+              href={buildWhatsAppUrl(buildItemEnquiryMessage(product.name))}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring mt-6 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-control bg-brand px-5 font-medium text-on-brand transition-colors hover:bg-brand-hover"
+            >
+              <MessageCircle className="h-5 w-5" aria-hidden="true" />
+              Perguntar sobre esta peça
+            </a>
+          )}
+
+          {sellable && (
           <div className="mt-6 flex items-center gap-3">
             <div className="flex items-center gap-1 rounded-control border border-line bg-surface-2 p-1">
               <button
@@ -184,7 +210,7 @@ export function ProductBottomSheet({ product, onClose }: ProductBottomSheetProps
                 <>
                   <span>Adicionar</span>
                   <span className="opacity-75 tabular-nums">
-                    {formatCurrency(product.price * quantity)}
+                    {formatCurrency(sellable.price * quantity)}
                   </span>
                 </>
               ) : (
@@ -192,6 +218,7 @@ export function ProductBottomSheet({ product, onClose }: ProductBottomSheetProps
               )}
             </motion.button>
           </div>
+          )}
         </div>
       </motion.div>
     </>

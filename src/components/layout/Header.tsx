@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Menu, X } from 'lucide-react';
 import { store } from '@/lib/config';
-import { navSections } from '@/lib/data';
+import { navSections } from '@/lib/format';
 import { useCart } from '@/lib/store';
 import { cn } from '@/lib/utils';
 

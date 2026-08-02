@@ -15,6 +15,7 @@ import {
 import { useCart, type CartItem } from "@/lib/store";
 import { store } from "@/lib/config";
 import { products } from "@/lib/data";
+import { isSellable, type SellableProduct } from "@/lib/format";
 import { buildOrderMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -197,8 +198,12 @@ function CartPanel({ onClose }: { onClose: () => void }) {
   const belowMinimum = store.minimumOrder > 0 && total < store.minimumOrder;
 
   const cartProductIds = new Set(items.map((i) => i.product.id));
+  // `isSellable` em vez de só `available`: sugerir item sem preço num carrinho
+  // levaria a um botão "adicionar" que o store recusa em silêncio.
   const suggestions = products
-    .filter((p) => !cartProductIds.has(p.id) && p.available)
+    .filter(
+      (p): p is SellableProduct => !cartProductIds.has(p.id) && isSellable(p),
+    )
     .slice(0, 2);
 
   // Erros derivados do estado atual, não guardados: assim a mensagem some
