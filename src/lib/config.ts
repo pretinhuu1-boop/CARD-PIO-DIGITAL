@@ -19,6 +19,7 @@ export type { StoreConfig, StoreHours, StoreSocial } from './types';
 
 export const store: StoreConfig = {
   name: 'Nome da Loja', // «PREENCHER»
+  orderMode: 'cart', // «PREENCHER» — 'cart' vende, 'enquiry' agenda/orça
   tagline: 'Categoria do negócio', // «PREENCHER»
   description:
     'Descrição curta da loja em uma ou duas linhas, usada no hero e no SEO.', // «PREENCHER»

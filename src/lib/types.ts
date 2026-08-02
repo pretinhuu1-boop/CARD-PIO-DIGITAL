@@ -126,9 +126,24 @@ export interface StoreSocial {
   url: string;
 }
 
+/**
+ * Como o cliente fecha negócio.
+ *
+ *   'cart'     escolhe itens, soma, envia o pedido — comida, produto físico
+ *   'enquiry'  fala com a loja sobre um item — serviço agendado, peça orçada
+ *
+ * NÃO é derivável do dado: um salão publica preço de 378 serviços e mesmo
+ * assim nada ali vai para um carrinho, porque corte de cabelo se agenda. É
+ * fato do negócio, então é decisão declarada — com fonte, no arquivo de
+ * procedência da loja.
+ */
+export type OrderMode = 'cart' | 'enquiry';
+
 export interface StoreConfig {
   /** Nome da loja. Aparece no header, hero, footer, título da aba e no pedido. */
   name: string;
+  /** Carrinho ou conversa. Ver `OrderMode`. */
+  orderMode: OrderMode;
   /** Frase curta acima do nome no hero. Ex.: 'Confeitaria artesanal' */
   tagline: string;
   /** Descrição de 1-2 linhas exibida no hero e usada no SEO. */

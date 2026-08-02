@@ -26,6 +26,8 @@ import {
   type Product,
   type NavSection,
 } from './data';
+import { store } from './config';
+import type { OrderMode } from './types';
 
 export type StoreFormat = 'cardapio' | 'expositor' | 'landing';
 
@@ -48,13 +50,23 @@ export function hasPrice(product: Product): product is SellableProduct {
   return product.price !== null;
 }
 
-export function deriveStoreFormat(catalog: Product[]): StoreFormat {
+export function deriveStoreFormat(
+  catalog: Product[],
+  orderMode: OrderMode,
+): StoreFormat {
   if (catalog.length === 0) return 'landing';
-  return catalog.some(hasPrice) ? 'cardapio' : 'expositor';
+  // Preço + carrinho = cardápio. Preço sem carrinho (serviço agendado) e
+  // catálogo sem preço (peça orçada) caem os dois no expositor: a página
+  // mostra o item e a negociação acontece na conversa.
+  if (catalog.some(hasPrice) && orderMode === 'cart') return 'cardapio';
+  return 'expositor';
 }
 
 /** Formato desta loja. Recalculado a cada build a partir de `data.ts`. */
-export const storeFormat: StoreFormat = deriveStoreFormat(products);
+export const storeFormat: StoreFormat = deriveStoreFormat(
+  products,
+  store.orderMode,
+);
 
 /**
  * Só o cardápio tem checkout.
@@ -64,7 +76,7 @@ export const storeFormat: StoreFormat = deriveStoreFormat(products);
  */
 export const hasCheckout = storeFormat === 'cardapio';
 
-/** O expositor conversa peça a peça pelo WhatsApp, sem carrinho. */
+/** O expositor conversa item a item pelo WhatsApp, sem carrinho. */
 export const hasPerItemContact = storeFormat === 'expositor';
 
 /** Landing não tem catálogo, então não tem busca nem navegação por categoria. */
