@@ -23,6 +23,7 @@ export const store: StoreConfig = {
   // própria loja publica no Linktree, e é o canal de pedido.
   whatsapp: '5511997365921', // linktr.ee/caracol.chocolates.tatuape
   phoneDisplay: '(11) 99736-5921',
+  bookingUrl: null,
 
   address: 'R. Itapeti, 601 — Tatuapé, São Paulo - SP, 03324-002',
   city: 'São Paulo - SP',

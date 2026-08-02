@@ -158,6 +158,19 @@ export interface StoreConfig {
   /** Telefone formatado para exibição. Ex.: '(11) 99999-8888' */
   phoneDisplay: string;
 
+  /**
+   * Canal de agendamento/orçamento quando NÃO há WhatsApp confirmado.
+   *
+   * Existe porque "sem WhatsApp" não pode virar "sem nenhuma ação": uma
+   * página de serviço sem caminho para agendar não serve para nada. Mas
+   * publicar um número não confirmado é pior — manda o cliente da loja para
+   * o telefone de outra pessoa.
+   *
+   * `whatsapp` vence quando os dois existem. `null` quando não há canal
+   * alternativo.
+   */
+  bookingUrl: string | null;
+
   /** Endereço completo em uma linha. Use string vazia se a loja não tem ponto físico. */
   address: string;
   /** Cidade/região curta exibida no hero. Ex.: 'São Paulo - SP' */
