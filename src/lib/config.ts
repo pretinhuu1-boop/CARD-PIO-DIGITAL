@@ -1,14 +1,10 @@
 /**
  * ============================================================================
- * CONFIGURAÇÃO DA LOJA — ARQUIVO DE PREENCHIMENTO
+ * CONFIGURAÇÃO — Restaurante Istambul Tatuapé (halal)
  * ============================================================================
  *
- * Este é o ÚNICO arquivo que precisa ser editado para trocar a loja do
- * template. Nenhum componente contém texto, telefone ou endereço fixo.
- *
- * Para as cores e fontes, edite `src/app/globals.css` (bloco IDENTIDADE VISUAL).
- *
- * Campos marcados com «PREENCHER» são placeholders neutros.
+ * Coletado em 2026-08-02. Procedência e lacunas declaradas em
+ * `scraped-stores/istambul-tatuape/`.
  * ============================================================================
  */
 
@@ -16,40 +12,55 @@ import type { StoreConfig } from './types';
 
 export type { StoreConfig, StoreHours, StoreSocial } from './types';
 
-
 export const store: StoreConfig = {
-  name: 'Nome da Loja', // «PREENCHER»
-  orderMode: 'cart', // «PREENCHER» — 'cart' vende, 'enquiry' agenda/orça
-  tagline: 'Categoria do negócio', // «PREENCHER»
+  name: 'Restaurante Istambul',
+  orderMode: 'cart',
+  tagline: 'Culinária árabe e turca · halal',
   description:
-    'Descrição curta da loja em uma ou duas linhas, usada no hero e no SEO.', // «PREENCHER»
+    'Shawarma, esfihas e pratos na brasa no Tatuapé. Salão para refeição no local e pedidos por WhatsApp.',
 
-  whatsapp: '', // «PREENCHER» — ex.: '5511999998888'
-  phoneDisplay: '(00) 00000-0000', // «PREENCHER»
+  whatsapp: '5511959343335', // (11) 95934-3335 — Maps e cardápio online
+  phoneDisplay: '(11) 95934-3335',
 
-  address: 'Rua, número — Bairro, Cidade', // «PREENCHER»
-  city: 'Cidade - UF', // «PREENCHER»
+  // O CEP que o Google registra (15390-000) é do interior e não bate com o
+  // Tatuapé (03xxx); foi omitido de propósito em vez de repetido. Ficha não
+  // reivindicada tem dado sujo.
+  address: 'R. Itapura, 1342 — Vila Gomes Cardim, São Paulo - SP',
+  city: 'Tatuapé, São Paulo',
 
   hours: [
-    { day: 'Seg a Sex', time: '09h - 18h' },
-    { day: 'Sábado', time: '09h - 14h' },
-    { day: 'Domingo', time: null },
+    { day: 'Segunda', time: null },
+    { day: 'Terça a Domingo', time: '11h - 23h' },
   ],
 
-  social: [], // «PREENCHER» — ex.: [{ label: '@minhaloja', url: 'https://instagram.com/minhaloja' }]
+  social: [
+    {
+      label: '@restauranteistambul2',
+      url: 'https://www.instagram.com/restauranteistambul2/',
+    },
+    {
+      label: 'Cardápio completo e pedido online',
+      url: 'https://restauranteistambulhalal-tatuape.pedido.app.br/cardapio/',
+    },
+  ],
 
-  heroImage: null,
+  heroImage: '/loja/salao.webp',
   aboutImage: null,
 
-  shippingFee: null, // «PREENCHER» — null = "a combinar", 0 = grátis de fato
+  // CORRIGIDO na v2. A v1 trazia 0, e a página escrevia "a combinar" por causa
+  // de um remendo no montador da mensagem. Agora a ausência está no dado: o
+  // cardápio online só revela frete depois de escolher endereço.
+  shippingFee: null,
   freeShippingThreshold: null,
   freeGiftThreshold: null,
   minimumOrder: 0,
 
-  // «PREENCHER» com o que a loja de fato aceita. Vazio esconde o campo — é
-  // melhor não perguntar do que oferecer uma forma que a loja não aceita.
+  // CORRIGIDO na v2. A v1 listava Pix/crédito/débito/dinheiro — chute padrão
+  // do template. A procedência diz que formas de pagamento não foram
+  // verificadas.
   paymentMethods: [],
 };
 
 /** Texto da mensagem do botão flutuante de WhatsApp (contato, fora do pedido). */
-export const contactMessage = 'Olá! Gostaria de mais informações.';
+export const contactMessage =
+  'Olá! Vi o cardápio do Restaurante Istambul e gostaria de fazer um pedido.';

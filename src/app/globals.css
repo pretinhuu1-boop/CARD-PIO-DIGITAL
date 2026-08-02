@@ -30,33 +30,37 @@
 
 :root {
   /* --- Superfícies ------------------------------------------------------ */
-  /* Papel quente, quase branco. A cor forte fica nas fotos, não no fundo.  */
-  --surface: #fdfcfa;        /* fundo de cards, header, modais              */
-  --surface-2: #f5f2ec;      /* fundo alternado de seção                    */
-  --surface-3: #ebe6dc;      /* preenchimento de campos, placeholders       */
+  /* Creme quente, do madeiramento claro do salão.                          */
+  --surface: #fffcf7;        /* fundo de cards, header, modais              */
+  --surface-2: #f7f1e7;      /* fundo alternado de seção                    */
+  --surface-3: #ede5d7;      /* preenchimento de campos, placeholders       */
 
   /* --- Texto ------------------------------------------------------------ */
-  --ink: #1c2a1e;            /* títulos e texto principal      15.01:1      */
-  --ink-2: #4a5a4c;          /* texto de apoio                  7.35:1      */
-  --ink-3: #8a938a;          /* legendas                                    */
+  --ink: #1a1512;            /* títulos e texto principal      17.69:1      */
+  --ink-2: #54483f;          /* texto de apoio                  8.64:1      */
+  --ink-3: #8d8073;          /* legendas                                    */
 
   /* --- Traços ----------------------------------------------------------- */
-  --line: #e4e0d6;           /* bordas padrão                               */
-  --line-strong: #cfc9bb;    /* bordas em destaque / hover                  */
+  --line: #e8dfd0;
+  --line-strong: #d4c7b2;
 
   /* --- Marca (CTA principal) ------------------------------------------- */
-  /* Verde amostrado da fachada da loja. As duas fotos divergem por causa   */
-  /* da luz (#205020 na sombra, #509060 no sol) — este é o meio, escolhido  */
-  /* pelo contraste, que é o critério que não depende de iluminação.        */
-  --brand: #2e6b3b;          /* verde Kokedami                  6.40:1      */
-  --brand-hover: #245430;
-  --brand-soft: #e8f0e6;
+  /*
+    Vermelho declarado pelo próprio lojista: é a cor que ele configurou no
+    cardápio online dele (o resto daquele site é tema da plataforma Expresso
+    Delivery, não da marca). Corroborado pelo letreiro e pelo mascote de fez
+    turco nas fotos do salão — as fotos sozinhas não serviam para amostrar,
+    uma foi tirada através do para-brisa e a outra sob luz quente.
+  */
+  --brand: #a40000;          /* vermelho Istambul               8.14:1      */
+  --brand-hover: #8c0000;
+  --brand-soft: #fbeaea;
   --on-brand: #ffffff;
 
   /* --- Destaque secundário --------------------------------------------- */
-  /* Terracota da parede interna, onde fica o logo em verde.                */
-  --accent: #b04a1e;         /* ênfases, eyebrow                5.46:1      */
-  --accent-soft: #f8ece5;
+  /* Âmbar da iluminação e da madeira do salão. */
+  --accent: #8a5a12;         /* eyebrow, ênfases                5.78:1      */
+  --accent-soft: #f9efdc;
 
   /* --- Estados ---------------------------------------------------------- */
   --success: #1f7a4d;
@@ -96,26 +100,26 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Escuro com tinta de folha, não cinza neutro. */
-    --surface: #12160f;
-    --surface-2: #1a1f16;
-    --surface-3: #252b20;
+    /* Escuro de mármore, não cinza neutro. */
+    --surface: #16120f;
+    --surface-2: #1f1915;
+    --surface-3: #2b231d;
 
-    --ink: #f2f1e8;
-    --ink-2: #b7bcae;
-    --ink-3: #868c7e;
+    --ink: #f5f0e8;
+    --ink-2: #beb2a4;
+    --ink-3: #8d8073;
 
-    --line: #2a3123;
-    --line-strong: #3b4433;
+    --line: #302720;
+    --line-strong: #443830;
 
-    /* O verde da fachada some no escuro: sobe para a folha nova. */
-    --brand: #6aab74;
-    --brand-hover: #82bd8a;
-    --brand-soft: #1e2a1d;
-    --on-brand: #10160f;
+    /* O vermelho escuro some no escuro: sobe mantendo 4,88:1 com o texto. */
+    --brand: #c82020;
+    --brand-hover: #dc3434;
+    --brand-soft: #2c1414;
+    --on-brand: #ffe8e8;
 
-    --accent: #e08c5e;
-    --accent-soft: #2b1d15;
+    --accent: #d9a441;
+    --accent-soft: #2c2114;
 
     --success: #5cc08d;
     --success-soft: #16281f;

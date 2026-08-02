@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Jost } from 'next/font/google';
+import { Inter, Fraunces } from 'next/font/google';
 import { store } from '@/lib/config';
 import './globals.css';
 
@@ -22,14 +22,14 @@ import './globals.css';
  */
 
 /**
- * TIPOGRAFIA — Kokedami.
+ * TIPOGRAFIA — Istambul.
  *
- * Jost é geométrica e de caixa alta larga, que é como o letreiro e o logo da
- * loja se apresentam nas fotos da fachada. Inter no corpo mantém o texto
- * neutro para a foto carregar a estética.
+ * Fraunces tem serifa de contraste alto e um desenho levemente ornamental,
+ * que conversa com a estética árabe/turca sem cair em fonte "temática".
+ * Inter no corpo para o cardápio ficar legível.
  */
 const sans = Inter({ subsets: ['latin'], variable: '--font-app-sans', display: 'swap' });
-const display = Jost({ subsets: ['latin'], variable: '--font-app-display', display: 'swap' });
+const display = Fraunces({ subsets: ['latin'], variable: '--font-app-display', display: 'swap' });
 
 export const metadata: Metadata = {
   title: `${store.name} — ${store.tagline}`,
@@ -52,8 +52,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#fdfcfa' },
-    { media: '(prefers-color-scheme: dark)', color: '#12160f' },
+    { media: '(prefers-color-scheme: light)', color: '#fffcf7' },
+    { media: '(prefers-color-scheme: dark)', color: '#16120f' },
   ],
 };
 
