@@ -2,30 +2,20 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { store } from '@/lib/config';
-import { useCart } from '@/lib/store';
+import { navSections } from '@/lib/data';
 import { cn } from '@/lib/utils';
 
-interface HeaderProps {
-  onOpenCart: () => void;
-}
-
-const navItems = [
-  { label: 'Cardápio', href: 'cardapio' },
-  { label: 'Combos', href: 'combos' },
-  { label: 'Sobre', href: 'sobre' },
-  { label: 'Avaliações', href: 'avaliacoes' },
-  { label: 'FAQ', href: 'faq' },
-];
+/** Derivada do conteúdo: seção sem dado não vira link morto. */
+const navItems = navSections.map((s) => ({ label: s.label, href: s.id }));
 
 /**
  * O header é sempre translúcido (classe `.glass`), nunca transparente.
  * A versão anterior ficava transparente no topo e pintava o texto de branco
  * via classes que não existiam — o logo sumia contra o hero.
  */
-function Header({ onOpenCart }: HeaderProps) {
-  const { count } = useCart();
+function Header() {
   const [activeSection, setActiveSection] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -95,31 +85,12 @@ function Header({ onOpenCart }: HeaderProps) {
               ))}
             </nav>
 
+            {/*
+              Sem ícone de carrinho: esta loja não tem preço nem checkout.
+              Botão que não leva a lugar nenhum é pior que a ausência dele —
+              mesmo erro do link "Combos" que sobrava no menu.
+            */}
             <div className="flex items-center gap-1">
-              <motion.button
-                type="button"
-                onClick={onOpenCart}
-                whileTap={{ scale: 0.94 }}
-                className="focus-ring relative flex h-11 w-11 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface-2"
-                aria-label={`Abrir pedido — ${count} ${count === 1 ? 'item' : 'itens'}`}
-              >
-                <ShoppingBag className="h-5 w-5" aria-hidden="true" />
-                <AnimatePresence>
-                  {count > 0 && (
-                    <motion.span
-                      key="badge"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 18 }}
-                      className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand px-1 text-[10px] font-bold text-on-brand tabular-nums"
-                    >
-                      {count > 99 ? '99+' : count}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
