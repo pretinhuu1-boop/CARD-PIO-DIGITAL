@@ -1,7 +1,19 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   IDENTIDADE VISUAL — ARQUIVO DE PREENCHIMENTO
+   IDENTIDADE VISUAL — Alooks Hair Studio Tatuapé
+
+   Amostrada da fotografia do LETREIRO publicada pela loja no Google Maps:
+   o "a" e "HAIR STUDIO" em magenta, "looks" em grafite. Não há site para
+   medir CSS — alooks.com.br devolve 403 numa página parqueada, com um
+   certificado que nem cobre o domínio.
+
+   O magenta #98487F é o valor MEDIDO, não estimado. A foto está na sombra e
+   tende a ler mais escuro que a marca real, mas o desempate é o contraste,
+   que não depende de iluminação — e ele passa AA com texto branco.
+
+   Contraste conferido: on-brand/brand 5,88:1 claro e 5,01:1 escuro ·
+   ink/surface 15,97:1 · accent/surface 12,56:1
    ==========================================================================
 
    Este template é NEUTRO por padrão: escala de cinza pura, tipografia de
@@ -30,33 +42,28 @@
 
 :root {
   /* --- Superfícies ------------------------------------------------------ */
-  /* Papel quente, quase branco. A cor forte fica nas fotos, não no fundo.  */
-  --surface: #fdfcfa;        /* fundo de cards, header, modais              */
-  --surface-2: #f5f2ec;      /* fundo alternado de seção                    */
-  --surface-3: #ebe6dc;      /* preenchimento de campos, placeholders       */
+  --surface: #ffffff;        /* fundo de cards, header, modais              */
+  --surface-2: #faf7f9;      /* fundo alternado de seção                    */
+  --surface-3: #f2eaf0;      /* preenchimento de campos, placeholders       */
 
   /* --- Texto ------------------------------------------------------------ */
-  --ink: #1c2a1e;            /* títulos e texto principal      15.01:1      */
-  --ink-2: #4a5a4c;          /* texto de apoio                  7.35:1      */
-  --ink-3: #8a938a;          /* legendas                                    */
+  --ink: #1e2228;            /* títulos e texto principal                   */
+  --ink-2: #4a5058;          /* texto de apoio                              */
+  --ink-3: #7d838b;          /* legendas, texto desabilitado                */
 
   /* --- Traços ----------------------------------------------------------- */
-  --line: #e4e0d6;           /* bordas padrão                               */
-  --line-strong: #cfc9bb;    /* bordas em destaque / hover                  */
+  --line: #ebe2e8;           /* bordas padrão                               */
+  --line-strong: #d8ccd4;    /* bordas em destaque / hover                  */
 
   /* --- Marca (CTA principal) ------------------------------------------- */
-  /* Verde amostrado da fachada da loja. As duas fotos divergem por causa   */
-  /* da luz (#205020 na sombra, #509060 no sol) — este é o meio, escolhido  */
-  /* pelo contraste, que é o critério que não depende de iluminação.        */
-  --brand: #2e6b3b;          /* verde Kokedami                  6.40:1      */
-  --brand-hover: #245430;
-  --brand-soft: #e8f0e6;
-  --on-brand: #ffffff;
+  --brand: #98487f;          /* «PREENCHER» cor principal da loja           */
+  --brand-hover: #87356d;    /* «PREENCHER» estado hover do CTA             */
+  --brand-soft: #f7ecf3;     /* «PREENCHER» fundo suave da marca            */
+  --on-brand: #ffffff;       /* texto sobre a cor da marca                  */
 
   /* --- Destaque secundário --------------------------------------------- */
-  /* Terracota da parede interna, onde fica o logo em verde.                */
-  --accent: #b04a1e;         /* ênfases, eyebrow                5.46:1      */
-  --accent-soft: #f8ece5;
+  --accent: #2e343c;         /* «PREENCHER» selos, ênfases, eyebrow         */
+  --accent-soft: #eceef1;    /* «PREENCHER» fundo de selo                   */
 
   /* --- Estados ---------------------------------------------------------- */
   --success: #1f7a4d;
@@ -96,26 +103,24 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Escuro com tinta de folha, não cinza neutro. */
-    --surface: #12160f;
-    --surface-2: #1a1f16;
-    --surface-3: #252b20;
+    --surface: #14161a;
+    --surface-2: #1b1e23;
+    --surface-3: #262a30;
 
-    --ink: #f2f1e8;
-    --ink-2: #b7bcae;
-    --ink-3: #868c7e;
+    --ink: #f2f3f5;
+    --ink-2: #aeb4bc;
+    --ink-3: #8a8a8a;
 
-    --line: #2a3123;
-    --line-strong: #3b4433;
+    --line: #2a2a2a;
+    --line-strong: #3a3a3a;
 
-    /* O verde da fachada some no escuro: sobe para a folha nova. */
-    --brand: #6aab74;
-    --brand-hover: #82bd8a;
-    --brand-soft: #1e2a1d;
-    --on-brand: #10160f;
+    --brand: #a0568a;
+    --brand-hover: #b1699a;
+    --brand-soft: #2a1f27;
+    --on-brand: #ffffff;
 
-    --accent: #e08c5e;
-    --accent-soft: #2b1d15;
+    --accent: #c9a0bc;
+    --accent-soft: #26202a;
 
     --success: #5cc08d;
     --success-soft: #16281f;

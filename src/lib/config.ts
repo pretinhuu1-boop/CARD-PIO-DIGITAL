@@ -1,14 +1,10 @@
 /**
  * ============================================================================
- * CONFIGURAÇÃO DA LOJA — ARQUIVO DE PREENCHIMENTO
+ * CONFIGURAÇÃO — Alooks Hair Studio Tatuapé
  * ============================================================================
  *
- * Este é o ÚNICO arquivo que precisa ser editado para trocar a loja do
- * template. Nenhum componente contém texto, telefone ou endereço fixo.
- *
- * Para as cores e fontes, edite `src/app/globals.css` (bloco IDENTIDADE VISUAL).
- *
- * Campos marcados com «PREENCHER» são placeholders neutros.
+ * Coletado em 2026-08-02. Procedência e lacunas declaradas em
+ * `scraped-stores/alooks-tatuape/`.
  * ============================================================================
  */
 
@@ -16,40 +12,69 @@ import type { StoreConfig } from './types';
 
 export type { StoreConfig, StoreHours, StoreSocial } from './types';
 
-
 export const store: StoreConfig = {
-  name: 'Nome da Loja', // «PREENCHER»
-  orderMode: 'cart', // «PREENCHER» — 'cart' vende, 'enquiry' agenda/orça
-  tagline: 'Categoria do negócio', // «PREENCHER»
+  name: 'Alooks Hair Studio',
+  // Serviço se AGENDA. Os 378 itens têm preço público, mas nada vai para um
+  // carrinho: cada serviço abre a conversa de agendamento.
+  orderMode: 'enquiry',
+  tagline: 'Salão de beleza · Tatuapé',
   description:
-    'Descrição curta da loja em uma ou duas linhas, usada no hero e no SEO.', // «PREENCHER»
+    'Cabelo, unhas, sobrancelhas, depilação e maquiagem na Rua Itapeti. Atendimento com hora marcada, de terça a sábado.',
 
-  whatsapp: '', // «PREENCHER» — ex.: '5511999998888'
-  phoneDisplay: '(00) 00000-0000', // «PREENCHER»
+  /*
+    ⚠️ BLOQUEADO DE PROPÓSITO — NÃO PREENCHER SEM CONFIRMAR COM O SALÃO.
 
-  address: 'Rua, número — Bairro, Cidade', // «PREENCHER»
-  city: 'Cidade - UF', // «PREENCHER»
+    O número 11 91304-2702 aparece na página Trinks desta unidade, mas tem
+    FONTE ÚNICA e é diferente do fixo da ficha do Google, (11) 2892-9005. O
+    Instagram é da marca com duas unidades e lista a do Aricanduva primeiro,
+    com telefone próprio — não serve de confirmação.
 
+    Link de WhatsApp errado manda o cliente da loja para o número de outra
+    pessoa. String vazia desabilita todos os botões de WhatsApp, que é o
+    comportamento certo enquanto o dado não estiver confirmado.
+  */
+  whatsapp: '',
+  phoneDisplay: '(11) 2892-9005', // fixo da ficha do Google, confirmado
+
+  address: 'R. Itapeti, 518 — Tatuapé, São Paulo - SP, 03324-002',
+  city: 'Tatuapé, São Paulo',
+
+  // Grade completa extraída dos aria-label da tabela do Google.
   hours: [
-    { day: 'Seg a Sex', time: '09h - 18h' },
-    { day: 'Sábado', time: '09h - 14h' },
     { day: 'Domingo', time: null },
+    { day: 'Segunda', time: null },
+    { day: 'Terça a Sábado', time: '09h - 20h' },
   ],
 
-  social: [], // «PREENCHER» — ex.: [{ label: '@minhaloja', url: 'https://instagram.com/minhaloja' }]
+  social: [
+    {
+      // Perfil da MARCA, com duas unidades. Rotulado como tal para não sugerir
+      // que o conteúdo de lá é todo desta loja.
+      label: '@alookshairstudio (perfil da marca)',
+      url: 'https://www.instagram.com/alookshairstudio/',
+    },
+    {
+      label: 'Agenda online no Trinks',
+      url: 'https://www.trinks.com/alooks',
+    },
+  ],
 
-  heroImage: null,
+  // Foto do próprio letreiro, publicada pela loja no Google Maps. É da loja.
+  heroImage: '/loja/letreiro.webp',
   aboutImage: null,
 
-  shippingFee: null, // «PREENCHER» — null = "a combinar", 0 = grátis de fato
+  // Salão não entrega nem cobra pedido mínimo: sem checkout, nada disto vai
+  // à tela. Explícito como não informado em vez de sumir do contrato.
+  shippingFee: null,
   freeShippingThreshold: null,
   freeGiftThreshold: null,
   minimumOrder: 0,
 
-  // «PREENCHER» com o que a loja de fato aceita. Vazio esconde o campo — é
-  // melhor não perguntar do que oferecer uma forma que a loja não aceita.
-  paymentMethods: [],
+  // A ficha do Google informa: crédito, débito e pagamento por aproximação.
+  // Sem checkout o campo não aparece, mas o dado fica registrado.
+  paymentMethods: ['Cartão de crédito', 'Cartão de débito', 'Pagamento por aproximação'],
 };
 
 /** Texto da mensagem do botão flutuante de WhatsApp (contato, fora do pedido). */
-export const contactMessage = 'Olá! Gostaria de mais informações.';
+export const contactMessage =
+  'Olá! Vi a página do Alooks Hair Studio e gostaria de agendar um horário.';
