@@ -89,6 +89,22 @@ em painel branco com revestimento de pedra e vidro escuro.
 ⚠️ Cores ainda **não amostradas nem validadas por contraste**. Nada de paleta
 foi definido nesta coleta.
 
+## Decisões de montagem (tomadas com o cliente em 2026-08-02)
+
+- **Formato: landing + catálogo de serviços com preço, `orderMode: 'enquiry'`.**
+  Hero, sobre, avaliações e CTA de WhatsApp, mais os 378 serviços nas 7
+  categorias do próprio lojista, cada um com preço e botão de agendar. **Sem
+  carrinho**: corte de cabelo se agenda, não se compra por checkout — preço
+  existir não implica carrinho.
+- **Imagens: genéricas, decorativas, sem pessoas.** Decidido com o cliente
+  diante do viés do acervo. Servem como capa de categoria.
+  ⚠️ **Não são fotos desta loja nem do trabalho dela** e não podem ser
+  apresentadas como tal. Foto de resultado, de cliente ou de "antes e depois"
+  está fora, mesmo genérica: o visitante leria como portfólio da casa.
+  As fotos de **fachada, letreiro e interior** são da loja e entram como tais.
+- **Pendência para o lojista:** fornecer fotos próprias de corte, coloração e
+  escova. Enquanto não vierem, o site não mostra o carro-chefe da casa.
+
 ## Notas de coleta
 
 - **Não existe site próprio.** `alooks.com.br` resolve DNS e tem MX funcional
