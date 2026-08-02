@@ -25,6 +25,7 @@ export const store: StoreConfig = {
   // no meio. O número correto foi confirmado contra o telefone do Google Maps.
   whatsapp: '5511975307287',
   phoneDisplay: '(11) 97530-7287',
+  bookingUrl: null,
 
   address: 'R. Itapeti, 622 — Tatuapé, São Paulo - SP, 03324-002',
   city: 'Tatuapé, São Paulo',
