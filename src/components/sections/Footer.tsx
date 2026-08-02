@@ -2,14 +2,13 @@
 
 import { MapPin, Clock, Phone } from 'lucide-react';
 import { store } from '@/lib/config';
+import { navSections } from '@/lib/data';
 
-const navLinks = [
-  { label: 'Cardápio', href: '#cardapio' },
-  { label: 'Combos', href: '#combos' },
-  { label: 'Sobre', href: '#sobre' },
-  { label: 'Avaliações', href: '#avaliacoes' },
-  { label: 'Perguntas frequentes', href: '#faq' },
-];
+/** Mesma fonte do header — seção oculta não aparece no rodapé. */
+const navLinks = navSections.map((s) => ({
+  label: s.footerLabel ?? s.label,
+  href: `#${s.id}`,
+}));
 
 export function Footer() {
   const year = new Date().getFullYear();

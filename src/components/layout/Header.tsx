@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Menu, X } from 'lucide-react';
 import { store } from '@/lib/config';
+import { navSections } from '@/lib/data';
 import { useCart } from '@/lib/store';
 import { cn } from '@/lib/utils';
 
@@ -11,13 +12,8 @@ interface HeaderProps {
   onOpenCart: () => void;
 }
 
-const navItems = [
-  { label: 'Cardápio', href: 'cardapio' },
-  { label: 'Combos', href: 'combos' },
-  { label: 'Sobre', href: 'sobre' },
-  { label: 'Avaliações', href: 'avaliacoes' },
-  { label: 'FAQ', href: 'faq' },
-];
+/** Derivado do catálogo: seção sem dado não vira link para âncora inexistente. */
+const navItems = navSections.map((s) => ({ label: s.label, href: s.id }));
 
 /**
  * O header é sempre translúcido (classe `.glass`), nunca transparente.

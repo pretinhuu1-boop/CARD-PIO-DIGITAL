@@ -1,31 +1,26 @@
 import { store } from '@/lib/config';
-import type { CartItem, CustomerData } from '@/lib/store';
+import type { CartItem } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
 
 /**
  * Monta a mensagem de WhatsApp do pedido.
  *
- * Mantém o layout original do template: cabeçalho com o nome da loja, uma
- * linha com marcador por item e o bloco de valores prefixado por emoji. É o
- * formato que melhor se lê no app — o WhatsApp não renderiza tabela, e texto
- * em colunas quebra na tela do celular.
+ * Cabeçalho com o nome da loja, uma linha com marcador por item e o total.
+ * É o formato que melhor se lê no app — o WhatsApp não renderiza tabela, e
+ * texto em colunas quebra na tela do celular.
  *
- * Os blocos de observação e de dados do cliente só aparecem quando há
- * conteúdo, então um pedido simples continua tão curto quanto antes.
+ * A mensagem NÃO leva nome, telefone, endereço, forma de pagamento nem troco:
+ * o cardápio não coleta esses dados. Entrega e pagamento se acertam na
+ * conversa, com quem conhece a política real da loja.
  */
 
 export interface OrderSummary {
   items: CartItem[];
-  subtotal: number;
-  shipping: number;
   total: number;
-  customer: CustomerData;
 }
 
 export function buildOrderMessage(order: OrderSummary): string {
-  const { items, subtotal, shipping, total, customer } = order;
-  const isPickup = customer.fulfillment === 'retirada';
-
+  const { items, total } = order;
   const lines: string[] = [];
 
   lines.push(`🛒 *Pedido — ${store.name}*`);
@@ -40,35 +35,7 @@ export function buildOrderMessage(order: OrderSummary): string {
   }
 
   lines.push('');
-  lines.push(`📦 Subtotal: ${formatCurrency(subtotal)}`);
-  lines.push(
-    `🚚 Entrega: ${
-      isPickup
-        ? 'Retirada no local'
-        : shipping === 0
-          ? 'Grátis'
-          : formatCurrency(shipping)
-    }`,
-  );
   lines.push(`💰 *Total: ${formatCurrency(total)}*`);
-
-  const hasCustomerData =
-    customer.name || customer.phone || customer.address || customer.payment;
-
-  if (hasCustomerData) {
-    lines.push('');
-    if (customer.name) lines.push(`👤 ${customer.name}`);
-    if (customer.phone) lines.push(`📱 ${customer.phone}`);
-    if (!isPickup && customer.address) lines.push(`📍 ${customer.address}`);
-    if (customer.payment) {
-      lines.push(
-        `💳 ${customer.payment}${
-          customer.changeFor ? ` (troco para ${customer.changeFor})` : ''
-        }`,
-      );
-    }
-  }
-
   lines.push('');
   lines.push('Obrigado!');
 

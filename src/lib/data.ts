@@ -1,15 +1,19 @@
 /**
  * ============================================================================
- * CATÁLOGO — ARQUIVO DE PREENCHIMENTO
+ * CATÁLOGO — Caracol Chocolates Cafeteria Tatuapé
  * ============================================================================
  *
- * Produtos, categorias, combos, avaliações, FAQ e a seção "sobre".
- * Dados de contato/loja ficam em `src/lib/config.ts`.
+ * Coletado em 2026-08-02.
+ * Fonte dos produtos: iFood (categoria "Os Queridinhos" — vitrine curada pela
+ * própria loja). Nome, descrição e preço são transcrição literal da fonte.
+ * Fonte das avaliações: iFood. Fonte de horário/endereço: Google Maps + Instagram.
  *
- * IMAGENS: todo produto tem `image: null` neste template em branco. A grade
- * renderiza um placeholder neutro quando `image` é `null`, então o layout
- * continua correto sem nenhuma imagem. Ao preencher, use caminhos locais
- * (ex.: '/produtos/nome-do-produto.webp') e não URLs externas.
+ * DADO DESCARTADO NA CURADORIA
+ * ----------------------------
+ * O iFood devolve `unitOriginalPrice: 78.90` em 26 dos 30 produtos — inclusive
+ * em água mineral de R$ 12,90. É valor-lixo do cadastro, não preço "de".
+ * Publicar isso como desconto seria propaganda falsa em nome do lojista, então
+ * NENHUM produto abaixo usa `originalPrice`.
  * ============================================================================
  */
 
@@ -90,167 +94,137 @@ export interface AboutSection {
 
 export const categories: Category[] = [
   { slug: 'todos', name: 'Todos', emoji: '' },
-  { slug: 'categoria-1', name: 'Categoria 1', emoji: '' },
-  { slug: 'categoria-2', name: 'Categoria 2', emoji: '' },
-  { slug: 'categoria-3', name: 'Categoria 3', emoji: '' },
-  { slug: 'categoria-4', name: 'Categoria 4', emoji: '' },
-  { slug: 'categoria-5', name: 'Categoria 5', emoji: '' },
+  { slug: 'doces', name: 'Doces', emoji: '' },
+  { slug: 'salgados', name: 'Salgados', emoji: '' },
+  { slug: 'bebidas', name: 'Bebidas', emoji: '' },
 ];
 
 /* -------------------------------------------------------------------------- */
 /* PRODUTOS                                                                    */
 /* -------------------------------------------------------------------------- */
-/* 15 itens de exemplo distribuídos nas 5 categorias, sem imagem.              */
-/* Substitua nome, descrição, preço e categoria pelos dados reais da loja.     */
+/* 10 itens. Os 5 primeiros são a vitrine "Os Queridinhos" do iFood — seleção  */
+/* do próprio lojista, não heurística nossa, e por isso levam selo. Os 5       */
+/* seguintes são o restante do cardápio, sem selo.                             */
+/*                                                                             */
+/* `id` = externalCode do iFood (chave estável: o uuid muda conforme a         */
+/* categoria em que o item aparece).                                           */
+/*                                                                             */
+/* PREÇOS: todos do iFood, coletados em 2026-08-02. Não foi possível cruzar    */
+/* com o site oficial — o cardápio da unidade                                  */
+/* (caracolchocolates.com.br/cardapio-tatuape) redireciona para uma publicação */
+/* Adobe InDesign que retorna "Document Not Found", e a loja online vende      */
+/* outro catálogo (barras SIGNO 60g, não as 23g da cafeteria). Preço de iFood  */
+/* costuma ser mais alto que o de balcão — confirmar com a lojista.            */
 
 export const products: Product[] = [
   {
-    id: 'p-01',
-    name: 'Produto 01',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 10.0,
-    image: null,
-    category: 'categoria-1',
-    badge: { label: 'Mais vendido', tone: 'accent' },
-    servings: '1 unidade',
+    id: '10019',
+    name: 'Bolo de Cenoura',
+    description:
+      'Nossa receita caseira de bolo fofinho, feito na loja. Coberto com a autêntica ganache de chocolate ao leite Caracol. Um abraço em forma de doce!',
+    price: 37.9,
+    image: '/produtos/bolo-de-cenoura.webp',
+    category: 'doces',
+    badge: { label: 'Os Queridinhos', tone: 'accent' },
     available: true,
   },
   {
-    id: 'p-02',
-    name: 'Produto 02',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 15.0,
-    originalPrice: 20.0,
-    image: null,
-    category: 'categoria-1',
-    badge: { label: 'Promoção', tone: 'warning' },
-    servings: '1 unidade',
+    id: '751',
+    name: 'Chocolate Quente Cremoso',
+    description:
+      'O verdadeiro sabor do inverno gaúcho. Bebida densa e aveludada, feita com o puro chocolate Caracol. Enviado em copo térmico.',
+    price: 33.9,
+    image: '/produtos/chocolate-quente-cremoso.webp',
+    category: 'bebidas',
+    badge: { label: 'Os Queridinhos', tone: 'accent' },
+    servings: '180 ml',
     available: true,
   },
   {
-    id: 'p-03',
-    name: 'Produto 03',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 22.5,
-    image: null,
-    category: 'categoria-1',
-    servings: '2 unidades',
+    id: '10082',
+    name: 'Coxinha de Frango com Requeijão',
+    description:
+      'A queridinha da casa! Massa de batata fininha e super recheada com frango desfiado bem temperado e requeijão cremoso. Frita no ponto para chegar dourada até você.',
+    price: 17.9,
+    image: '/produtos/coxinha-frango-requeijao.webp',
+    category: 'salgados',
+    badge: { label: 'Os Queridinhos', tone: 'accent' },
     available: true,
   },
   {
-    id: 'p-04',
-    name: 'Produto 04',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 30.0,
-    image: null,
-    category: 'categoria-2',
-    badge: { label: 'Novidade', tone: 'success' },
+    id: '3',
+    name: 'Croissant de Chocolate com Morangos',
+    description:
+      'A união perfeita: a clássica massa folhada Ofner recheada com nossa inconfundível ganache de chocolate ao leite de Gramado e morangos frescos fatiados. Finalizado com raspas de chocolate.',
+    price: 52.9,
+    image: '/produtos/croissant-chocolate-morangos.webp',
+    category: 'doces',
+    badge: { label: 'Os Queridinhos', tone: 'accent' },
     available: true,
   },
   {
-    id: 'p-05',
-    name: 'Produto 05',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 35.9,
-    image: null,
-    category: 'categoria-2',
-    servings: '6 unidades',
+    id: '1',
+    name: 'Mini Fondue - Favorito Cacau',
+    description:
+      'A experiência da Serra Gaúcha na sua casa! Puro chocolate Caracol derretido, com mini brownies artesanais, marshmallows e morangos frescos (enviados separados para manter o frescor).',
+    price: 67.9,
+    image: '/produtos/mini-fondue-favorito-cacau.webp',
+    category: 'doces',
+    badge: { label: 'Os Queridinhos', tone: 'accent' },
+    available: true,
+  },
+
+  /* Demais itens do cardápio, fora da vitrine "Os Queridinhos" — por isso
+     sem selo. Mesma fonte, mesma data de coleta. */
+  {
+    id: '11',
+    name: 'Waffle com Chocolate e Morangos',
+    description:
+      'Massa artesanal leve e crocante. Acompanha a famosa ganache de chocolate ao leite Caracol, morangos frescos e chantilly. Os complementos vão separados para a massa chegar perfeita até você!',
+    price: 53.9,
+    image: '/produtos/waffle-chocolate-morangos.webp',
+    category: 'doces',
     available: true,
   },
   {
-    id: 'p-06',
-    name: 'Produto 06',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 42.0,
-    image: null,
-    category: 'categoria-2',
+    id: '14',
+    name: 'Trio de Brownies Recheados',
+    description:
+      'Nossa receita exclusiva! Três brownies super macios recheados com Nutella, ganache branca e doce de leite. Acompanha porção de ganache de chocolate Caracol.',
+    price: 53.9,
+    image: '/produtos/trio-brownies-recheados.webp',
+    category: 'doces',
+    servings: '3 unidades',
     available: true,
   },
   {
-    id: 'p-07',
-    name: 'Produto 07',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 48.9,
-    image: null,
-    category: 'categoria-3',
-    badge: { label: 'Destaque', tone: 'info' },
-    servings: '8 a 10 porções',
+    id: '253',
+    name: 'Croissant de Presunto e Queijo',
+    description:
+      'A legítima massa folhada francesa da Ofner, incrivelmente leve e amanteigada, com recheio tradicional de presunto e queijo.',
+    price: 26.9,
+    image: '/produtos/croissant-presunto-queijo.webp',
+    category: 'salgados',
     available: true,
   },
   {
-    id: 'p-08',
-    name: 'Produto 08',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 55.0,
-    originalPrice: 65.0,
-    image: null,
-    category: 'categoria-3',
+    id: '10037',
+    name: 'Croiffle Presunto e Queijo',
+    description:
+      'Inovação e sabor! A massa folhada Ofner prensada na chapa de waffle até ficar dourada, com recheio de requeijão, presunto e queijo derretido.',
+    price: 33.9,
+    image: '/produtos/croiffle-presunto-queijo.webp',
+    category: 'salgados',
     available: true,
   },
   {
-    id: 'p-09',
-    name: 'Produto 09',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 60.0,
-    image: null,
-    category: 'categoria-3',
-    available: true,
-  },
-  {
-    id: 'p-10',
-    name: 'Produto 10',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 12.5,
-    image: null,
-    category: 'categoria-4',
-    available: true,
-  },
-  {
-    id: 'p-11',
-    name: 'Produto 11',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 18.0,
-    image: null,
-    category: 'categoria-4',
-    badge: { label: 'Edição limitada', tone: 'neutral' },
-    available: true,
-  },
-  {
-    id: 'p-12',
-    name: 'Produto 12',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 25.0,
-    image: null,
-    category: 'categoria-4',
-    available: false,
-  },
-  {
-    id: 'p-13',
-    name: 'Produto 13',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 8.0,
-    image: null,
-    category: 'categoria-5',
-    servings: '300 ml',
-    available: true,
-  },
-  {
-    id: 'p-14',
-    name: 'Produto 14',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 9.5,
-    image: null,
-    category: 'categoria-5',
-    servings: '400 ml',
-    available: true,
-  },
-  {
-    id: 'p-15',
-    name: 'Produto 15',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 11.0,
-    image: null,
-    category: 'categoria-5',
+    id: '10011',
+    name: 'Chai Latte',
+    description:
+      'Uma experiência aromática. Bebida à base de chá preto, leite, cardamomo, cravo, canela, gengibre e mel. Um equilíbrio perfeito e intenso que aquece a alma.',
+    price: 21.9,
+    image: '/produtos/chai-latte.webp',
+    category: 'bebidas',
     available: true,
   },
 ];
@@ -258,31 +232,12 @@ export const products: Product[] = [
 /* -------------------------------------------------------------------------- */
 /* COMBOS                                                                      */
 /* -------------------------------------------------------------------------- */
-/* Deixe [] para ocultar a seção inteira.                                      */
+/* Vazio por decisão: a seção inteira fica oculta.                             */
+/* A loja tem 3 combos reais no iFood ("Conforto de Gramado" R$ 50,99,         */
+/* "Duo Croissant Royal" R$ 104,99 e "Clássico" R$ 39,99) — registrados em     */
+/* scraped-stores/caracol-chocolates-tatuape/ caso voltem a ser publicados.    */
 
-export const combos: Combo[] = [
-  {
-    id: 'c-01',
-    name: 'Combo 01',
-    description: 'Descrição curta do combo.',
-    productIds: ['p-01', 'p-04', 'p-13'],
-    comboPrice: 45.0,
-  },
-  {
-    id: 'c-02',
-    name: 'Combo 02',
-    description: 'Descrição curta do combo.',
-    productIds: ['p-07', 'p-08'],
-    comboPrice: 95.0,
-  },
-  {
-    id: 'c-03',
-    name: 'Combo 03',
-    description: 'Descrição curta do combo.',
-    productIds: ['p-02', 'p-05', 'p-14'],
-    comboPrice: 55.0,
-  },
-];
+export const combos: Combo[] = [];
 
 /**
  * Converte um combo num item vendável.
@@ -327,57 +282,57 @@ export function findSellableById(id: string): Product | undefined {
 /* -------------------------------------------------------------------------- */
 
 export const about: AboutSection = {
-  title: 'Sobre',
-  subtitle: 'Subtítulo da seção sobre',
+  title: 'O chocolate de Gramado no Tatuapé',
+  subtitle: 'Fábrica própria na Serra Gaúcha desde 1982',
   paragraphs: [
-    'Primeiro parágrafo sobre a loja: origem, proposta e o que a diferencia.',
-    'Segundo parágrafo: processo, matéria-prima ou forma de trabalho.',
-    'Terceiro parágrafo: posicionamento atual e público atendido.',
+    'A Caracol nasceu em 1982, em Canela, batizada com o nome da Cascata do Caracol. Em 2001 levou a fábrica para Gramado e se tornou pioneira na produção de chocolate na Serra Gaúcha.',
+    'A unidade do Tatuapé traz esse chocolate para a zona leste de São Paulo em formato de cafeteria: doces, salgados e bebidas feitos na loja, além de espaço para eventos.',
+    'É também uma casa pensada para família — o espaço kids é gratuito, com mini cozinha, mesa de desenho, videogame e jogos de tabuleiro.',
   ],
   values: [
-    { icon: '', title: 'Valor 1', description: 'Descrição curta do primeiro diferencial.' },
-    { icon: '', title: 'Valor 2', description: 'Descrição curta do segundo diferencial.' },
-    { icon: '', title: 'Valor 3', description: 'Descrição curta do terceiro diferencial.' },
-    { icon: '', title: 'Valor 4', description: 'Descrição curta do quarto diferencial.' },
+    {
+      icon: '',
+      title: 'Chocolate de Gramado',
+      description: 'Fábrica própria na Serra Gaúcha há mais de 40 anos.',
+    },
+    {
+      icon: '',
+      title: 'Espaço kids gratuito',
+      description: 'Mini cozinha, mesa de desenho, videogame e jogos.',
+    },
+    {
+      icon: '',
+      title: 'Massa folhada Ofner',
+      description: 'Croissants e croiffles feitos com a legítima massa francesa.',
+    },
+    {
+      icon: '',
+      title: '4,7 no Google',
+      description: 'Avaliação da unidade Tatuapé entre os clientes.',
+    },
   ],
 };
 
 /* -------------------------------------------------------------------------- */
 /* AVALIAÇÕES                                                                  */
 /* -------------------------------------------------------------------------- */
-/* Deixe [] para ocultar a seção inteira.                                      */
+/* Avaliação real e literal do iFood. As outras 4 avaliações recentes da loja  */
+/* são nota 5 sem texto escrito — sem conteúdo para exibir, ficaram de fora.   */
 
 export const reviews: Review[] = [
   {
-    id: 'r-01',
-    name: 'Nome do cliente 1',
-    initials: 'C1',
-    rating: 5,
-    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
-    date: 'há 1 semana',
-  },
-  {
-    id: 'r-02',
-    name: 'Nome do cliente 2',
-    initials: 'C2',
-    rating: 5,
-    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
-    date: 'há 2 semanas',
-  },
-  {
-    id: 'r-03',
-    name: 'Nome do cliente 3',
-    initials: 'C3',
+    id: 'r-ifood-4788',
+    name: 'Victor',
+    initials: 'V',
     rating: 4,
-    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
-    date: 'há 1 mês',
+    text: 'O Chocolate Quente Cremoso é realmente muito bom — sabor rico e textura agradável. O único ponto a melhorar é a quantidade servida, que ficou abaixo do esperado. No geral, um ótimo produto com potencial para 5 estrelas.',
+    date: '07/06/2026',
   },
 ];
 
 /* -------------------------------------------------------------------------- */
 /* FAQ                                                                         */
 /* -------------------------------------------------------------------------- */
-/* Deixe [] para ocultar a seção inteira.                                      */
 
 export const faqs: FAQ[] = [
   {
@@ -386,15 +341,46 @@ export const faqs: FAQ[] = [
       'Adicione os produtos ao carrinho, preencha seus dados e clique em "Enviar pedido pelo WhatsApp". Você será levado à conversa com a nota do pedido já montada.',
   },
   {
-    question: 'Qual o prazo de entrega?',
-    answer: 'Resposta sobre prazos de entrega e retirada.',
+    question: 'Qual é o pedido mínimo?',
+    answer: 'O pedido mínimo é de R$ 35,00.',
   },
   {
-    question: 'Quais são as formas de pagamento?',
-    answer: 'Resposta sobre as formas de pagamento aceitas.',
+    question: 'Onde vocês ficam e qual o horário?',
+    answer:
+      'R. Itapeti, 601 — Tatuapé, São Paulo/SP. Terça a sábado das 9h às 18h e domingo das 10h às 19h. Segunda-feira não abrimos.',
   },
   {
-    question: 'Vocês atendem quais regiões?',
-    answer: 'Resposta sobre a área de cobertura de entrega.',
+    question: 'A loja tem espaço para crianças?',
+    answer:
+      'Sim, e o acesso é gratuito: mini cozinha, mesa de desenho, videogame e jogos de tabuleiro. A casa também recebe eventos.',
   },
+];
+
+/* -------------------------------------------------------------------------- */
+/* NAVEGAÇÃO                                                                   */
+/* -------------------------------------------------------------------------- */
+
+export interface NavSection {
+  id: string;
+  /** Rótulo curto, usado no header. */
+  label: string;
+  /** Rótulo do rodapé, quando ele usa um nome mais longo. */
+  footerLabel?: string;
+}
+
+/**
+ * Seções que existem de fato na página.
+ *
+ * Header e rodapé derivam a navegação daqui em vez de manterem cada um a sua
+ * lista fixa. Combos, avaliações e FAQ somem da página quando seus dados estão
+ * vazios — e antes o link continuava no menu, levando a uma âncora inexistente.
+ */
+export const navSections: NavSection[] = [
+  { id: 'cardapio', label: 'Cardápio' },
+  ...(combos.length > 0 ? [{ id: 'combos', label: 'Combos' }] : []),
+  { id: 'sobre', label: 'Sobre' },
+  ...(reviews.length > 0 ? [{ id: 'avaliacoes', label: 'Avaliações' }] : []),
+  ...(faqs.length > 0
+    ? [{ id: 'faq', label: 'FAQ', footerLabel: 'Perguntas frequentes' }]
+    : []),
 ];

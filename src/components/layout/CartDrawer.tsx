@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -8,7 +8,6 @@ import {
   Minus,
   Trash2,
   ChevronRight,
-  ChevronLeft,
   ShoppingBag,
   AlertCircle,
 } from "lucide-react";
@@ -16,7 +15,7 @@ import { useCart, type CartItem } from "@/lib/store";
 import { store } from "@/lib/config";
 import { products } from "@/lib/data";
 import { buildOrderMessage, buildWhatsAppUrl } from "@/lib/whatsapp";
-import { cn, formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ProductImage } from "@/components/ui/ProductImage";
@@ -26,8 +25,6 @@ interface CartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-type Step = "cart" | "checkout";
 
 const drawerVariants = {
   hidden: { x: "100%" },
@@ -128,48 +125,17 @@ function CartItemRow({ item }: { item: CartItem }) {
 
 /* -------------------------------------------------------------------------- */
 
-function Field({
-  label,
-  id,
-  error,
-  children,
-}: {
-  label: string;
-  id: string;
-  error?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <label htmlFor={id} className="text-xs font-medium text-ink-2">
-        {label}
-      </label>
-      <div className="mt-1.5">{children}</div>
-      {error && (
-        <p className="mt-1 flex items-center gap-1 text-xs text-danger">
-          <AlertCircle className="h-3 w-3" aria-hidden="true" />
-          {error}
-        </p>
-      )}
-    </div>
-  );
-}
-
-const inputClass =
-  "focus-ring w-full rounded-control border border-line bg-surface-2 px-4 py-3 text-sm text-ink placeholder:text-ink-3";
-
-/* -------------------------------------------------------------------------- */
-
 /**
- * O painel só existe enquanto o carrinho está aberto. Manter a etapa
- * (`step`) aqui dentro faz ela voltar para 'cart' a cada abertura pelo
- * próprio ciclo de vida — sem precisar de um efeito de reset.
+ * Painel do pedido — etapa única.
+ *
+ * O cardápio não coleta nome, telefone, endereço, forma de pagamento nem
+ * troco: a mensagem leva só os itens e o total, e o restante se combina na
+ * própria conversa do WhatsApp. Um formulário que pede endereço obriga a
+ * afirmar uma política de entrega; enquanto frete e formas de pagamento não
+ * estiverem confirmados com a loja, perguntar seria inventar regra de negócio.
  */
 function CartPanel({ onClose }: { onClose: () => void }) {
-  const { items, total, count, customer, setCustomer, clearCart, addItem } =
-    useCart();
-  const [step, setStep] = useState<Step>("cart");
-  const [submitted, setSubmitted] = useState(false);
+  const { items, total, count, clearCart, addItem } = useCart();
   const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -188,12 +154,6 @@ function CartPanel({ onClose }: { onClose: () => void }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  const isPickup = customer.fulfillment === "retirada";
-  const freeByThreshold =
-    store.freeShippingThreshold !== null &&
-    total >= store.freeShippingThreshold;
-  const shipping = isPickup || freeByThreshold ? 0 : store.shippingFee;
-  const orderTotal = total + shipping;
   const belowMinimum = store.minimumOrder > 0 && total < store.minimumOrder;
 
   const cartProductIds = new Set(items.map((i) => i.product.id));
@@ -201,31 +161,8 @@ function CartPanel({ onClose }: { onClose: () => void }) {
     .filter((p) => !cartProductIds.has(p.id) && p.available)
     .slice(0, 2);
 
-  // Erros derivados do estado atual, não guardados: assim a mensagem some
-  // sozinha assim que o cliente corrige o campo, em vez de ficar na tela até
-  // a próxima tentativa de envio.
-  const validationErrors: Record<string, string> = {};
-  if (!customer.name.trim()) validationErrors.name = "Informe seu nome";
-  if (!customer.phone.trim())
-    validationErrors.phone = "Informe um telefone para contato";
-  if (!isPickup && !customer.address.trim())
-    validationErrors.address = "Informe o endereço de entrega";
-
-  // Só mostra erro depois da primeira tentativa de envio.
-  const errors = submitted ? validationErrors : {};
-
   const handleSubmit = () => {
-    setSubmitted(true);
-    if (Object.keys(validationErrors).length > 0) return;
-
-    const message = buildOrderMessage({
-      items,
-      subtotal: total,
-      shipping,
-      total: orderTotal,
-      customer,
-    });
-
+    const message = buildOrderMessage({ items, total });
     window.open(buildWhatsAppUrl(message), "_blank", "noopener,noreferrer");
     clearCart();
     onClose();
@@ -258,22 +195,9 @@ function CartPanel({ onClose }: { onClose: () => void }) {
         {/* Cabeçalho ------------------------------------------------- */}
         <div className="flex items-center justify-between border-b border-line px-5 py-4">
           <div className="flex items-center gap-2.5">
-            {step === "checkout" ? (
-              <button
-                type="button"
-                onClick={() => setStep("cart")}
-                className="focus-ring flex h-9 w-9 items-center justify-center rounded-full text-ink transition-colors hover:bg-surface-2"
-                aria-label="Voltar para o pedido"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-            ) : (
-              <ShoppingBag className="h-5 w-5 text-ink" aria-hidden="true" />
-            )}
-            <h2 className="font-display text-lg text-ink">
-              {step === "cart" ? "Seu pedido" : "Seus dados"}
-            </h2>
-            {step === "cart" && count > 0 && (
+            <ShoppingBag className="h-5 w-5 text-ink" aria-hidden="true" />
+            <h2 className="font-display text-lg text-ink">Seu pedido</h2>
+            {count > 0 && (
               <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-surface-3 px-1.5 text-xs font-semibold text-ink-2 tabular-nums">
                 {count}
               </span>
@@ -308,7 +232,7 @@ function CartPanel({ onClose }: { onClose: () => void }) {
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
-        ) : step === "cart" ? (
+        ) : (
           <>
             {(store.freeShippingThreshold !== null ||
               store.freeGiftThreshold !== null) && (
@@ -376,9 +300,9 @@ function CartPanel({ onClose }: { onClose: () => void }) {
             </div>
 
             <div className="space-y-3 border-t border-line bg-surface-2 px-5 py-4">
-              <div className="flex justify-between text-sm">
-                <span className="text-ink-2">Subtotal</span>
-                <span className="font-medium text-ink tabular-nums">
+              <div className="flex justify-between">
+                <span className="text-base font-semibold text-ink">Total</span>
+                <span className="text-base font-bold text-ink tabular-nums">
                   {formatCurrency(total)}
                 </span>
               </div>
@@ -391,154 +315,6 @@ function CartPanel({ onClose }: { onClose: () => void }) {
                 </p>
               )}
 
-              <Button
-                variant="primary"
-                fullWidth
-                disabled={belowMinimum}
-                onClick={() => setStep("checkout")}
-              >
-                Continuar
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="flex-1 space-y-4 overflow-y-auto overscroll-contain px-5 py-4">
-              <Field label="Nome completo" id="c-name" error={errors.name}>
-                <input
-                  id="c-name"
-                  type="text"
-                  autoComplete="name"
-                  value={customer.name}
-                  onChange={(e) => setCustomer({ name: e.target.value })}
-                  placeholder="Seu nome"
-                  className={inputClass}
-                />
-              </Field>
-
-              <Field label="Telefone" id="c-phone" error={errors.phone}>
-                <input
-                  id="c-phone"
-                  type="tel"
-                  inputMode="tel"
-                  autoComplete="tel"
-                  value={customer.phone}
-                  onChange={(e) => setCustomer({ phone: e.target.value })}
-                  placeholder="(00) 00000-0000"
-                  className={inputClass}
-                />
-              </Field>
-
-              <fieldset>
-                <legend className="text-xs font-medium text-ink-2">
-                  Como prefere receber
-                </legend>
-                <div className="mt-1.5 grid grid-cols-2 gap-2">
-                  {(["entrega", "retirada"] as const).map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      onClick={() => setCustomer({ fulfillment: option })}
-                      aria-pressed={customer.fulfillment === option}
-                      className={cn(
-                        "focus-ring min-h-[48px] rounded-control border text-sm font-medium capitalize transition-colors",
-                        customer.fulfillment === option
-                          ? "border-brand bg-brand text-on-brand"
-                          : "border-line bg-surface-2 text-ink-2 hover:text-ink",
-                      )}
-                    >
-                      {option === "entrega" ? "Entrega" : "Retirada"}
-                    </button>
-                  ))}
-                </div>
-              </fieldset>
-
-              {!isPickup && (
-                <Field
-                  label="Endereço de entrega"
-                  id="c-address"
-                  error={errors.address}
-                >
-                  <textarea
-                    id="c-address"
-                    rows={2}
-                    autoComplete="street-address"
-                    value={customer.address}
-                    onChange={(e) => setCustomer({ address: e.target.value })}
-                    placeholder="Rua, número, complemento, bairro"
-                    className={cn(inputClass, "resize-none")}
-                  />
-                </Field>
-              )}
-
-              {store.paymentMethods.length > 0 && (
-                <Field label="Forma de pagamento" id="c-payment">
-                  <select
-                    id="c-payment"
-                    value={customer.payment}
-                    onChange={(e) => setCustomer({ payment: e.target.value })}
-                    className={inputClass}
-                  >
-                    <option value="">Combinar no WhatsApp</option>
-                    {store.paymentMethods.map((method) => (
-                      <option key={method} value={method}>
-                        {method}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-              )}
-
-              {customer.payment.toLowerCase().includes("dinheiro") && (
-                <Field label="Troco para quanto?" id="c-change">
-                  <input
-                    id="c-change"
-                    type="text"
-                    inputMode="decimal"
-                    value={customer.changeFor}
-                    onChange={(e) => setCustomer({ changeFor: e.target.value })}
-                    placeholder="Ex.: R$ 100,00 — deixe vazio se não precisa"
-                    className={inputClass}
-                  />
-                </Field>
-              )}
-            </div>
-
-            <div className="space-y-3 border-t border-line bg-surface-2 px-5 py-4">
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-sm">
-                  <span className="text-ink-2">Subtotal</span>
-                  <span className="font-medium text-ink tabular-nums">
-                    {formatCurrency(total)}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-ink-2">Entrega</span>
-                  <span
-                    className={cn(
-                      "font-medium tabular-nums",
-                      shipping === 0 ? "text-success" : "text-ink",
-                    )}
-                  >
-                    {isPickup
-                      ? "Retirada"
-                      : shipping === 0
-                        ? "Grátis"
-                        : formatCurrency(shipping)}
-                  </span>
-                </div>
-                <div className="h-px bg-line" />
-                <div className="flex justify-between">
-                  <span className="text-base font-semibold text-ink">
-                    Total
-                  </span>
-                  <span className="text-base font-bold text-ink tabular-nums">
-                    {formatCurrency(orderTotal)}
-                  </span>
-                </div>
-              </div>
-
               {whatsappMissing ? (
                 <p className="flex items-start gap-1.5 rounded-control bg-warning-soft px-3 py-2 text-xs text-warning">
                   <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
@@ -550,6 +326,7 @@ function CartPanel({ onClose }: { onClose: () => void }) {
                   variant="whatsapp"
                   fullWidth
                   size="lg"
+                  disabled={belowMinimum}
                   onClick={handleSubmit}
                 >
                   <WhatsAppIcon className="h-5 w-5" />
@@ -558,7 +335,7 @@ function CartPanel({ onClose }: { onClose: () => void }) {
               )}
 
               <p className="text-center text-xs text-ink-3">
-                O pedido abre no WhatsApp já formatado, pronto para enviar.
+                Entrega, retirada e pagamento são combinados na conversa.
               </p>
             </div>
           </>

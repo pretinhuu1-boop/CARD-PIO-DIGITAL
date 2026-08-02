@@ -62,8 +62,6 @@ export interface StoreConfig {
    */
   heroImage: string | null;
 
-  /** Valor do frete padrão em R$. Use 0 para frete sempre grátis. */
-  shippingFee: number;
   /**
    * Valor mínimo do subtotal para frete grátis.
    * `null` desativa a barra de progresso de frete grátis.
@@ -79,40 +77,51 @@ export interface StoreConfig {
    * Use 0 para não exigir mínimo.
    */
   minimumOrder: number;
-
-  /** Formas de pagamento oferecidas na etapa de checkout. */
-  paymentMethods: string[];
 }
 
+/**
+ * Loja: Caracol Chocolates Cafeteria Tatuapé
+ * Coletado em 2026-08-02 de Google Maps, Instagram (@caracol.tatuape),
+ * Linktree e iFood. Ver `scraped-stores/caracol-chocolates-tatuape/`.
+ *
+ * Frete e formas de pagamento NÃO entram aqui: nenhuma fonte pública informa
+ * a política real da loja, e o cardápio não coleta dados do cliente. Os dois
+ * assuntos se resolvem na conversa do WhatsApp, com quem sabe a resposta.
+ */
 export const store: StoreConfig = {
-  name: 'Nome da Loja', // «PREENCHER»
-  tagline: 'Categoria do negócio', // «PREENCHER»
+  name: 'Caracol Chocolates Tatuapé',
+  tagline: 'Cafeteria e chocolateria',
   description:
-    'Descrição curta da loja em uma ou duas linhas, usada no hero e no SEO.', // «PREENCHER»
+    'Cafeteria, eventos e o melhor do chocolate de Gramado, no coração do Tatuapé.',
 
-  whatsapp: '', // «PREENCHER» — ex.: '5511999998888'
-  phoneDisplay: '(00) 00000-0000', // «PREENCHER»
+  whatsapp: '5511997365921', // linktr.ee/caracol.chocolates.tatuape
+  phoneDisplay: '(11) 99736-5921',
 
-  address: 'Rua, número — Bairro, Cidade', // «PREENCHER»
-  city: 'Cidade - UF', // «PREENCHER»
+  address: 'R. Itapeti, 601 — Tatuapé, São Paulo - SP, 03324-002',
+  city: 'São Paulo - SP',
 
+  // Instagram (@caracol.tatuape): "Ter a sáb 9h-18h/dom 10h-19h"
   hours: [
-    { day: 'Seg a Sex', time: '09h - 18h' },
-    { day: 'Sábado', time: '09h - 14h' },
-    { day: 'Domingo', time: null },
+    { day: 'Segunda', time: null },
+    { day: 'Terça a Sábado', time: '09h - 18h' },
+    { day: 'Domingo', time: '10h - 19h' },
   ],
 
-  social: [], // «PREENCHER» — ex.: [{ label: '@minhaloja', url: 'https://instagram.com/minhaloja' }]
+  social: [
+    { label: '@caracol.tatuape', url: 'https://www.instagram.com/caracol.tatuape' },
+    {
+      label: 'Pedir no iFood',
+      url: 'https://www.ifood.com.br/delivery/sao-paulo-sp/caracol-chocolates-tatuape-vila-gomes-cardim/d527f516-05cc-4d6d-888e-c0806ab9edfc',
+    },
+  ],
 
-  heroImage: null,
+  heroImage: '/loja/hero.webp',
 
-  shippingFee: 0,
   freeShippingThreshold: null,
   freeGiftThreshold: null,
-  minimumOrder: 0,
-
-  paymentMethods: ['Pix', 'Cartão de crédito', 'Cartão de débito', 'Dinheiro'],
+  minimumOrder: 35, // confirmado no iFood
 };
 
 /** Texto da mensagem do botão flutuante de WhatsApp (contato, fora do pedido). */
-export const contactMessage = 'Olá! Gostaria de mais informações.';
+export const contactMessage =
+  'Olá! Vi o cardápio da Caracol Tatuapé e gostaria de mais informações.';
