@@ -1,14 +1,10 @@
 /**
  * ============================================================================
- * CONFIGURAÇÃO DA LOJA — ARQUIVO DE PREENCHIMENTO
+ * CONFIGURAÇÃO — Kokedami · Arte com Plantas (Tatuapé)
  * ============================================================================
  *
- * Este é o ÚNICO arquivo que precisa ser editado para trocar a loja do
- * template. Nenhum componente contém texto, telefone ou endereço fixo.
- *
- * Para as cores e fontes, edite `src/app/globals.css` (bloco IDENTIDADE VISUAL).
- *
- * Campos marcados com «PREENCHER» são placeholders neutros.
+ * Coletado em 2026-08-02. Procedência e lacunas declaradas em
+ * `scraped-stores/kokedami-tatuape/`.
  * ============================================================================
  */
 
@@ -16,40 +12,43 @@ import type { StoreConfig } from './types';
 
 export type { StoreConfig, StoreHours, StoreSocial } from './types';
 
-
 export const store: StoreConfig = {
-  name: 'Nome da Loja', // «PREENCHER»
-  orderMode: 'cart', // «PREENCHER» — 'cart' vende, 'enquiry' agenda/orça
-  tagline: 'Categoria do negócio', // «PREENCHER»
+  name: 'Kokedami',
+  // Peça única e orçada na conversa: não existe carrinho aqui. Combinado com
+  // `price: null` em todos os itens, a página se monta como expositor.
+  orderMode: 'enquiry',
+  tagline: 'Arte com plantas',
   description:
-    'Descrição curta da loja em uma ou duas linhas, usada no hero e no SEO.', // «PREENCHER»
+    'Kokedamas montadas à mão no Tatuapé. Cada peça é única — a escolha da planta e do suporte acontece na conversa.',
 
-  whatsapp: '', // «PREENCHER» — ex.: '5511999998888'
-  phoneDisplay: '(00) 00000-0000', // «PREENCHER»
+  // A bio do Instagram traz "551197530.7287", com um ponto digitado por engano
+  // no meio. O número correto foi confirmado contra o telefone do Google Maps.
+  whatsapp: '5511975307287',
+  phoneDisplay: '(11) 97530-7287',
 
-  address: 'Rua, número — Bairro, Cidade', // «PREENCHER»
-  city: 'Cidade - UF', // «PREENCHER»
+  address: 'R. Itapeti, 622 — Tatuapé, São Paulo - SP, 03324-002',
+  city: 'Tatuapé, São Paulo',
 
-  hours: [
-    { day: 'Seg a Sex', time: '09h - 18h' },
-    { day: 'Sábado', time: '09h - 14h' },
-    { day: 'Domingo', time: null },
+  // O Maps mostra só "Abre às 14:00" e não expõe a grade sem interação; o
+  // Instagram não informa. Publicar uma grade completa aqui seria inventá-la.
+  hours: [{ day: 'Aberto', time: 'a partir das 14h' }],
+
+  social: [
+    { label: '@koke.da.mi', url: 'https://www.instagram.com/koke.da.mi/' },
   ],
 
-  social: [], // «PREENCHER» — ex.: [{ label: '@minhaloja', url: 'https://instagram.com/minhaloja' }]
+  heroImage: '/loja/fachada.webp',
+  aboutImage: '/loja/interior.webp',
 
-  heroImage: null,
-  aboutImage: null,
-
-  shippingFee: null, // «PREENCHER» — null = "a combinar", 0 = grátis de fato
+  // Sem checkout, nenhum destes campos chega à tela. Ficam explícitos como
+  // "não informado" em vez de sumirem do contrato.
+  shippingFee: null,
   freeShippingThreshold: null,
   freeGiftThreshold: null,
   minimumOrder: 0,
-
-  // «PREENCHER» com o que a loja de fato aceita. Vazio esconde o campo — é
-  // melhor não perguntar do que oferecer uma forma que a loja não aceita.
   paymentMethods: [],
 };
 
 /** Texto da mensagem do botão flutuante de WhatsApp (contato, fora do pedido). */
-export const contactMessage = 'Olá! Gostaria de mais informações.';
+export const contactMessage =
+  'Olá! Vi o expositor da Kokedami e queria saber mais sobre as peças.';

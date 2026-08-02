@@ -1,15 +1,28 @@
 /**
  * ============================================================================
- * CATÁLOGO — ARQUIVO DE PREENCHIMENTO
+ * CATÁLOGO — Kokedami · Arte com Plantas (Tatuapé)
  * ============================================================================
  *
- * Produtos, categorias, combos, avaliações, FAQ e a seção "sobre".
- * Dados de contato/loja ficam em `src/lib/config.ts`.
+ * Coletado em 2026-08-02. Procedência em `scraped-stores/kokedami-tatuape/`.
  *
- * IMAGENS: todo produto tem `image: null` neste template em branco. A grade
- * renderiza um placeholder neutro quando `image` é `null`, então o layout
- * continua correto sem nenhuma imagem. Ao preencher, use caminhos locais
- * (ex.: '/produtos/nome-do-produto.webp') e não URLs externas.
+ * EXPOSITOR, NÃO CARDÁPIO
+ * -----------------------
+ * Todos os itens têm `price: null`, e é por isso que a página se monta como
+ * expositor: sem carrinho, cada peça abrindo conversa no WhatsApp.
+ *
+ * O preço não é uma lacuna a preencher. Não existe em fonte pública nenhuma —
+ * não há site, e-commerce nem linktree de loja — e kokedama é peça única: a
+ * planta, o porte e o suporte mudam o valor. "Sob consulta" é como o negócio
+ * funciona, não falha da coleta.
+ *
+ * NUNCA preencher com a faixa de mercado. A busca devolve R$ 43–90 de outras
+ * kokedamarias (Xique Xique, Meu Kokedama, Orquidário Ibáñez) — isso é preço
+ * de concorrente publicado em nome desta loja.
+ *
+ * LIMITE DECLARADO DOS NOMES
+ * --------------------------
+ * Os títulos descrevem O QUE APARECE NA FOTOGRAFIA. NÃO são a nomenclatura
+ * comercial da loja: a loja não publica nomenclatura.
  * ============================================================================
  */
 
@@ -42,173 +55,73 @@ import type {
 /* -------------------------------------------------------------------------- */
 /* CATEGORIAS                                                                  */
 /* -------------------------------------------------------------------------- */
-/* NÃO existe mais a categoria 'todos'. Ela servia ao filtro; a página agora   */
-/* mostra o catálogo inteiro e o controle de categoria NAVEGA por âncora, então */
-/* um "todos" seria um botão que rola para o lugar onde já se está.             */
-/* A ordem daqui é a ordem das seções na página.                                */
+/* Uma só. A loja não publica divisão de catálogo, e inventar seções aqui seria */
+/* organizar a loja no lugar dela. Com uma categoria a barra de navegação nem   */
+/* aparece — não há entre o que navegar.                                       */
 
 export const categories: Category[] = [
-  { slug: 'categoria-1', name: 'Categoria 1', emoji: '' },
-  { slug: 'categoria-2', name: 'Categoria 2', emoji: '' },
-  { slug: 'categoria-3', name: 'Categoria 3', emoji: '' },
-  { slug: 'categoria-4', name: 'Categoria 4', emoji: '' },
-  { slug: 'categoria-5', name: 'Categoria 5', emoji: '' },
+  { slug: 'pecas', name: 'Peças em exposição', emoji: '' },
 ];
 
 /* -------------------------------------------------------------------------- */
-/* PRODUTOS                                                                    */
+/* PEÇAS                                                                       */
 /* -------------------------------------------------------------------------- */
-/* 15 itens de exemplo distribuídos nas 5 categorias, sem imagem.              */
-/* Substitua nome, descrição, preço e categoria pelos dados reais da loja.     */
+/* Fotografias publicadas pelo próprio estabelecimento no Google Maps.         */
+/* A descrição só cita o que é visível na foto.                                */
 
 export const products: Product[] = [
   {
-    id: 'p-01',
-    name: 'Produto 01',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 10.0,
-    image: null,
-    category: 'categoria-1',
-    badge: { label: 'Mais vendido', tone: 'accent' },
-    servings: '1 unidade',
+    id: 'orquidea',
+    name: 'Orquídea',
+    description: 'Haste amarela sobre esfera de musgo, apoiada sem vaso.',
+    price: null,
+    image: '/pecas/orquidea.webp',
+    category: 'pecas',
     available: true,
   },
   {
-    id: 'p-02',
-    name: 'Produto 02',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 15.0,
-    originalPrice: 20.0,
-    image: null,
-    category: 'categoria-1',
-    badge: { label: 'Promoção', tone: 'warning' },
-    servings: '1 unidade',
+    id: 'aglaonema',
+    name: 'Aglaonema',
+    description: 'Folhagem rosada. O tamanho cabe nas duas mãos.',
+    price: null,
+    image: '/pecas/aglaonema.webp',
+    category: 'pecas',
     available: true,
   },
   {
-    id: 'p-03',
-    name: 'Produto 03',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 22.5,
-    image: null,
-    category: 'categoria-1',
-    servings: '2 unidades',
+    id: 'singonio-suporte',
+    name: 'Singônio com suporte',
+    description: 'Esfera suspensa dentro de um cubo de metal preto.',
+    price: null,
+    image: '/pecas/singonio-suporte.webp',
+    category: 'pecas',
     available: true,
   },
   {
-    id: 'p-04',
-    name: 'Produto 04',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 30.0,
-    image: null,
-    category: 'categoria-2',
-    badge: { label: 'Novidade', tone: 'success' },
+    id: 'podocarpo-suporte',
+    name: 'Podocarpo com suporte',
+    description: 'Porte vertical em base aramada, junto à janela.',
+    price: null,
+    image: '/pecas/podocarpo-suporte.webp',
+    category: 'pecas',
     available: true,
   },
   {
-    id: 'p-05',
-    name: 'Produto 05',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 35.9,
-    image: null,
-    category: 'categoria-2',
-    servings: '6 unidades',
+    id: 'anturio-verde',
+    name: 'Antúrio',
+    description: 'Folhas largas sobre disco de madeira.',
+    price: null,
+    image: '/pecas/anturio-verde.webp',
+    category: 'pecas',
     available: true,
   },
   {
-    id: 'p-06',
-    name: 'Produto 06',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 42.0,
-    image: null,
-    category: 'categoria-2',
-    available: true,
-  },
-  {
-    id: 'p-07',
-    name: 'Produto 07',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 48.9,
-    image: null,
-    category: 'categoria-3',
-    badge: { label: 'Destaque', tone: 'info' },
-    servings: '8 a 10 porções',
-    available: true,
-  },
-  {
-    id: 'p-08',
-    name: 'Produto 08',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 55.0,
-    originalPrice: 65.0,
-    image: null,
-    category: 'categoria-3',
-    available: true,
-  },
-  {
-    id: 'p-09',
-    name: 'Produto 09',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 60.0,
-    image: null,
-    category: 'categoria-3',
-    available: true,
-  },
-  {
-    id: 'p-10',
-    name: 'Produto 10',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 12.5,
-    image: null,
-    category: 'categoria-4',
-    available: true,
-  },
-  {
-    id: 'p-11',
-    name: 'Produto 11',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 18.0,
-    image: null,
-    category: 'categoria-4',
-    badge: { label: 'Edição limitada', tone: 'neutral' },
-    available: true,
-  },
-  {
-    id: 'p-12',
-    name: 'Produto 12',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 25.0,
-    image: null,
-    category: 'categoria-4',
-    available: false,
-  },
-  {
-    id: 'p-13',
-    name: 'Produto 13',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 8.0,
-    image: null,
-    category: 'categoria-5',
-    servings: '300 ml',
-    available: true,
-  },
-  {
-    id: 'p-14',
-    name: 'Produto 14',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 9.5,
-    image: null,
-    category: 'categoria-5',
-    servings: '400 ml',
-    available: true,
-  },
-  {
-    id: 'p-15',
-    name: 'Produto 15',
-    description: 'Descrição curta do produto, com até duas linhas de texto.',
-    price: 11.0,
-    image: null,
-    category: 'categoria-5',
+    id: 'anturios-vitrine',
+    name: 'Antúrios na vitrine',
+    description: 'Floração vermelha na bancada que dá para a rua.',
+    price: null,
+    image: '/pecas/anturios-vitrine.webp',
+    category: 'pecas',
     available: true,
   },
 ];
@@ -216,39 +129,10 @@ export const products: Product[] = [
 /* -------------------------------------------------------------------------- */
 /* COMBOS                                                                      */
 /* -------------------------------------------------------------------------- */
-/* Deixe [] para ocultar a seção inteira.                                      */
+/* Sem preço não há combo: conjunto com desconto exige valor para descontar.   */
 
-export const combos: Combo[] = [
-  {
-    id: 'c-01',
-    name: 'Combo 01',
-    description: 'Descrição curta do combo.',
-    productIds: ['p-01', 'p-04', 'p-13'],
-    comboPrice: 45.0,
-  },
-  {
-    id: 'c-02',
-    name: 'Combo 02',
-    description: 'Descrição curta do combo.',
-    productIds: ['p-07', 'p-08'],
-    comboPrice: 95.0,
-  },
-  {
-    id: 'c-03',
-    name: 'Combo 03',
-    description: 'Descrição curta do combo.',
-    productIds: ['p-02', 'p-05', 'p-14'],
-    comboPrice: 55.0,
-  },
-];
+export const combos: Combo[] = [];
 
-/**
- * Converte um combo num item vendável.
- *
- * O combo entra no pedido como UMA linha, pelo preço do combo — se entrasse
- * como produtos avulsos, o carrinho cobraria a soma dos preços cheios e
- * contradiria o desconto anunciado no card.
- */
 export function comboAsProduct(combo: Combo): Product {
   const names = combo.productIds
     .map((id) => products.find((p) => p.id === id)?.name)
@@ -268,10 +152,6 @@ export function comboAsProduct(combo: Combo): Product {
   };
 }
 
-/**
- * Resolve qualquer id vendável — produto avulso ou combo.
- * Usado ao restaurar o carrinho do localStorage.
- */
 export function findSellableById(id: string): Product | undefined {
   const product = products.find((p) => p.id === id);
   if (product) return product;
@@ -285,81 +165,111 @@ export function findSellableById(id: string): Product | undefined {
 /* -------------------------------------------------------------------------- */
 
 export const about: AboutSection = {
-  title: 'Sobre',
-  subtitle: 'Subtítulo da seção sobre',
+  title: 'Uma esfera de musgo, uma planta, nenhum vaso',
+  subtitle:
+    'Kokedama é a técnica japonesa que sustenta a raiz em terra e musgo',
   paragraphs: [
-    'Primeiro parágrafo sobre a loja: origem, proposta e o que a diferencia.',
-    'Segundo parágrafo: processo, matéria-prima ou forma de trabalho.',
-    'Terceiro parágrafo: posicionamento atual e público atendido.',
+    'A Kokedami fica na Rua Itapeti, no Tatuapé, e é atendida pela Michele. Cada peça é montada à mão: a planta, a esfera e o suporte são escolhidos juntos.',
+    'Além da loja, a casa recebe oficinas — várias das avaliações são de quem entrou para comprar e voltou para aprender a fazer.',
+    'Não há tabela de preço publicada porque não há duas peças iguais. O valor sai na conversa, junto com a escolha da planta.',
   ],
   values: [
-    { icon: '', title: 'Valor 1', description: 'Descrição curta do primeiro diferencial.' },
-    { icon: '', title: 'Valor 2', description: 'Descrição curta do segundo diferencial.' },
-    { icon: '', title: 'Valor 3', description: 'Descrição curta do terceiro diferencial.' },
-    { icon: '', title: 'Valor 4', description: 'Descrição curta do quarto diferencial.' },
+    { icon: '', title: '5,0 no Google', description: '77 avaliações da unidade Tatuapé.' },
+    { icon: '', title: 'Feito à mão', description: 'Cada esfera é montada peça a peça na loja.' },
+    { icon: '', title: 'Oficinas', description: 'Aulas para montar a própria kokedama.' },
+    { icon: '', title: 'Entrega expressa', description: 'Retirada na loja ou entrega combinada no WhatsApp.' },
   ],
 };
 
 /* -------------------------------------------------------------------------- */
 /* AVALIAÇÕES                                                                  */
 /* -------------------------------------------------------------------------- */
-/* Deixe [] para ocultar a seção inteira.                                      */
+/*
+  Avaliações reais do Google (5,0 · 77 avaliações), transcritas literalmente.
+  A nota da loja é 5,0 cravado, então toda avaliação publicada é 5 estrelas.
+
+  CUIDADO QUE CUSTOU UMA CONFERÊNCIA: o Maps concatena a RESPOSTA DA LOJA no
+  mesmo bloco de texto da avaliação. Duas destas vinham com a fala da própria
+  dona grudada no fim — publicar assim seria atribuir ao cliente algo que ele
+  não escreveu. O texto abaixo já vem separado.
+
+  Nome: primeiro nome + inicial. A avaliação é pública; o nome completo não vai.
+*/
 
 export const reviews: Review[] = [
   {
-    id: 'r-01',
-    name: 'Nome do cliente 1',
-    initials: 'C1',
+    id: 'q-lucas',
+    name: 'Lucas H.',
+    initials: 'LH',
     rating: 5,
-    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
-    date: 'há 1 semana',
-  },
-  {
-    id: 'r-02',
-    name: 'Nome do cliente 2',
-    initials: 'C2',
-    rating: 5,
-    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
-    date: 'há 2 semanas',
-  },
-  {
-    id: 'r-03',
-    name: 'Nome do cliente 3',
-    initials: 'C3',
-    rating: 4,
-    text: 'Texto da avaliação do cliente, com duas ou três linhas de comentário.',
+    text: 'A Micheli demonstra ter muito conhecimento dessa arte de cultivo de plantas e me senti seguro em comprar e cuidar, apesar da minha pouca experiência com plantas em geral.',
     date: 'há 1 mês',
+  },
+  {
+    id: 'q-sandra',
+    name: 'Sandra M.',
+    initials: 'SM',
+    rating: 5,
+    text: 'A loja é perfeita, uma kokedama mais linda que a outra. Gostei tanto que resolvi participar da oficina e adorei.',
+    date: 'há 2 meses',
+  },
+  {
+    id: 'q-larissa',
+    name: 'Larissa C.',
+    initials: 'LC',
+    rating: 5,
+    text: 'Passei e vi a loja, e achei maravilhosa por fora. Mas por dentro, a experiência foi ainda mais incrível.',
+    date: 'há 5 meses',
+  },
+  {
+    id: 'q-gabor',
+    name: 'Gabor G.',
+    initials: 'GG',
+    rating: 5,
+    text: 'Lindíssimo trabalho. Comprei para a minha esposa e, quando viu, tirou foto para mandar para toda a família.',
+    date: 'há 6 meses',
+  },
+  {
+    id: 'q-vic',
+    name: 'Vic T.',
+    initials: 'VT',
+    rating: 5,
+    text: 'Experiência maravilhosa e ambiente acolhedor para todos.',
+    date: 'há 5 meses',
+  },
+  {
+    id: 'q-vanessa',
+    name: 'Vanessa R.',
+    initials: 'VR',
+    rating: 5,
+    text: 'Ganhei de uma pessoa muito especial na minha vida. Depois disso me apaixonei e comprei outros.',
+    date: 'há 4 meses',
   },
 ];
 
 /* -------------------------------------------------------------------------- */
 /* FAQ                                                                         */
 /* -------------------------------------------------------------------------- */
-/* Deixe [] para ocultar a seção inteira.                                      */
 
 export const faqs: FAQ[] = [
   {
-    question: 'Como faço para realizar um pedido?',
+    question: 'Por que não tem preço no site?',
     answer:
-      'Adicione os produtos ao carrinho, preencha seus dados e clique em "Enviar pedido pelo WhatsApp". Você será levado à conversa com a nota do pedido já montada.',
+      'Cada kokedama é montada à mão e nenhuma é igual à outra: a planta, o porte e o suporte mudam o valor. O preço sai na conversa, junto com a escolha da peça.',
   },
   {
-    question: 'Qual o prazo de entrega?',
-    answer: 'Resposta sobre prazos de entrega e retirada.',
+    question: 'Dá para escolher a planta?',
+    answer:
+      'Sim. A escolha da planta, da esfera e do suporte é feita junto com a loja — é parte de como a peça é montada.',
   },
   {
-    question: 'Quais são as formas de pagamento?',
-    answer: 'Resposta sobre as formas de pagamento aceitas.',
+    question: 'Vocês entregam?',
+    answer:
+      'Há retirada na loja e entrega expressa combinada pelo WhatsApp. A área de cobertura e o valor são acertados na conversa.',
   },
   {
-    question: 'Vocês atendem quais regiões?',
-    answer: 'Resposta sobre a área de cobertura de entrega.',
+    question: 'Vocês dão oficinas?',
+    answer:
+      'Sim. A casa recebe oficinas de montagem de kokedama. As datas são informadas pelo WhatsApp e pelo Instagram.',
   },
 ];
-
-/* -------------------------------------------------------------------------- */
-
-
-/* A lista `navSections` é DERIVADA e vive em `src/lib/format.ts`, junto com a
-   regra de formato — as duas dependem do mesmo dado e separá-las já produziu
-   menu apontando para âncora inexistente. */
