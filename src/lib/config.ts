@@ -115,7 +115,7 @@ export const store: StoreConfig = {
     },
   ],
 
-  heroImage: '/produtos/croissant-chocolate-morangos.webp',
+  heroImage: '/loja/hero.webp',
 
   freeShippingThreshold: null,
   freeGiftThreshold: null,
