@@ -91,15 +91,22 @@ export function HeroBanner() {
           variants={fadeUp}
           className="mt-10 flex flex-col items-center gap-3 sm:flex-row"
         >
+          {/*
+            O CTA usa `brand`/`on-brand` com ou sem foto.
+
+            A variante anterior para foto era `bg-on-overlay text-ink`, um par
+            instável: `on-overlay` é branco fixo, mas `ink` inverte para claro
+            no modo escuro — o botão virava texto quase branco sobre fundo
+            branco (1,05:1). `brand`/`on-brand` é o único par com contraste
+            garantido nos dois temas, e é a cor de ação da marca de qualquer forma.
+          */}
           <button
             type="button"
             onClick={scrollToMenu}
             className={cn(
               'focus-ring min-h-[52px] rounded-full px-8 text-[15px] font-medium',
               'transition-colors duration-200',
-              hasImage
-                ? 'bg-on-overlay text-ink hover:opacity-90'
-                : 'bg-brand text-on-brand hover:bg-brand-hover',
+              'bg-brand text-on-brand hover:bg-brand-hover',
             )}
           >
             Ver cardápio
