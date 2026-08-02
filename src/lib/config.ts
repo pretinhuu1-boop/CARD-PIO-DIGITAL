@@ -24,6 +24,7 @@ export const store: StoreConfig = {
   // telefone (11) 95124-0157, é 55 + 11 + 951240157.
   whatsapp: '5511951240157',
   phoneDisplay: '(11) 95124-0157',
+  bookingUrl: null,
 
   address: 'R. Itapura, 1267 — Vila Gomes Cardim, São Paulo - SP',
   city: 'Tatuapé, São Paulo',

@@ -96,3 +96,21 @@ export function buildItemEnquiryMessage(productName: string): string {
 export function buildWhatsAppUrl(message: string): string {
   return `https://wa.me/${store.whatsapp}?text=${encodeURIComponent(message)}`;
 }
+
+/**
+ * Para onde vai o botão de contato de um item.
+ *
+ * WhatsApp quando existe (leva a mensagem dizendo QUAL item); senão o canal
+ * de agendamento; senão `null`, e o botão não é renderizado.
+ */
+export function itemContactHref(productName: string): string | null {
+  if (store.whatsapp) {
+    return buildWhatsAppUrl(buildItemEnquiryMessage(productName));
+  }
+  return store.bookingUrl;
+}
+
+/** Rótulo coerente com o destino: conversa não é a mesma coisa que agenda. */
+export function itemContactLabel(): string {
+  return store.whatsapp ? 'Perguntar' : 'Agendar';
+}

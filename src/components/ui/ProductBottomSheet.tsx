@@ -4,10 +4,9 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { X, Plus, Minus, MessageCircle } from 'lucide-react';
 import { type Product } from '@/lib/data';
-import { hasPrice } from '@/lib/format';
+import { hasPrice, hasCheckout } from '@/lib/format';
 import { useCart } from '@/lib/store';
-import { store } from '@/lib/config';
-import { buildItemEnquiryMessage, buildWhatsAppUrl } from '@/lib/whatsapp';
+import { itemContactHref, itemContactLabel } from '@/lib/whatsapp';
 import { cn, formatCurrency } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { Price } from '@/components/ui/Price';
@@ -33,6 +32,7 @@ export function ProductBottomSheet({ product, onClose }: ProductBottomSheetProps
    * a folha inteira muda de comportamento.
    */
   const sellable = hasPrice(product) ? product : null;
+  const contatoHref = itemContactHref(product.name);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -154,15 +154,15 @@ export function ProductBottomSheet({ product, onClose }: ProductBottomSheetProps
 
           {/* Sem preço: a peça é orçada. O botão abre a conversa já dizendo
               qual peça, para o lojista não ter de perguntar "qual delas?". */}
-          {!sellable && store.whatsapp && (
+          {!hasCheckout && contatoHref && (
             <a
-              href={buildWhatsAppUrl(buildItemEnquiryMessage(product.name))}
+              href={contatoHref}
               target="_blank"
               rel="noopener noreferrer"
               className="focus-ring mt-6 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-control bg-brand px-5 font-medium text-on-brand transition-colors hover:bg-brand-hover"
             >
               <MessageCircle className="h-5 w-5" aria-hidden="true" />
-              Perguntar sobre esta peça
+              {itemContactLabel()} — {product.name}
             </a>
           )}
 
