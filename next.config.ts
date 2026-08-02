@@ -1,11 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  images: {
-    remotePatterns: [
-      { protocol: 'https', hostname: 'd8j0ntlcm91z4.cloudfront.net' },
-    ],
-  },
+  // Imagens de produto ficam em /public. Se a loja precisar servir imagens de
+  // um domínio externo, declare o host aqui em `images.remotePatterns`.
 };
 
 export default nextConfig;

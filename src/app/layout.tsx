@@ -1,67 +1,57 @@
-import type { Metadata, Viewport } from "next";
-import { Inter, Instrument_Serif } from "next/font/google";
-import "./globals.css";
+import type { Metadata, Viewport } from 'next';
+import { store } from '@/lib/config';
+import './globals.css';
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-instrument",
-  display: "swap",
-});
+/**
+ * TIPOGRAFIA — ponto de preenchimento.
+ *
+ * O template usa a fonte do sistema por padrão (neutro). Para aplicar a fonte
+ * da loja, importe de `next/font/google` e injete as variáveis no <html>:
+ *
+ *   import { Inter, Playfair_Display } from 'next/font/google';
+ *
+ *   const sans = Inter({ subsets: ['latin'], variable: '--font-app-sans', display: 'swap' });
+ *   const display = Playfair_Display({ subsets: ['latin'], variable: '--font-app-display', display: 'swap' });
+ *
+ * e troque a className do <html> por:
+ *   `${sans.variable} ${display.variable} h-full antialiased`
+ *
+ * As variáveis --font-app-sans / --font-app-display já são consumidas em
+ * globals.css; nada mais precisa mudar.
+ */
 
 export const metadata: Metadata = {
-  title: "Doces Dondoca | Confeitaria Artesanal Premium - Tatuapé, São Paulo",
-  description:
-    "Confeitaria artesanal no Tatuapé. Brigadeiros gourmet, tortas, bolos decorados, brownies, cafés especiais e muito mais. Peça pelo WhatsApp.",
-  keywords: [
-    "confeitaria artesanal",
-    "doces gourmet São Paulo",
-    "brigadeiro gourmet",
-    "tortas artesanais",
-    "bolos decorados",
-    "brownies",
-    "cafés especiais",
-    "Tatuapé",
-    "delivery doces SP",
-  ],
+  title: `${store.name} | Cardápio digital`,
+  description: store.description,
   openGraph: {
-    title: "Doces Dondoca | Confeitaria Artesanal Premium",
-    description:
-      "Doces artesanais feitos com amor. Brigadeiros gourmet, tortas, bolos e cafés especiais no Tatuapé.",
-    type: "website",
-    locale: "pt_BR",
-    siteName: "Doces Dondoca",
+    title: store.name,
+    description: store.description,
+    type: 'website',
+    locale: 'pt_BR',
+    siteName: store.name,
   },
   robots: { index: true, follow: true },
   other: {
-    "format-detection": "telephone=no",
+    'format-detection': 'telephone=no',
   },
 };
 
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#FAFAF8",
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#121212' },
+  ],
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="pt-BR"
-      className={`${inter.variable} ${instrumentSerif.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)]">
+    <html lang="pt-BR" className="h-full antialiased">
+      <body className="min-h-full flex flex-col bg-surface text-ink">
         {children}
       </body>
     </html>

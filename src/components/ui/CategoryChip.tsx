@@ -1,55 +1,63 @@
 'use client';
 
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import type { Category } from '@/lib/data';
 import { cn } from '@/lib/utils';
-
-interface Category {
-  slug: string;
-  name: string;
-  emoji: string;
-  productCount: number;
-}
 
 interface CategoryChipProps {
   categories: Category[];
-  selected: string | null;
-  onChange: (slug: string | null) => void;
+  /** Slug ativo. 'todos' quando nenhum filtro está aplicado. */
+  selected: string;
+  onChange: (slug: string) => void;
   className?: string;
 }
 
+/**
+ * Faixa de categorias com arrasto horizontal no desktop.
+ *
+ * O arrasto NÃO usa `setPointerCapture`: capturar o ponteiro no container
+ * redireciona o `click` para ele, e o clique nunca chega ao <button> do chip —
+ * o filtro fica morto no mouse (funcionava só no toque e no teclado).
+ * Aqui o scroll é feito manualmente enquanto o botão está pressionado, e um
+ * ref marca se houve arrasto para suprimir o clique acidental no fim dele.
+ */
 function CategoryChip({ categories, selected, onChange, className }: CategoryChipProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
   const dragStartX = useRef(0);
   const scrollStartX = useRef(0);
+  const pointerDown = useRef(false);
+  const didDrag = useRef(false);
 
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    // Só arrasta com o botão primário do mouse; toque usa o scroll nativo.
+    if (e.pointerType !== 'mouse') return;
     const el = scrollRef.current;
     if (!el) return;
-    setIsDragging(false);
+    pointerDown.current = true;
+    didDrag.current = false;
     dragStartX.current = e.clientX;
     scrollStartX.current = el.scrollLeft;
-    el.setPointerCapture(e.pointerId);
   }, []);
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
     const el = scrollRef.current;
-    if (!el || !el.hasPointerCapture(e.pointerId)) return;
+    if (!el || !pointerDown.current) return;
     const dx = e.clientX - dragStartX.current;
-    if (Math.abs(dx) > 3) setIsDragging(true);
-    el.scrollLeft = scrollStartX.current - dx;
+    if (Math.abs(dx) > 4) didDrag.current = true;
+    if (didDrag.current) el.scrollLeft = scrollStartX.current - dx;
   }, []);
 
-  const handlePointerUp = useCallback((e: React.PointerEvent) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.releasePointerCapture(e.pointerId);
+  const endDrag = useCallback(() => {
+    pointerDown.current = false;
   }, []);
 
   const handleChipClick = (slug: string) => {
-    if (isDragging) return;
-    onChange(selected === slug ? null : slug);
+    if (didDrag.current) {
+      didDrag.current = false;
+      return;
+    }
+    onChange(slug);
   };
 
   return (
@@ -57,13 +65,15 @@ function CategoryChip({ categories, selected, onChange, className }: CategoryChi
       ref={scrollRef}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
+      onPointerUp={endDrag}
+      onPointerLeave={endDrag}
       className={cn(
-        'flex gap-2 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing',
-        'touch-pan-x select-none py-1 -my-1 px-1 -mx-1',
+        'no-scrollbar flex gap-2 overflow-x-auto',
+        'touch-pan-x py-1 -my-1 px-1 -mx-1',
         className,
       )}
-      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      role="group"
+      aria-label="Filtrar por categoria"
     >
       {categories.map((category) => {
         const isSelected = selected === category.slug;
@@ -71,21 +81,25 @@ function CategoryChip({ categories, selected, onChange, className }: CategoryChi
         return (
           <motion.button
             key={category.slug}
-            layout
+            type="button"
             whileTap={{ scale: 0.96 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             onClick={() => handleChipClick(category.slug)}
+            aria-pressed={isSelected}
             className={cn(
-              'flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium whitespace-nowrap',
-              'transition-all duration-200 shrink-0',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-caramel-400/50',
+              'focus-ring flex shrink-0 items-center gap-2 whitespace-nowrap',
+              'min-h-[44px] rounded-full px-4 text-sm font-medium',
+              'transition-colors duration-200',
               isSelected
-                ? 'bg-chocolate-800 text-cream-50 shadow-md shadow-chocolate-800/15 dark:bg-cream-200 dark:text-chocolate-900'
-                : 'bg-cream-100 text-cream-700 border border-cream-300 hover:border-caramel-300 hover:bg-cream-200 dark:bg-chocolate-800/30 dark:text-cream-400 dark:border-chocolate-600 dark:hover:border-caramel-600',
+                ? 'bg-brand text-on-brand'
+                : 'border border-line bg-surface text-ink-2 hover:border-line-strong hover:text-ink',
             )}
-            type="button"
           >
-            <span className="text-base">{category.emoji}</span>
+            {category.emoji && (
+              <span className="text-base" aria-hidden="true">
+                {category.emoji}
+              </span>
+            )}
             <span>{category.name}</span>
           </motion.button>
         );
@@ -94,4 +108,4 @@ function CategoryChip({ categories, selected, onChange, className }: CategoryChi
   );
 }
 
-export { CategoryChip, type CategoryChipProps, type Category };
+export { CategoryChip, type CategoryChipProps };

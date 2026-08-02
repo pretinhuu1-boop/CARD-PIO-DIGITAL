@@ -1,64 +1,38 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import type { Badge as BadgeData, BadgeTone } from '@/lib/data';
 import { cn } from '@/lib/utils';
 
-type BadgeVariant = 'maisVendido' | 'novo' | 'promo' | 'zeroLactose' | 'vegano' | 'chefRecomenda' | 'edicaoLimitada';
-
 interface BadgeProps {
-  variant: BadgeVariant;
+  badge: BadgeData;
   className?: string;
 }
 
-const variantConfig: Record<BadgeVariant, { label: string; styles: string }> = {
-  maisVendido: {
-    label: 'Mais Vendido',
-    styles: 'bg-caramel-100 text-caramel-800 border border-caramel-200',
-  },
-  chefRecomenda: {
-    label: 'Chef Recomenda',
-    styles: 'bg-blush-100 text-blush-800 border border-blush-200',
-  },
-  novo: {
-    label: 'Novidade',
-    styles: 'bg-emerald-50 text-emerald-800 border border-emerald-200',
-  },
-  edicaoLimitada: {
-    label: 'Edição Limitada',
-    styles: 'bg-chocolate-100 text-chocolate-800 border border-chocolate-200',
-  },
-  promo: {
-    label: 'Promoção',
-    styles: 'bg-amber-50 text-amber-800 border border-amber-200',
-  },
-  zeroLactose: {
-    label: 'Zero Lactose',
-    styles: 'bg-sky-50 text-sky-800 border border-sky-200',
-  },
-  vegano: {
-    label: 'Vegano',
-    styles: 'bg-lime-50 text-lime-800 border border-lime-200',
-  },
+/**
+ * Selo genérico. O rótulo vem de `data.ts` — o componente só decide a cor,
+ * então criar um selo novo não exige tocar em código.
+ */
+const toneStyles: Record<BadgeTone, string> = {
+  neutral: 'bg-surface-3 text-ink-2 border-line',
+  accent: 'bg-accent-soft text-accent border-line',
+  success: 'bg-success-soft text-success border-success/25',
+  warning: 'bg-warning-soft text-warning border-warning/25',
+  info: 'bg-info-soft text-info border-info/25',
 };
 
-function Badge({ variant, className }: BadgeProps) {
-  const config = variantConfig[variant];
-
+function Badge({ badge, className }: BadgeProps) {
   return (
-    <motion.span
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+    <span
       className={cn(
-        'inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium tracking-wide whitespace-nowrap',
-        'select-none',
-        config.styles,
+        'inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-1',
+        'text-[11px] font-medium tracking-wide select-none',
+        toneStyles[badge.tone],
         className,
       )}
     >
-      {config.label}
-    </motion.span>
+      {badge.label}
+    </span>
   );
 }
 
-export { Badge, type BadgeProps, type BadgeVariant };
+export { Badge, type BadgeProps };
