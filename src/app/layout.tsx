@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Inter, Jost } from 'next/font/google';
 import { store } from '@/lib/config';
 import './globals.css';
 
@@ -20,8 +21,18 @@ import './globals.css';
  * globals.css; nada mais precisa mudar.
  */
 
+/**
+ * TIPOGRAFIA — Kokedami.
+ *
+ * Jost é geométrica e de caixa alta larga, que é como o letreiro e o logo da
+ * loja se apresentam nas fotos da fachada. Inter no corpo mantém o texto
+ * neutro para a foto carregar a estética.
+ */
+const sans = Inter({ subsets: ['latin'], variable: '--font-app-sans', display: 'swap' });
+const display = Jost({ subsets: ['latin'], variable: '--font-app-display', display: 'swap' });
+
 export const metadata: Metadata = {
-  title: `${store.name} | Cardápio digital`,
+  title: `${store.name} — ${store.tagline}`,
   description: store.description,
   openGraph: {
     title: store.name,
@@ -41,8 +52,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#121212' },
+    { media: '(prefers-color-scheme: light)', color: '#fdfcfa' },
+    { media: '(prefers-color-scheme: dark)', color: '#12160f' },
   ],
 };
 
@@ -50,7 +61,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className="h-full antialiased">
+    <html
+      lang="pt-BR"
+      className={`${sans.variable} ${display.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col bg-surface text-ink">
         {children}
       </body>
