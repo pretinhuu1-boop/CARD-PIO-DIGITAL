@@ -16,6 +16,9 @@ import { join } from 'node:path';
                      de vários MB. O site servido continua com o original —
                      o next/image escolhe o tamanho pelo srcset e não passa
                      por aqui. Sem a variável, embute public/ direto.
+    SNAPSHOT_NOINDEX '1' insere <meta robots="noindex, nofollow">. Use sempre
+                     que o arquivo for hospedado: demonstração não disputa
+                     busca com a loja real.
 */
 const ORIGIN = process.argv[2] ?? 'http://localhost:3100';
 const REPO = new URL('..', import.meta.url).pathname;
@@ -23,6 +26,7 @@ const OUT = join(REPO, process.env.SNAPSHOT_OUT ?? 'cardapio.html');
 const THEME = process.env.SNAPSHOT_THEME ?? 'auto';
 const ORDER = process.env.SNAPSHOT_ORDER ?? 'items';
 const IMG_DIR = process.env.SNAPSHOT_IMG_DIR ?? null;
+const NOINDEX = process.env.SNAPSHOT_NOINDEX === '1';
 
 const mime = (f) =>
   f.endsWith('.webp') ? 'image/webp'
@@ -415,6 +419,24 @@ const enhance = `
 `;
 html = html.replace('</body>', () => enhance + '</body>');
 html = banner + html;
+
+/*
+  Um snapshot hospedado é demonstração, não é a loja. Sem noindex, ele disputa
+  busca com o negócio real em nome de quem não pediu isso.
+
+  Ficava como retoque manual depois de publicar — e todo arquivo regerado
+  nascia sem ele, porque etapa manual não tem como falhar em voz alta. Vale
+  como flag do gerador, para nascer junto com o arquivo.
+
+  A meta do Next continua "index, follow" mais abaixo. Buscador aplica a
+  diretiva mais restritiva quando elas conflitam, então esta ganha.
+*/
+if (NOINDEX) {
+  const i = html.indexOf('<head>');
+  if (i < 0) throw new Error('não achei <head> para inserir o noindex');
+  html = html.slice(0, i + 6) + '\n<meta name="robots" content="noindex, nofollow">\n' + html.slice(i + 6);
+  console.log('  robots: noindex, nofollow');
+}
 
 writeFileSync(OUT, html);
 console.log(`escrito: ${OUT} (${(html.length / 1024 / 1024).toFixed(2)} MB)`);
